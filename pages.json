@@ -1,0 +1,250 @@
+{
+	"pages": [ //pages数组中第一项表示应用启动页
+		{
+			"path": "pages/login/login",
+			"style": {
+				"app-plus": {
+					//禁用原生导航栏
+					"titleNView": false
+				}
+			}
+		},
+		{
+			"path": "pages/main/main",
+			"style": {
+				"navigationBarTitleText": "工作台",
+				"app-plus": {
+					"bounce": "none"
+				}
+			},
+			"scrollIndicator": "none"
+		}, {
+			"path": "pages/possales/possales",
+			"style": {
+				"navigationBarTitleText": "销售小票"
+			}
+		}, {
+			"path": "pages/purchase/purchase",
+			"style": {
+				"navigationBarTitleText": "采购收货单"
+			}
+		}, {
+			"path": "pages/sales/sales",
+			"style": {
+				"navigationBarTitleText": "销售发货单"
+			}
+		}, {
+			"path": "pages/setting/setting",
+			"style": {
+				"navigationBarTitleText": "设置中心"
+			}
+		}, {
+			"path": "pages/statistics/statistics",
+			"style": {
+				"navigationBarTitleText": "数据统计"
+			}
+		}, {
+			"path": "pages/salesOrder/salesOrder",
+			"style": {
+				"navigationBarTitleText": "销售订单"
+			}
+		}, {
+			"path": "pages/salesReturn/salesReturn",
+			"style": {
+				"navigationBarTitleText": "销售退货单"
+			}
+		}, {
+			"path": "pages/purchaseOrder/purchaseOrder",
+			"style": {
+				"navigationBarTitleText": "采购订单"
+			}
+		}, {
+			"path": "pages/purchaseReturn/purchaseReturn",
+			"style": {
+				"navigationBarTitleText": "采购退货单"
+			}
+		}, {
+			"path": "pages/stockMove/stockMove",
+			"style": {
+				"navigationBarTitleText": "转仓单"
+			}
+		}, {
+			"path": "pages/stocktaking/stocktaking",
+			"style": {
+				"navigationBarTitleText": "盘点单"
+			}
+		}, {
+			"path": "pages/stockIn/stockIn",
+			"style": {
+				"navigationBarTitleText": "进仓单"
+			}
+		}, {
+			"path": "pages/stockOut/stockOut",
+			"style": {
+				"navigationBarTitleText": "出仓单"
+			}
+		}, {
+			"path": "pages/goods/goodsList/goodsList",
+			"style": {
+				"navigationBarTitleText": "货品管理",
+				"app-plus": {
+					"bounce": "none",
+					"titleNView": {
+						"searchInput": {
+							"align": "left",
+							"borderRadius": "10px",
+							"backgroundColor": "#FFFFFF",
+							"placeholderColor": "#808080",
+							"placeholder": "请输入货品条码"
+						},
+						"buttons": [ //原生标题栏按钮配置,
+							{
+								"fontSrc": "/static/iconfont.ttf",
+								"text": "\ue6ea",
+								"fontSize": "24px",
+								"color": "#FFFFFF"
+							}, {
+								"fontSrc": "/static/iconfont.ttf",
+								"text": "\ue7ae",
+								"fontSize": "24px",
+								"color": "#FFFFFF"
+							}
+						]
+					}
+				},
+				"scrollIndicator": "none"
+			}
+		}, {
+			"path": "pages/department/department",
+			"style": {
+				"navigationBarTitleText": "店仓管理"
+			}
+		}, {
+			"path": "pages/vip/vip",
+			"style": {
+				"navigationBarTitleText": "会员管理"
+			}
+		}, {
+			"path": "pages/employee/employee",
+			"style": {
+				"navigationBarTitleText": "员工管理"
+			}
+		}, {
+			"path": "pages/supplier/supplier",
+			"style": {
+				"navigationBarTitleText": "厂商管理"
+			}
+		}, {
+			"path": "pages/color/color",
+			"style": {
+				"navigationBarTitleText": "颜色管理"
+			}
+		}, {
+			"path": "pages/customer/customer",
+			"style": {
+				"navigationBarTitleText": "客户管理"
+			}
+		}, {
+			"path": "pages/receival/receival",
+			"style": {
+				"navigationBarTitleText": "客户收款单"
+			}
+		}, {
+			"path": "pages/deduct/deduct",
+			"style": {
+				"navigationBarTitleText": "客户费用单"
+			}
+		}, {
+			"path": "pages/receivalReport/receivalReport",
+			"style": {
+				"navigationBarTitleText": "客户往来"
+			}
+		}, {
+			"path": "pages/payment/payment",
+			"style": {
+				"navigationBarTitleText": "厂商付款单"
+			}
+		}, {
+			"path": "pages/supplierDeduct/supplierDeduct",
+			"style": {
+				"navigationBarTitleText": "厂商费用单"
+			}
+		}, {
+			"path": "pages/paymentReport/paymentReport",
+			"style": {
+				"navigationBarTitleText": "厂商往来"
+			}
+		}, {
+			"path": "pages/goods/goodsAdd/goodsAdd",
+			"style": {
+				"navigationBarTitleText": "新增货品",
+				"app-plus": {
+					"bounce": "none",
+					"titleNView": {
+						"buttons": [ //原生标题栏按钮配置,
+							{
+								"fontSrc": "/static/iconfont.ttf",
+								"text": "\ue7b2",
+								"fontSize": "24px",
+								"color": "#FFFFFF",
+								"width": "auto"
+							}
+						]
+					}
+				},
+				"scrollIndicator": "none"
+			}
+		}
+	],
+	"tabBar": {
+		"color": "#AAAAAA",
+		"selectedColor": "#427CAC",
+		"borderStyle": "black",
+		"backgroundColor": "#ffffff",
+		"list": [{
+				"pagePath": "pages/sales/sales",
+				"iconPath": "static/image/icon-tab-sales.png",
+				"selectedIconPath": "static/image/icon-tab-sales-select.png",
+				"text": "销售"
+			},
+			{
+				"pagePath": "pages/possales/possales",
+				"iconPath": "static/image/icon-tab-stock.png",
+				"selectedIconPath": "static/image/icon-tab-stock-select.png",
+				"text": "零售"
+			},
+			{
+				"pagePath": "pages/main/main",
+				"iconPath": "static/image/icon-tab-home.png",
+				"selectedIconPath": "static/image/icon-tab-home-select.png",
+				"text": "工作台"
+			},
+			{
+				"pagePath": "pages/statistics/statistics",
+				"iconPath": "static/image/icon-tab-me.png",
+				"selectedIconPath": "static/image/icon-tab-me-select.png",
+				"text": "统计"
+			},
+			{
+				"pagePath": "pages/setting/setting",
+				"iconPath": "static/image/icon-tab-me.png",
+				"selectedIconPath": "static/image/icon-tab-me-select.png",
+				"text": "设置"
+			}
+		]
+	},
+	"globalStyle": {
+		"navigationBarTextStyle": "white",
+		"navigationBarTitleText": "西奈移动应用",
+		"navigationBarBackgroundColor": "#333333",
+		"backgroundColor": "#333333"
+	},
+	"condition": { //模式配置，仅开发期间生效
+		"current": 0, //当前激活的模式(list 的索引项)
+		"list": [{
+			"name": "test", //模式名称
+			"path": "pages/goods/goodsAdd/goodsAdd", //启动页面，必选
+			"query": "" //启动参数，在页面的onLoad函数里面得到
+		}]
+	}
+}
