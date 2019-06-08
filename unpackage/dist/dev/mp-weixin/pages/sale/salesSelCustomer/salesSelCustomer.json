@@ -1,0 +1,8 @@
+{
+  "navigationBarTitleText": "选择客户",
+  "scrollIndicator": "none",
+  "usingComponents": {
+    "search": "/components/search",
+    "sear-item": "/components/searItem"
+  }
+}

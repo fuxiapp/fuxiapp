@@ -1,0 +1,132 @@
+{
+  "@platforms": [
+    "android",
+    "iPhone",
+    "iPad"
+  ],
+  "id": "__UNI__DE7613B",
+  "name": "西奈科技",
+  "version": {
+    "name": "1.0.0",
+    "code": "100"
+  },
+  "description": "西奈新零售移动应用",
+  "launch_path": "__uniapptabbar.html",
+  "developer": {
+    "name": "",
+    "email": "",
+    "url": ""
+  },
+  "permissions": {
+    "SQLite": {},
+    "UniNView": {
+      "description": "UniNView原生渲染"
+    }
+  },
+  "plus": {
+    "useragent": {
+      "value": "uni-app appservice",
+      "concatenate": true
+    },
+    "splashscreen": {
+      "target": "id:1",
+      "autoclose": true,
+      "waiting": true,
+      "delay": 0
+    },
+    "popGesture": "close",
+    "launchwebview": {
+      "render": "always"
+    },
+    "statusbar": {
+      "immersed": "supportedDevice",
+      "style": "light",
+      "background": "black"
+    },
+    "usingComponents": true,
+    "distribute": {
+      "icons": {
+        "ios": {
+          "appstore": "C:/Users/20833/Pictures/Saved Pictures/1558197846(1).png",
+          "ipad": {
+            "app": "C:/Users/20833/Pictures/Saved Pictures/1558197846(1).png",
+            "app@2x": "C:/Users/20833/Pictures/Saved Pictures/1558197846(1).png",
+            "notification": "C:/Users/20833/Pictures/Saved Pictures/1558197846(1).png",
+            "notification@2x": "C:/Users/20833/Pictures/Saved Pictures/1558197846(1).png",
+            "proapp@2x": "C:/Users/20833/Pictures/Saved Pictures/1558197846(1).png",
+            "settings": "C:/Users/20833/Pictures/Saved Pictures/1558197846(1).png",
+            "settings@2x": "C:/Users/20833/Pictures/Saved Pictures/1558197846(1).png",
+            "spotlight": "C:/Users/20833/Pictures/Saved Pictures/1558197846(1).png",
+            "spotlight@2x": "C:/Users/20833/Pictures/Saved Pictures/1558197846(1).png"
+          },
+          "iphone": {
+            "app@2x": "C:/Users/20833/Pictures/Saved Pictures/1558197846(1).png",
+            "app@3x": "C:/Users/20833/Pictures/Saved Pictures/1558197846(1).png",
+            "notification@2x": "C:/Users/20833/Pictures/Saved Pictures/1558197846(1).png",
+            "notification@3x": "C:/Users/20833/Pictures/Saved Pictures/1558197846(1).png",
+            "settings@2x": "C:/Users/20833/Pictures/Saved Pictures/1558197846(1).png",
+            "settings@3x": "C:/Users/20833/Pictures/Saved Pictures/1558197846(1).png",
+            "spotlight@2x": "C:/Users/20833/Pictures/Saved Pictures/1558197846(1).png",
+            "spotlight@3x": "C:/Users/20833/Pictures/Saved Pictures/1558197846(1).png"
+          }
+        },
+        "android": {
+          "hdpi": "C:/Users/20833/Pictures/Saved Pictures/1558197846(1).png",
+          "ldpi": "C:/Users/20833/Pictures/Saved Pictures/1558197846(1).png",
+          "mdpi": "C:/Users/20833/Pictures/Saved Pictures/1558197846(1).png",
+          "xhdpi": "C:/Users/20833/Pictures/Saved Pictures/1558197846(1).png",
+          "xxhdpi": "C:/Users/20833/Pictures/Saved Pictures/1558197846(1).png",
+          "xxxhdpi": "C:/Users/20833/Pictures/Saved Pictures/1558197846(1).png"
+        }
+      },
+      "splashscreen": {
+        "android": {
+          "hdpi": "C:/Users/20833/Pictures/Saved Pictures/1558197846(1).png",
+          "xhdpi": "C:/Users/20833/Pictures/Saved Pictures/1558197846(1).png",
+          "xxhdpi": "C:/Users/20833/Pictures/Saved Pictures/1558197846(1).png"
+        }
+      },
+      "google": {
+        "permissions": [
+          "<uses-feature android:name=\"android.hardware.camera\"/>",
+          "<uses-feature android:name=\"android.hardware.camera.autofocus\"/>",
+          "<uses-permission android:name=\"android.permission.ACCESS_COARSE_LOCATION\"/>",
+          "<uses-permission android:name=\"android.permission.ACCESS_FINE_LOCATION\"/>",
+          "<uses-permission android:name=\"android.permission.CALL_PHONE\"/>",
+          "<uses-permission android:name=\"android.permission.CAMERA\"/>",
+          "<uses-permission android:name=\"android.permission.CHANGE_NETWORK_STATE\"/>",
+          "<uses-permission android:name=\"android.permission.CHANGE_WIFI_STATE\"/>",
+          "<uses-permission android:name=\"android.permission.FLASHLIGHT\"/>",
+          "<uses-permission android:name=\"android.permission.GET_ACCOUNTS\"/>",
+          "<uses-permission android:name=\"android.permission.VIBRATE\"/>",
+          "<uses-permission android:name=\"android.permission.WAKE_LOCK\"/>"
+        ]
+      },
+      "apple": {},
+      "plugins": {
+        "push": {},
+        "audio": {
+          "mp3": {
+            "description": "Android平台录音支持MP3格式文件"
+          }
+        }
+      }
+    },
+    "allowsInlineMediaPlayback": true,
+    "safearea": {
+      "background": "#ffffff",
+      "bottom": {
+        "offset": "auto"
+      }
+    },
+    "uni-app": {
+      "compilerVersion": "1.9.9",
+      "control": "v8"
+    },
+    "secondwebview": {
+      "id": "1",
+      "launch_path": "__uniappview.html",
+      "kernel": "WKWebview"
+    }
+  }
+}

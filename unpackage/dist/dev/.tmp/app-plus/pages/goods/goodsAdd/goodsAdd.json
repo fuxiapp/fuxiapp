@@ -1,0 +1,19 @@
+{
+  "navigationBarTitleText": "新增货品",
+  "scrollIndicator": "none",
+  "bounce": "none",
+  "titleNView": {
+    "buttons": [
+      {
+        "fontSrc": "/static/iconfont.ttf",
+        "text": "",
+        "fontSize": "24px",
+        "color": "#FFFFFF",
+        "width": "auto"
+      }
+    ]
+  },
+  "usingComponents": {
+    "radio-item": "/components/radioItem"
+  }
+}

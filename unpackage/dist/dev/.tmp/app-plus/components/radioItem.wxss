@@ -1,0 +1,63 @@
+@charset "UTF-8";
+/* 颜色变量 */
+/* 行为相关颜色 */
+/* 文字基本颜色 */
+/* 背景颜色 */
+/* 边框颜色 */
+/* 尺寸变量 */
+/* 文字尺寸 */
+/* 图片尺寸 */
+/* Border Radius */
+/* 水平间距 */
+/* 垂直间距 */
+/* 透明度 */
+/* 文章场景相关 */
+/* 超出部分省略号 */
+.cgh-radio-childe.data-v-0c8be756 {
+  width: 100%;
+  overflow: hidden;
+}
+.cgh-radio-childe .alert-black.data-v-0c8be756 {
+    display: black;
+    position: fixed;
+    top: 0%;
+    left: 0%;
+    width: 100%;
+    height: 100%;
+    background-color: black;
+    z-index: 2;
+    -moz-opacity: 0.5;
+    opacity: .80;
+    filter: alpha(opacity=88);
+}
+.cgh-radio-childe .close.data-v-0c8be756 {
+    width: 100rpx;
+    height: 100rpx;
+    position: fixed;
+    overflow: auto;
+    top: 270rpx;
+    right: 0;
+    z-index: 11;
+}
+.cgh-radio-childe .close image.data-v-0c8be756 {
+      width: 90rpx;
+      height: 80rpx;
+}
+.cgh-radio-childe .radio-con.data-v-0c8be756 {
+    width: 100%;
+    height: 70%;
+    position: fixed;
+    overflow: auto;
+    bottom: 0;
+    left: 0;
+    z-index: 11;
+    background: #fff;
+}
+.cgh-radio-childe .radio-con .radio-info-con .item.data-v-0c8be756 {
+      font-size: 36rpx;
+      color: #333;
+      font-weight: bold;
+      border-bottom: 1rpx solid #f4f4f4;
+      padding: 25rpx 0rpx 25rpx 30rpx;
+}
+

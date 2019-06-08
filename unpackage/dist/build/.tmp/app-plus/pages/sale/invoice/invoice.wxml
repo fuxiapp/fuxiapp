@@ -1,0 +1,1 @@
+<view class="v-invoice-view" bind:__l="__l"><view class="search"><search-left placeholderStr="货品编码/品名/条形码" type="1"></search-left></view><view class="list-con"><goods-item list="{{infoList}}" type="1" data-event-opts="{{[['^toPath',[['goEditGoods']]]]}}" bind:toPath="__e"></goods-item></view></view>

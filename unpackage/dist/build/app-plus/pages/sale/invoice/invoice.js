@@ -1,0 +1,2 @@
+setCssToHead(["@charset \x22UTF-8\x22;\n.",[1],"v-invoice-view .",[1],"list-con { margin-top: ",[0,140],"; }\n",],undefined,{path:"./pages/sale/invoice/invoice.wxss"})();
+document.dispatchEvent(new CustomEvent("generateFuncReady", { detail: { generateFunc: $gwx('./pages/sale/invoice/invoice.wxml') } }));

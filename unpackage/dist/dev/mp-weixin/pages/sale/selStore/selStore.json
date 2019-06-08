@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "选择仓库",
+  "usingComponents": {
+    "search": "/components/search",
+    "sear-item": "/components/searItem"
+  }
+}

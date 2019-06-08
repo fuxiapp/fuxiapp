@@ -1,0 +1,1 @@
+<view class="v-sel-customer" bind:__l="__l"><view class="search"><search placeholderStr="编码/名称/手机号" type="1"></search></view><view class="list-con"><sear-item list="{{infoList}}" type="1" data-event-opts="{{[['^toPath',[['toStrore']]]]}}" bind:toPath="__e"></sear-item></view></view>

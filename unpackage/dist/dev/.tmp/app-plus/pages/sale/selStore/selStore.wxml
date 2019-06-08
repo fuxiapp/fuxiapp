@@ -1,0 +1,1 @@
+<view class="v-sel-strore" bind:__l="__l"><view class="search"><search placeholderStr="店仓编码/店仓名称" type="2"></search></view><view class="list-con"><sear-item list="{{infoList}}" type="2" data-event-opts="{{[['^toPath',[['toInvoice']]]]}}" bind:toPath="__e"></sear-item></view></view>

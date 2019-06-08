@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "销售发货单",
+  "usingComponents": {
+    "search-left": "/components/searchLeft",
+    "goods-item": "/components/goodsItem"
+  }
+}

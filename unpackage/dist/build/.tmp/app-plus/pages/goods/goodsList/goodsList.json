@@ -1,0 +1,29 @@
+{
+  "navigationBarTitleText": "货品管理",
+  "scrollIndicator": "none",
+  "bounce": "none",
+  "titleNView": {
+    "searchInput": {
+      "align": "left",
+      "borderRadius": "10px",
+      "backgroundColor": "#FFFFFF",
+      "placeholderColor": "#808080",
+      "placeholder": "请输入货品条码"
+    },
+    "buttons": [
+      {
+        "fontSrc": "/static/iconfont.ttf",
+        "text": "",
+        "fontSize": "24px",
+        "color": "#FFFFFF"
+      },
+      {
+        "fontSrc": "/static/iconfont.ttf",
+        "text": "",
+        "fontSize": "24px",
+        "color": "#FFFFFF"
+      }
+    ]
+  },
+  "usingComponents": {}
+}

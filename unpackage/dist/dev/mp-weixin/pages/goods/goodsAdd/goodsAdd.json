@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "新增货品",
+  "scrollIndicator": "none",
+  "usingComponents": {
+    "radio-item": "/components/radioItem"
+  }
+}

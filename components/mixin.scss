@@ -1,0 +1,90 @@
+/* 超出部分省略号 */
+@mixin lineEllipsis($n) {
+  @if $n == 1 {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  } @else {
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-line-clamp: $n;
+    -webkit-box-orient: vertical;
+  }
+}
+
+@mixin flexLayout($direction, $justify, $align, $wrap) {
+  display: flex;
+  flex-direction: $direction;
+  justify-content: $justify;
+  align-items: $align;
+  flex-wrap: $wrap;
+}
+
+
+@mixin default-bac-button () {
+		background: #344FA4;
+		border: 1px solid #344FA4;
+		color: white;
+		text-align: center;
+}
+@mixin bac-line ($height) {
+		width: 100%;
+		background: #f1f2f6;
+		height: $height
+}
+
+@mixin default-price($size, $weight) {
+	 font-size: $size;
+	 font-weight: $weight;
+	 color: orange;
+}
+@mixin  cgh-alert-white ($width, $top, $left, $zIndex) {
+			width: $width;
+			background: #FFF;
+			display: black; 
+			position: fixed; 
+			top: $top; 
+			left: $left; 
+			z-index:  $zIndex; 
+			-webkit-overflow-scrolling: touch;
+	}
+@mixin cgh-alert-black {
+			display: black; 
+			position: fixed; 
+			top: 0%; 
+			left: 0%; 
+			width: 100%; 
+			height: 100%; 
+			background-color: black; 
+			z-index: 2; 
+			-moz-opacity: 0.5; 
+			opacity:.80; 
+			filter: alpha(opacity=88); 
+}
+@mixin cgh-right-img {
+		width: 18upx;
+		height: 26upx;
+		vertical-align: middle;
+}
+@mixin  more-info ($width, $height) { // 查看更多
+	background: #ccc;
+	width: $width;
+	height: $height;
+	margin-right: 10upx;
+	font-size: 24upx;
+	color: #fff;
+	text-align: center;
+	line-height: $height;
+	padding-left: 20upx;
+}
+@mixin  tab-title () { // 标题
+	color:  #333;
+	font-size: 36upx;
+	font-weight: bold;
+	padding: 30upx 0upx;
+}
+// 公共颜色
+$themeColor: #427CAC;
+$hui-se: #999;
+$boder-se: #f4f4f4;
+$red-color: #e63c42
