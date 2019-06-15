@@ -2,7 +2,7 @@
 	<view class="cgh-search-item-childe">
 		<view class="info-con">
 			<view class="list" v-for="(v, index) in list" :key="index" @click="toPath(v.id)">
-				<view class="name" v-if="type === '1'">白马店白马店白马店白马店白马店白马店白马店</view>
+				<view class="name" v-if="type === '1'">广州市伏羲计算机系统工程有限公司</view>
 				<view class="name" v-if="type === '2'">白马店</view>
 				<view class="class-type">
 					<view class="type-name" v-if="type === '1'">手机号: 15216168437</view>

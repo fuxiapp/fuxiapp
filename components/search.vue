@@ -53,7 +53,7 @@
 		overflow: hidden;
 		background: #fff;
 		padding: 30upx 0upx;
-		position: fixed;
+		// position: fixed;
 		left: 0;
 		top: 0;
 		z-index: 2009;
