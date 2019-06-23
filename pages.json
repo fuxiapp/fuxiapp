@@ -10,7 +10,7 @@
 			}
 		},
 		{
-			"path": "pages/main/main",
+			"path": "pages/tab/main/main",
 			"style": {
 				"navigationBarTitleText": "工作台",
 				"app-plus": {
@@ -19,7 +19,7 @@
 			},
 			"scrollIndicator": "none"
 		}, {
-			"path": "pages/possales/possales",
+			"path": "pages/tab/possales/possales",
 			"style": {
 				"navigationBarTitleText": "销售小票"
 			}
@@ -29,17 +29,17 @@
 				"navigationBarTitleText": "采购收货单"
 			}
 		}, {
-			"path": "pages/sales/sales",
+			"path": "pages/tab/sales/sales",
 			"style": {
 				"navigationBarTitleText": "销售发货单"
 			}
 		}, {
-			"path": "pages/setting/setting",
+			"path": "pages/tab/setting/setting",
 			"style": {
 				"navigationBarTitleText": "设置中心"
 			}
 		}, {
-			"path": "pages/statistics/statistics",
+			"path": "pages/tab/statistics/statistics",
 			"style": {
 				"navigationBarTitleText": "数据统计"
 			}
@@ -194,41 +194,96 @@
 				},
 				"scrollIndicator": "none"
 			}
+		}, {
+			"path": "pages/sale/salesSelCustomer/salesSelCustomer",
+			"style": {
+				"navigationBarTitleText": "选择客户",
+				"app-plus": {
+					"bounce": "none",
+					"titleNView": {
+						"buttons": [ //原生标题栏按钮配置,
+							{
+								"fontSrc": "/static/iconfont.ttf",
+								"text": "\ue6ea",
+								"fontSize": "24px",
+								"color": "#FFFFFF"
+							}
+						]
+					}
+				},
+				"scrollIndicator": "none"
+			}
+		},
+		{
+			"path": "pages/sale/selStore/selStore",
+			"style": {
+				"navigationBarTitleText": "选择仓库"
+			}
+		},
+		{
+			"path": "pages/sale/invoice/invoice",
+			"style": {
+				"navigationBarTitleText": "销售发货单"
+			}
+		},
+		{
+			"path": "pages/sale/editGoods/editGoods",
+			"style": {
+				"navigationBarTitleText": "销售发货单"
+			}
+		},
+		{
+			"path": "pages/sale/saleComfig/saleComfig",
+			"style": {
+				"navigationBarTitleText": "销售发货单",
+				   "app-plus" : {
+					"scrollIndicator":"none",
+				    "titleNView" : {
+				        "buttons" : [
+				            //原生标题栏按钮配置,
+				            {
+				               "text": "首页",
+				               "fontSize": "14"
+				            }
+				        ]
+				    },
+				    "bounce" : "none"
+				}
+			}
 		}
 	],
 	"tabBar": {
-		"color": "#AAAAAA",
-		"selectedColor": "#427CAC",
-		"borderStyle": "black",
+		"color": "#6C6C6C",
+		"selectedColor": "#54B0D5",
 		"backgroundColor": "#ffffff",
 		"list": [{
-				"pagePath": "pages/sales/sales",
-				"iconPath": "static/image/icon-tab-sales.png",
-				"selectedIconPath": "static/image/icon-tab-sales-select.png",
+				"pagePath": "pages/tab/sales/sales",
+				"iconPath": "static/tabs/xs.png",
+				"selectedIconPath": "static/tabs/sel_xs.png",
 				"text": "销售"
 			},
 			{
-				"pagePath": "pages/possales/possales",
-				"iconPath": "static/image/icon-tab-stock.png",
-				"selectedIconPath": "static/image/icon-tab-stock-select.png",
+				"pagePath": "pages/tab/possales/possales",
+				"iconPath": "static/tabs/ls.png",
+				"selectedIconPath": "static/tabs/sel_ls.png",
 				"text": "零售"
 			},
 			{
-				"pagePath": "pages/main/main",
-				"iconPath": "static/image/icon-tab-home.png",
-				"selectedIconPath": "static/image/icon-tab-home-select.png",
+				"pagePath": "pages/tab/main/main",
+				"iconPath": "static/tabs/gzt.png",
+				"selectedIconPath": "static/tabs/sel_gzt.png",
 				"text": "工作台"
 			},
 			{
-				"pagePath": "pages/statistics/statistics",
-				"iconPath": "static/image/icon-tab-me.png",
-				"selectedIconPath": "static/image/icon-tab-me-select.png",
+				"pagePath": "pages/tab/statistics/statistics",
+				"iconPath": "static/tabs/tj.png",
+				"selectedIconPath": "static/tabs/sel_tj.png",
 				"text": "统计"
 			},
 			{
-				"pagePath": "pages/setting/setting",
-				"iconPath": "static/image/icon-tab-me.png",
-				"selectedIconPath": "static/image/icon-tab-me-select.png",
+				"pagePath": "pages/tab/setting/setting",
+				"iconPath": "static/tabs/sz.png",
+				"selectedIconPath": "static/tabs/sel_sz.png",
 				"text": "设置"
 			}
 		]
@@ -236,14 +291,14 @@
 	"globalStyle": {
 		"navigationBarTextStyle": "white",
 		"navigationBarTitleText": "西奈移动应用",
-		"navigationBarBackgroundColor": "#333333",
-		"backgroundColor": "#333333"
+		"navigationBarBackgroundColor": "black",
+		"backgroundColor": "white"
 	},
 	"condition": { //模式配置，仅开发期间生效
 		"current": 0, //当前激活的模式(list 的索引项)
 		"list": [{
-			"name": "test", //模式名称
-			"path": "pages/goods/goodsAdd/goodsAdd", //启动页面，必选
+			"name": "login", //模式名称
+			"path": "pages/login/login", //启动页面，必选
 			"query": "" //启动参数，在页面的onLoad函数里面得到
 		}]
 	}

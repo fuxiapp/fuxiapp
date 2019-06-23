@@ -46,10 +46,12 @@
 				</view>
 			</view>
 		</view>
+		<uni-load-more :status="status" :content-text="contentText" />
 	</scroll-view>
 </template>
 
 <script>
+	import uniLoadMore from '../../../components/uni/uni-load-more/uni-load-more.vue';
 	export default {
 		data() {
 			return {
@@ -109,10 +111,43 @@
 					price: '100.00',
 					originalPrice: '90.00',
 					reserve: '99'
-				}]
+				}],
+				// 分页
+				listData: [],
+				
+				last_id: '',
+				reload: false,
+				status: 'more',
+				contentText: {
+					contentdown: '上拉加载更多',
+					contentrefresh: '加载中',
+					contentnomore: '没有更多'
+				},
+				para: {pageSize: 10, pageNum: 1, orderBy: '', goodsType: '', age: '', season: ''}
 			}
 		},
+		onReachBottom() { // 页面下拉
+			this.status = 'more';
+			this.getList();
+		},
+		onLoad() {
+			this.getList();
+		},
 		methods: {
+			getList() { // 获取货品列表
+				if (this.last_id) {
+					//说明已有数据，目前处于上拉加载
+					this.status = 'loading';
+				}
+				this.$API.get('/fuxi/goods/query-goods-list', this.para).then(res => {
+					if (res.code === 'success') {
+						let list = res.data;
+						this.listData = this.reload ? list : this.listData.concat(list);
+						this.last_id = list[list.length - 1].id;
+						this.reload = false;
+					}
+				});
+			},
 			sortPrice() {
 
 			},
@@ -125,6 +160,9 @@
 			sortSeason() {
 
 			}
+		},
+		components: {
+			uniLoadMore
 		},
 		onNavigationBarButtonTap: (function(e) {
 			var i = e.index;
@@ -145,7 +183,7 @@
 					}
 				});
 			}
-		})
+		}),
 	}
 </script>
 
