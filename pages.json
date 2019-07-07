@@ -18,7 +18,9 @@
 				}
 			},
 			"scrollIndicator": "none"
-		}, {
+		},
+		
+		 {
 			"path": "pages/tab/possales/possales",
 			"style": {
 				"navigationBarTitleText": "销售小票"
@@ -90,13 +92,6 @@
 				"app-plus": {
 					"bounce": "none",
 					"titleNView": {
-						"searchInput": {
-							"align": "left",
-							"borderRadius": "10px",
-							"backgroundColor": "#FFFFFF",
-							"placeholderColor": "#808080",
-							"placeholder": "请输入货品条码"
-						},
 						"buttons": [ //原生标题栏按钮配置,
 							{
 								"fontSrc": "/static/iconfont.ttf",
@@ -250,7 +245,55 @@
 				    "bounce" : "none"
 				}
 			}
+		},{
+			"path": "pages/sale/salesPurchase/salesPurchase",
+			"style": {
+				"navigationBarTitleText": "选择厂商",
+				"app-plus": {
+					"bounce": "none",
+					"titleNView": {
+						"buttons": [ //原生标题栏按钮配置,
+							{
+								"fontSrc": "/static/iconfont.ttf",
+								"text": "\ue6ea",
+								"fontSize": "24px",
+								"color": "#FFFFFF"
+							}
+						]
+					}
+				},
+				"scrollIndicator": "none"
+			}
+		},{
+			"path": "pages/sale/addGoodsConfig/addGoodsConfig",
+			"style": {
+				"navigationBarTitleText": "已盘货品",
+				   "app-plus" : {
+					"scrollIndicator":"none",
+				    "titleNView" : {
+				        "buttons" : [
+				            //原生标题栏按钮配置,
+				            {
+				               "text": "差异",
+				               "fontSize": "14"
+				            }
+				        ]
+				    },
+				    "bounce" : "none"
+				}
+			}
+		},{
+			"path": "pages/sale/differenceGoodsCheck/differenceGoodsCheck",
+			"style": {
+				"navigationBarTitleText": "差异"
+			}
+		},{
+			"path": "pages/sale/defferenceCheckConfig/defferenceCheckConfig",
+			"style": {
+				"navigationBarTitleText": "盘点单"
+			}
 		}
+		
 	],
 	"tabBar": {
 		"color": "#6C6C6C",

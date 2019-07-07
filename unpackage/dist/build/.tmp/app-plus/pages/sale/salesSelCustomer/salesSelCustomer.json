@@ -1,0 +1,20 @@
+{
+  "navigationBarTitleText": "选择客户",
+  "scrollIndicator": "none",
+  "bounce": "none",
+  "titleNView": {
+    "buttons": [
+      {
+        "fontSrc": "/static/iconfont.ttf",
+        "text": "",
+        "fontSize": "24px",
+        "color": "#FFFFFF"
+      }
+    ]
+  },
+  "usingComponents": {
+    "search": "/components/search",
+    "sear-item": "/components/searItem",
+    "add-customer": "/components/addCustomer"
+  }
+}

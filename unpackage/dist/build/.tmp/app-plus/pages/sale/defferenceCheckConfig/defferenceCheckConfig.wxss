@@ -1,0 +1,150 @@
+@charset "UTF-8";
+/* 颜色变量 */
+/* 行为相关颜色 */
+/* 文字基本颜色 */
+/* 背景颜色 */
+/* 边框颜色 */
+/* 尺寸变量 */
+/* 文字尺寸 */
+/* 图片尺寸 */
+/* Border Radius */
+/* 水平间距 */
+/* 垂直间距 */
+/* 透明度 */
+/* 文章场景相关 */
+/* 超出部分省略号 */
+.v-config-view .company-con {
+  width: 100%;
+  overflow: hidden;
+  background: #fff;
+}
+.v-config-view .company-con .info {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+        -ms-flex-align: center;
+            align-items: center;
+    padding: 20rpx 0rpx;
+    font-size: 32rpx;
+    border-bottom: 1rpx solid #f4f4f4;
+}
+.v-config-view .company-con .info .title {
+      width: 18%;
+      color: #999;
+      margin-left: 3%;
+}
+.v-config-view .company-con .info .value {
+      color: #333;
+      font-weight: bold;
+}
+.v-config-view .info-con {
+  width: 100%;
+  overflow: hidden;
+  margin: 0rpx auto;
+  background: #fff;
+  font-size: 28rpx;
+}
+.v-config-view .info-con .list {
+    width: 92%;
+    overflow: hidden;
+    border-bottom: 1rpx solid #f4f4f4;
+    padding: 5rpx 4%;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+        -ms-flex-align: center;
+            align-items: center;
+    line-height: 40rpx;
+}
+.v-config-view .info-con .list .img {
+      width: 180rpx;
+      height: 180rpx;
+      margin-right: 5%;
+      -webkit-border-radius: 10rpx;
+              border-radius: 10rpx;
+}
+.v-config-view .info-con .list .img image {
+        width: 180rpx;
+        height: 180rpx;
+        -webkit-border-radius: 10rpx;
+                border-radius: 10rpx;
+}
+.v-config-view .info-con .list .info {
+      width: 80%;
+}
+.v-config-view .info-con .list .info .name {
+        color: #333;
+        overflow: hidden;
+        white-space: nowrap;
+        -o-text-overflow: ellipsis;
+           text-overflow: ellipsis;
+}
+.v-config-view .info-con .list .info .prices {
+        display: -webkit-box;
+        display: -webkit-flex;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-align: center;
+        -webkit-align-items: center;
+            -ms-flex-align: center;
+                align-items: center;
+}
+.v-config-view .info-con .list .info .prices .no {
+          width: 60%;
+          backgroud: pink;
+}
+.v-config-view .info-con .list .info .prices .price {
+          width: 60%;
+          font-size: 30rpx;
+          font-weight: bold;
+          color: orange;
+}
+.v-config-view .info-con .list .info .prices .order-number {
+          color: #CCC;
+}
+.v-config-view .info-con .list .info .prices .order-number text {
+            padding: 0rpx 10rpx;
+}
+.v-config-view .info-con .list .info .prices .stock {
+          color: red;
+}
+.v-config-view .footer {
+  width: 100%;
+  height: 100rpx;
+  background: #fff;
+  border-top: 1rpx solid #f4f4f4;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  z-index: 2;
+}
+.v-config-view .footer .left {
+    margin-left: 7%;
+    width: 63%;
+    font-size: 28rpx;
+    color: #333;
+}
+.v-config-view .footer .left .price {
+      font-size: 34rpx;
+      font-weight: bold;
+      color: orange;
+}
+.v-config-view .footer .right {
+    width: 45%;
+    font-size: 30rpx;
+    text-align: center;
+    color: #fff;
+    background: orange;
+    line-height: 100rpx;
+}
+

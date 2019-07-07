@@ -57,9 +57,14 @@
 		overflow: hidden;
 		background: #fff;
 		padding: 30upx 0upx;
-		 position: fixed;
+		position: fixed;
 		left: 0;
-		top: 0;
+		/* #ifdef APP-PLUS */
+			top: 0;
+		/*  #endif */
+		/* #ifdef H5 */
+			top: 90upx;
+		/*  #endif */
 		z-index: 2009;
 		.search-con {
 			width: 92%;

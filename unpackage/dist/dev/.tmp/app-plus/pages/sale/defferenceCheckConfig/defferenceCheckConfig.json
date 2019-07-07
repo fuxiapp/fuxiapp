@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "盘点单",
+  "usingComponents": {
+    "goods-item": "/components/goodsItem"
+  }
+}

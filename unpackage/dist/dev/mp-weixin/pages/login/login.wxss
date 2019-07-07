@@ -1,0 +1,94 @@
+@charset "UTF-8";
+/* 颜色变量 */
+/* 行为相关颜色 */
+/* 文字基本颜色 */
+/* 背景颜色 */
+/* 边框颜色 */
+/* 尺寸变量 */
+/* 文字尺寸 */
+/* 图片尺寸 */
+/* Border Radius */
+/* 水平间距 */
+/* 垂直间距 */
+/* 透明度 */
+/* 文章场景相关 */
+/* 超出部分省略号 */
+page {
+  background-color: #FFFFFF;
+}
+.content {
+  overflow: hidden;
+}
+.content .content-top {
+    width: 100%;
+    height: 400rpx;
+    text-align: center;
+    margin-top: 130rpx;
+}
+.content .v-logo {
+    height: 200rpx;
+}
+.content .logo {
+    height: 200rpx;
+    width: 200rpx;
+    -webkit-border-radius: 50%;
+            border-radius: 50%;
+}
+.content .v-title {
+    line-height: 30rpx;
+    font-weight: bold;
+    font-size: 40rpx;
+    margin-top: 35rpx;
+}
+.content .margin-center {
+    width: 100%;
+    height: 300rpx;
+}
+.content .margin-center input {
+    height: 90rpx;
+    alignment-baseline: after-edge;
+}
+.content .v-username,
+  .content .v-password,
+  .content .v-department {
+    border-bottom: 2rpx solid #F6F6F6;
+    height: 90rpx;
+    margin: 0 40rpx 20rpx 40rpx;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    -webkit-flex-direction: row;
+        -ms-flex-direction: row;
+            flex-direction: row;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+        -ms-flex-align: center;
+            align-items: center;
+    -webkit-box-pack: start;
+    -webkit-justify-content: flex-start;
+        -ms-flex-pack: start;
+            justify-content: flex-start;
+}
+.content .v-img-before {
+    margin-right: 40rpx;
+    margin-top: 10rpx;
+}
+.content .v-img-before image {
+    width: 20px;
+    height: 20px;
+}
+.content .v-img-after {
+    margin-left: 50rpx;
+}
+.content .v-img-after image {
+    width: 40rpx;
+    height: 40rpx;
+}
+.content .btn-login {
+    color: #FFFFFF;
+    margin: 80rpx 40rpx 0 40rpx;
+}
+

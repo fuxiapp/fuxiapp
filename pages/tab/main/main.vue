@@ -5,7 +5,7 @@
 			<view class="info-con">
 				<view class="title">单据信息</view>
 				<view class="list-con">
-					<view class="item" v-for="(v, index) in noInfo"  @click="toPath(v.url, v.routeType)" :key="index">
+					<view class="item" v-for="(v, index) in noInfo"  @click="toPath(v.url, v.routeType, v.type)" :key="index">
 						<view class="bill-icons-con">
 							<view class="bill-icons" :style="'background:' + v.bac">
 								<view :class="'icon iconfont  '+ v.icon"></view>
@@ -22,7 +22,7 @@
 			<view class="info-con">
 				<view class="title">档案信息</view>
 				<view class="list-con">
-					<view class="item"  v-for="(v, index) in docInfo" @click="toPath(v.url, v.routeType)" :key="index">
+					<view class="item"  v-for="(v, index) in docInfo" @click="toPath(v.url, v.routeType, v.type)" :key="index">
 						<view class="icons" :style="'background:' + v.bac"><view :class="'icon iconfont  '+ v.icon"></view></view>
 						<view class="name">{{v.title}}</view>
 					</view>
@@ -35,7 +35,7 @@
 			<view class="info-con">
 				<view class="title">往来帐管理</view>
 				<view class="list-con">
-					<view class="item"  v-for="(v, index) in receivalInfo" @click="toPath(v.url, v.routeType)" :key="index">
+					<view class="item"  v-for="(v, index) in receivalInfo" @click="toPath(v.url, v.routeType, v.type)" :key="index">
 						<view class="icons" :style="'background:' + v.bac"><view  :class="'icon iconfont  '+ v.icon"></view></view>
 						<view class="name">{{v.title}}</view>
 					</view>
@@ -78,73 +78,84 @@
 				serverData: '',
 				noInfo: [{
 						icon: 'iconsales-order',
-						url: '../../salesOrder/salesOrder',
+						url: '../../sale/salesSelCustomer/salesSelCustomer',
 						title: '销售订单',
 						bac: '#427CAC',
-						routeType: 2
+						routeType: 2,
+						type: 0
 					},
 					{
 						icon: 'iconfahuodan',
 						url: '../../sale/salesSelCustomer/salesSelCustomer',
 						title: '销售发货单',
 						bac: '#F65341',
-						routeType: 2
+						routeType: 2,
+						type: 1
+						
 					},
 					{
 						icon: 'icontuihuodan',
-						url: '../../salesReturn/salesReturn',
+						url: '../../sale/selStore/selStore',
 						title: '销售退货单',
 						bac: '#FD943E',
-						routeType: 2
+						routeType: 2,
+						type: 2
 					},
 					{
 						icon: 'iconicon-caigoudd',
 						url: '../../purchaseOrder/purchaseOrder',
 						title: '采购订单',
 						bac: '#427CAC',
-						routeType: 2
+						routeType: 2,
+						type: 3
 					},
 					{
 						icon: 'iconshouhuodan',
-						url: '../../purchase/purchase',
+						url: '../../sale/salesPurchase/salesPurchase',
 						title: '采购收货单',
 						bac: '#12BC7F',
-						routeType: 2
+						routeType: 2,
+						type: 4
 					},
 					{
 						icon: 'icontuihuodan',
-						url: '../../purchaseReturn/purchaseReturn',
+						url: '../../sale/salesPurchase/salesPurchase',
 						title: '采购退货单',
 						bac: '#BC7AF1',
-						routeType: 2
+						routeType: 2,
+						type: 5
 					},
 					{
 						icon: 'iconchanchengpinrukuzhuancang',
 						url: '../../stockMove/stockMove',
 						title: '转仓单',
 						bac: '#12BC7F',
-						routeType: 2
+						routeType: 2,
+						type: 6
 					},
 					{
 						icon: 'iconshengchengpandiandan',
-						url: '../stocktaking/stocktaking',
+						url:'../../sale/selStore/selStore',
 						title: '盘点单',
 						bac: '#427CAC',
-						routeType: 2
+						routeType: 2,
+						type: 7
 					},
 					{
 						icon: 'iconjianchaliucheng',
-						url:'../../stockIn/stockIn',
+						url:'../../sale/selStore/selStore',
 						title: '进仓单',
 						bac: '#BC7AF1',
-						routeType: 2
+						routeType: 2,
+						type: 8
 					},
 					{
 						icon: 'icontuihuodanguanli',
 						url:'../../stockOut/stockOut',
 						title: '出仓单',
 						bac: '#427CAC',
-						routeType: 2
+						routeType: 2,
+						type: 9
 					}
 
 				],
@@ -153,55 +164,63 @@
 						url:'../../goods/goodsAdd/goodsAdd',
 						title: '新增货品',
 						bac: '#F65341',
-						routeType: 2
+						routeType: 2,
+						type: 10
 					},
 					{
 						icon: 'iconcangkuguanli',
 						url:'../../department/department',
 						title: '店仓管理',
 						bac: '#427CAC',
-						routeType: 2
+						routeType: 2,
+						type: 11
 					},
 					{
 						icon: 'iconhuiyuanguanli',
 						url:'../../vip/vip',
 						title: '会员管理',
 						bac: '#F65341',
-						routeType: 2
+						routeType: 2,
+						type: 12
 					},
 					{
 						icon: 'iconyuangongguanli',
 						url:'../../employee/employee',
 						title: '员工管理',
 						bac: '#FD943E',
-						routeType: 2
+						routeType: 2,
+						type: 13
 					},
 					{
 						icon: 'iconchangshang',
 						url:'../supplier/supplier',
 						title: '厂商管理',
-						routeType: 2
+						routeType: 2,
+						type: 14
 					},
 					{
 						icon: 'iconyanse',
 						url:'../../color/color',
 						title: '颜色管理',
 						bac: '#BC7AF1',
-						routeType: 2
+						routeType: 2,
+						type: 15
 					},
 					{
 						icon: 'iconkehuguanli',
 						url:'../../customer/customer',
 						title: '客户管理',
 						bac: '#427CAC',
-						routeType: 2
+						routeType: 2,
+						type: 16
 					},
 					{
 						icon: 'iconhuopinguanli',
 						url:'../../goods/goodsList/goodsList',
 						title: '货品管理',
 						bac: '#12BC7F',
-						routeType: 2
+						routeType: 2,
+						type: 17
 					}
 
 				],
@@ -210,42 +229,48 @@
 						url:'../../receival/receival',
 						title: '客户收款单',
 						bac: '#12BC7F',
-						routeType: 2
+						routeType: 2,
+						type: 18
 					},
 					{
 						icon: 'iconjigouduan-shouyeqietu',
 						url:'../../deduct/deduct',
 						title: '客户费用单',
 						bac: '#427CAC',
-						routeType: 2
+						routeType: 2,
+						type: 19
 					},
 					{
 						icon: 'iconkehuwanglai',
 						url:'../../receivalReport/receivalReport',
 						title: '客户往来',
 						bac: '#427CAC',
-						routeType: 2
+						routeType: 2,
+						type: 20
 					},
 					{
 						icon: 'iconfukuandan',
 						url:'../payment/payment',
 						title: '厂商付款单',
 						bac: '#FD943E',
-						routeType: 2
+						routeType: 2,
+						type: 21
 					},
 					{
 						icon: 'iconjigouduan-shouyeqietu',
 						url:'../../supplierDeduct/supplierDeduct',
 						title: '厂商费用单',
 						bac: '#BC7AF1',
-						routeType: 2
+						routeType: 2,
+						type: 22
 					},
 					{
 						icon: 'iconchanchengpinrukuzhuancang',
 						url:'../../paymentReport/paymentReport',
 						title: '厂商往来',
 						bac: '#427CAC',
-						routeType: 2
+						routeType: 2,
+						type: 23
 					}
 
 				]
@@ -269,11 +294,12 @@
 			this.getServerData();
 		},
 		methods: {
-			toPath (url, routeType) { // tab页面跳转
+			toPath (url, routeType, type) { // tab页面跳转
+				let router = `${url}?type=${type}`;
 				if (routeType === 1) {
-					this.$API.tab(url);
+					this.$API.tab(router);
 				} else {
-					this.$API.to(url);
+					this.$API.to(router);
 				}
 			},
 			getServerData() {
@@ -339,12 +365,6 @@
 					dataLabel: true,
 				});
 
-			},
-			clickModule(e) {
-				console.info(e)
-				uni.navigateTo({
-					url: e.currentTarget.id
-				});
 			}
 		}
 	}

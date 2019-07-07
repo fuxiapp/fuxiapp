@@ -8,7 +8,7 @@
 		</view>
 		<!-- 新增客户 -->
 		<view v-if="isShowAddCustomer">
-			<addCustomer :selPrivince="selPrivince"  :selCityInfo="selCityInfo"  :selCounty="selCounty" :cityType="cityType" :isShowCity="isShowCity" :selCityNameS="selCityNameS"  @selCity="selCity" @closeAlertCity="closeAlertCity" @okCityValue="okCityValue" @closeAdd="closeAdd" @saveCustomer="saveCustomer" >
+			<addCustomer :selPrivince="selPrivince"  :moduleType="moduleType" :selCityInfo="selCityInfo"  :selCounty="selCounty" :cityType="cityType" :isShowCity="isShowCity" :selCityNameS="selCityNameS"  @selCity="selCity" @closeAlertCity="closeAlertCity" @okCityValue="okCityValue" @closeAdd="closeAdd" @saveCustomer="saveCustomer" >
 			</addCustomer>
 		</view>
 	</view>
@@ -43,6 +43,8 @@
 				selPrivinceIndex: 0,
 				selCityIndex: 0,
 				selCountyIndex: 0,
+				moduleType: 1 // 0: 销售订单 1: 销售发货单
+				
 			}
 		},
 		onNavigationBarButtonTap(e) {
@@ -51,7 +53,8 @@
 		methods: {
 			
 		},
-		onLoad() {
+		onLoad(option) {
+			this.moduleType = option.type === undefined? 1 : parseInt(option.type);
 		},
 		methods: {
 			toStrore (id) { // 选择店仓

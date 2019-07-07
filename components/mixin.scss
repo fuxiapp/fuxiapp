@@ -39,15 +39,15 @@
 	 color: orange;
 }
 @mixin  cgh-alert-white ($width, $top, $left, $zIndex) {
-			width: $width;
-			background: #FFF;
-			display: black; 
-			position: fixed; 
-			top: $top; 
-			left: $left; 
-			z-index:  $zIndex; 
-			-webkit-overflow-scrolling: touch;
-	}
+		width: $width;
+		background: #FFF;
+		display: black; 
+		position: fixed; 
+		top: $top; 
+		left: $left; 
+		z-index:  $zIndex; 
+		-webkit-overflow-scrolling: touch;
+}
 @mixin cgh-alert-black {
 			display: black; 
 			position: fixed; 

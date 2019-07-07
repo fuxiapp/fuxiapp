@@ -1,0 +1,9 @@
+{
+  "navigationBarTitleText": "选择厂商",
+  "scrollIndicator": "none",
+  "usingComponents": {
+    "search": "/components/search",
+    "purchase-item": "/components/purchaseItem",
+    "add-customer": "/components/addCustomer"
+  }
+}

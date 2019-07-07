@@ -4,7 +4,8 @@ import api from './api';
 
 Vue.config.productionTip = false;
 Vue.prototype.$API = api;
-Vue.prototype.$URL = 'http://116.55.248.84:9090/';
+Vue.prototype.$URL = 'http://116.55.248.84:8090/images/';
+// Vue.prototype.$IMG = 'http://116.55.248.84:8090/images/';
 
 App.mpType = 'app'
 

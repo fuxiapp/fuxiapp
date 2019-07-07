@@ -1,0 +1,16 @@
+{
+  "navigationBarTitleText": "销售发货单",
+  "scrollIndicator": "none",
+  "titleNView": {
+    "buttons": [
+      {
+        "text": "首页",
+        "fontSize": "14"
+      }
+    ]
+  },
+  "bounce": "none",
+  "usingComponents": {
+    "goods-item": "/components/goodsItem"
+  }
+}

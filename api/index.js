@@ -74,23 +74,34 @@ const API = {
 		});
 	},
 	//图片上传
-	upload(success,fail){
-		let url = '';
-		// 获取网络类型
-		url = ``;
-		uni.chooseImage({
-			count:1,
-			 sourceType: ['album', 'camera'],
-			success: (chooseImageRes) => {
-				const tempFilePaths = chooseImageRes.tempFilePaths;
-				uni.uploadFile({
-					url: `${url}/upload/img`, 
-					filePath: tempFilePaths[0],
-					name: 'file',
-					success,
-					fail
-				});
-			}
+	upload(goodsCode=1){
+		return new Promise((resolve,reject) => {
+			let url = `http://116.55.248.84:9090/fuxi/common/upload-image?goodsCode=${goodsCode}`;
+			// 获取网络类型
+			uni.chooseImage({
+				count: 1,
+			    sizeType: ['original', 'compressed'], //可以指定是原图还是压缩图，默认二者都有
+				sourceType: ['album', 'camera'], //从相册选择
+				success: (res) => {
+					let imageSrc = res.tempFilePaths[0]
+					uni.uploadFile({
+						url: url,
+						filePath: imageSrc,
+						fileType: 'image',
+						name: 'file',
+						success: (res) => {
+							res.imageSrc = imageSrc;
+							resolve(res);
+						},
+						fail: (err) => {
+							resolve(err);
+						}
+					});
+				},
+				fail: (err) => {
+					reject(err);
+				}
+			})
 		});
 	},
 	// 底部导航栏切换

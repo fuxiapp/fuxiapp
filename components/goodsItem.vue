@@ -28,6 +28,10 @@
 			type: {
 				type: String,
 				default: '1'
+			},
+			moduleType: {
+				type: Number,
+				default: 0
 			}
 		},
 		data() {

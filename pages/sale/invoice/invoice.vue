@@ -2,12 +2,14 @@
 	<view class="v-invoice-view">
 		<view v-if="!iShowSelGoods">
 			<view class="search">
-				<searchLeft placeholderStr="货品编码/品名/条形码" type="1" @scanCode="scanCode" ></searchLeft>
+				<search v-if="moduleType === 4 || moduleType === 5" placeholderStr="店仓编码/店仓名称" type="2"></search>
+				<searchLeft v-else placeholderStr="货品编码/品名/条形码" type="1" @scanCode="scanCode" ></searchLeft>
 			</view>
 			<view class="list-con">
 				<goodsItem :list="infoList" type="1" @toPath="goEditGoods"></goodsItem>
 			</view>
-			<view class="btn" @click="selGoods" >已选货品</view>
+			<view class="btn" v-if="moduleType === 7" @click="selGoods" >已盘货品</view>
+			<view class="btn" v-else @click="selGoods" >已选货品</view>
 		</view>
 		<view  v-if="iShowSelGoods">
 			<view  class="ok-goods-con">
@@ -18,9 +20,9 @@
 		</view>
 	</view>
 </template>
-
 <script>
 	import searchLeft from '../../../components/searchLeft.vue';
+	import search from '../../../components/search.vue';
 	import goodsItem from '../../../components/goodsItem.vue';
 	export default {
 		data() {
@@ -51,15 +53,22 @@
 					{id:1},
 					{id:1}
 				],
-				iShowSelGoods: false
+				iShowSelGoods: false,
+				moduleType: 1 ,// main 模块
 			}
 		},
 		onShow() {
 			this.iShowSelGoods = false;
 		},
+		onLoad(option) {
+			let type = option.type;
+			if (type !== '' && type !== undefined) {
+				this.moduleType = parseInt(type);
+			}
+		},
 		methods: {
 			goEditGoods (id) {
-				this.$API.to(`../../sale/editGoods/editGoods?id=${id}`);
+				this.$API.to(`../../sale/editGoods/editGoods?id=${id}&type=${this.moduleType}`);
 			},
 			scanCode () { // 识别二维码
 				uni.scanCode({
@@ -77,7 +86,8 @@
 		},
 		components: {
 			searchLeft,
-			goodsItem
+			goodsItem,
+			search
 		}
 	}
 </script>

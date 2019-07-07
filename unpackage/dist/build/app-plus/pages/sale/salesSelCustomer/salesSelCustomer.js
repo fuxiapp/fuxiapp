@@ -1,0 +1,2 @@
+setCssToHead(["@charset \x22UTF-8\x22;\n.",[1],"v-sel-customer .",[1],"list-con { margin-top: ",[0,140],"; }\n",],undefined,{path:"./pages/sale/salesSelCustomer/salesSelCustomer.wxss"})();
+document.dispatchEvent(new CustomEvent("generateFuncReady", { detail: { generateFunc: $gwx('./pages/sale/salesSelCustomer/salesSelCustomer.wxml') } }));

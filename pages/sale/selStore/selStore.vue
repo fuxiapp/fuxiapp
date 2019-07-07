@@ -4,7 +4,7 @@
 			<search placeholderStr="店仓编码/店仓名称" type="2"></search>
 		</view>
 		<view class="list-con">
-			<searItem :list="infoList" type="2" @toPath="toInvoice"></searItem>
+			<searItem :moduleType="moduleType" :companyOrStrore="companyOrStrore" :list="infoList" type="2" @toPath="toInvoice"></searItem>
 		</view>
 	</view>
 </template>
@@ -24,12 +24,21 @@
 					{id:1},
 					{id:1},
 					{id:1}
-				]
+				],
+				moduleType: 1 ,// main 模块
+				companyOrStrore: 0
 			}
+		},
+		onLoad (option) {
+			this.moduleType = parseInt(option.type);
 		},
 		methods: {
 			toInvoice (id) { // 选择店仓
-				this.$API.to(`../../sale/invoice/invoice?id=${id}`);
+				if (this.moduleType === 2) { // 销售退货单
+					this.$API.to(`../../sale/salesSelCustomer/salesSelCustomer?id=${id}`);
+				} else {
+					this.$API.to(`../../sale/invoice/invoice?id=${id}&type=${this.moduleType}`);
+				}	
 			}
 		},
 		components: {

@@ -63,7 +63,8 @@
 			</view>
 			<view class="btn">
 				<view class="cel" @click="closeAdd">取消</view>
-				<view class="config" @click="saveCustomer">保存并返回</view>
+				<view class="config" v-if="moduleType === 1" @click="saveCustomer">保存并返回</view>
+				<view class="config" v-if="moduleType === 0" @click="goPlaceOrder">保存并下单</view>
 			</view>
 		</view>
 		
@@ -110,6 +111,10 @@
 				type: Number,
 				default: 0
 			},
+			moduleType: {
+				type: Number,
+				default: 1
+			},
 			selCityNameS: {}
 		},
 		data() {
@@ -135,6 +140,9 @@
 			},
 			saveCustomer () {
 				this.$emit('saveCustomer');
+			},
+			goPlaceOrder () {
+				this.$API.to(`../../sale/invoice/invoice?type={this.moduleType}`);
 			}
 		}
 		

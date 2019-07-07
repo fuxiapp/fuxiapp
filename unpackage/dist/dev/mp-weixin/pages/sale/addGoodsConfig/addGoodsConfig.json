@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "已盘货品",
+  "usingComponents": {
+    "goods-item": "/components/goodsItem"
+  }
+}

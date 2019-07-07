@@ -1,0 +1,87 @@
+{
+  "pages": [
+    "pages/login/login",
+    "pages/tab/main/main",
+    "pages/tab/possales/possales",
+    "pages/purchase/purchase",
+    "pages/tab/sales/sales",
+    "pages/tab/setting/setting",
+    "pages/tab/statistics/statistics",
+    "pages/salesOrder/salesOrder",
+    "pages/salesReturn/salesReturn",
+    "pages/purchaseOrder/purchaseOrder",
+    "pages/purchaseReturn/purchaseReturn",
+    "pages/stockMove/stockMove",
+    "pages/stocktaking/stocktaking",
+    "pages/stockIn/stockIn",
+    "pages/stockOut/stockOut",
+    "pages/goods/goodsList/goodsList",
+    "pages/department/department",
+    "pages/vip/vip",
+    "pages/employee/employee",
+    "pages/supplier/supplier",
+    "pages/color/color",
+    "pages/customer/customer",
+    "pages/receival/receival",
+    "pages/deduct/deduct",
+    "pages/receivalReport/receivalReport",
+    "pages/payment/payment",
+    "pages/supplierDeduct/supplierDeduct",
+    "pages/paymentReport/paymentReport",
+    "pages/goods/goodsAdd/goodsAdd",
+    "pages/sale/salesSelCustomer/salesSelCustomer",
+    "pages/sale/selStore/selStore",
+    "pages/sale/invoice/invoice",
+    "pages/sale/editGoods/editGoods",
+    "pages/sale/saleComfig/saleComfig",
+    "pages/sale/salesPurchase/salesPurchase",
+    "pages/sale/addGoodsConfig/addGoodsConfig",
+    "pages/sale/differenceGoodsCheck/differenceGoodsCheck",
+    "pages/sale/defferenceCheckConfig/defferenceCheckConfig"
+  ],
+  "subPackages": [],
+  "window": {
+    "navigationBarTextStyle": "white",
+    "navigationBarTitleText": "西奈移动应用",
+    "navigationBarBackgroundColor": "black",
+    "backgroundColor": "white"
+  },
+  "tabBar": {
+    "color": "#6C6C6C",
+    "selectedColor": "#54B0D5",
+    "backgroundColor": "#ffffff",
+    "list": [
+      {
+        "pagePath": "pages/tab/sales/sales",
+        "iconPath": "static/tabs/xs.png",
+        "selectedIconPath": "static/tabs/sel_xs.png",
+        "text": "销售"
+      },
+      {
+        "pagePath": "pages/tab/possales/possales",
+        "iconPath": "static/tabs/ls.png",
+        "selectedIconPath": "static/tabs/sel_ls.png",
+        "text": "零售"
+      },
+      {
+        "pagePath": "pages/tab/main/main",
+        "iconPath": "static/tabs/gzt.png",
+        "selectedIconPath": "static/tabs/sel_gzt.png",
+        "text": "工作台"
+      },
+      {
+        "pagePath": "pages/tab/statistics/statistics",
+        "iconPath": "static/tabs/tj.png",
+        "selectedIconPath": "static/tabs/sel_tj.png",
+        "text": "统计"
+      },
+      {
+        "pagePath": "pages/tab/setting/setting",
+        "iconPath": "static/tabs/sz.png",
+        "selectedIconPath": "static/tabs/sel_sz.png",
+        "text": "设置"
+      }
+    ]
+  },
+  "usingComponents": {}
+}

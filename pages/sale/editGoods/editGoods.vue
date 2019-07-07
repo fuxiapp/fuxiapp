@@ -82,11 +82,14 @@
 			</view>
 			<view class="cgh-alert-black" @click="isShowPrice = false"></view>
 		</view>
-		
-		<view class="footer">
+		<view class="one-btn" v-if= "moduleType === 7"  @click="toPath">
+			确定
+		</view>
+		<view class="footer" v-else>
 			<view class="left">20件<text>¥ 12000.00</text></view>
 			<view class="right" @click="toPath">确定</view>
 		</view>
+		
 	</view>
 </template>
 <script>
@@ -112,14 +115,28 @@
 				isShowPrice: false,
 				priceType: 0,
 				upTitle: '修改价格',
+				moduleType: 0,
+				id: ''
 			}
 		},
-		onLoad() {
+		onLoad(option) {
+			this.id = option.id;
+			let type = option.type;
+			if (type !== '' && type !== undefined) {
+				this.moduleType = parseInt(type);
+				if (this.moduleType === 7) {
+					uni.setNavigationBarTitle({	title: '录入货品'})
+				}
+			}
 			this.goodsInfo.price = this.decimalNumber(this.goodsInfo.price);
 		},
 		methods: {
 			toPath () {
-				this.$API.to('../../sale/saleComfig/saleComfig');
+				if (this.moduleType === 7) {
+					this.$API.to(`../../sale/addGoodsConfig/addGoodsConfig?id=${this.id}&type=${this.moduleType}`);
+				} else {
+					this.$API.to(`../../sale/saleComfig/saleComfig?id=${this.id}&type=${this.moduleType}`);
+				}
 			},
 			allAdd () { // 批量添加数量
 				this.allNumber++;
@@ -472,6 +489,19 @@
 				text-align: center;
 				color: #fff;
 			}
+		}
+		.one-btn {
+			width: 100%;
+			height: 100upx;
+			background: orange;
+			border-top: 1upx solid $boder-se;
+			position: fixed;
+			bottom: 0;
+			left: 0;
+			z-index: 2;
+			line-height: 100upx;
+			text-align: center;
+			color: #fff;
 		}
 	}
 </style>

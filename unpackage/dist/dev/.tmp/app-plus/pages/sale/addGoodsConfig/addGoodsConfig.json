@@ -1,0 +1,16 @@
+{
+  "navigationBarTitleText": "已盘货品",
+  "scrollIndicator": "none",
+  "titleNView": {
+    "buttons": [
+      {
+        "text": "差异",
+        "fontSize": "14"
+      }
+    ]
+  },
+  "bounce": "none",
+  "usingComponents": {
+    "goods-item": "/components/goodsItem"
+  }
+}

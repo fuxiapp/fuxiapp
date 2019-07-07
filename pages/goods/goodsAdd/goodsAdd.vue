@@ -2,7 +2,7 @@
 	<view class="v-add-goods-view">
 		<view class="v-goods-detail-top">
 			<view class="v-goods-img">
-				<image :src="goodImg"></image>
+				<image :src="goodImg" @click="uploadImg"></image>
 			</view>
 			<view class="v-goods-title">
 				<view class="v-goods-title-item">
@@ -11,7 +11,7 @@
 						<text>货号</text>
 					</view>
 					<view class="v-input">
-						<input type="text" :value="goodsCode" maxlength="200" />
+						<input type="text" v-model="goodsInfo.code" maxlength="200" />
 					</view>
 				</view>
 				<view class="v-goods-title-item">
@@ -20,16 +20,16 @@
 						<text>品名</text>
 					</view>
 					<view class="v-input">
-						<input type="text" :value="goodsName" />
+						<input type="text" v-model="goodsInfo.name" />
 					</view>
 				</view>
-				<view class="v-goods-title-item" @click="goSelRadio(1)">
+				<view class="v-goods-title-item" @click="opentType(1)">
 					<view class="v-input-title">
 						<text class="mark">*</text>
 						<text>类别</text>
 					</view>
 					<view class="v-input">
-						<input type="text" placeholder="请选择分类" :value="goodsInfo.className" disabled="true" />
+						<input type="text" placeholder="请选择分类" v-model="selRadioList.classType" disabled="true" />
 					</view>
 					<view class="v-right">
 						<image class="top-right" src="../../../static/base/right.png"></image>
@@ -38,37 +38,40 @@
 			</view>
 		</view>
 		<view class="v-goods-content">
-			<view class="v-goods-brand" @click="goSelRadio(2)">
+			<view class="v-goods-brand" @click="opentType(2)">
 				<view class="v-input-title">
 					<text>品牌</text>
 				</view>
 				<view class="v-input">
-					<input type="text" placeholder="请选择品牌" :value="goodsInfo.brandName" disabled="true" />
+					<input type="text" placeholder="请选择品牌" v-model="selRadioList.brandType" disabled="true" />
 					<image class="base-right" src="../../../static/base/right.png"></image>
 				</view>
 			</view>
-			<view class="v-goods-year">
+			<view class="v-goods-brand" @click="opentType(3)">
 				<view class="v-input-title">
 					<text>年份</text>
 				</view>
 				<view class="v-input">
-					<input type="text" :value="goodsYear" />
+					<input type="text" placeholder="请选择年份"  v-model="selRadioList.ageType" disabled="true" />
+					<image class="base-right" src="../../../static/base/right.png"></image>
 				</view>
 			</view>
-			<view class="v-goods-season">
+			<view class="v-goods-brand" @click="opentType(4)">
 				<view class="v-input-title">
 					<text>季节</text>
 				</view>
 				<view class="v-input">
-					<input type="text" :value="goodsSeason" />
+					<input type="text" placeholder="请选择季节"  v-model="selRadioList.seasonType" disabled="true" />
+					<image class="base-right" src="../../../static/base/right.png"></image>
 				</view>
 			</view>
-			<view class="v-goods-supplier">
+			<view class="v-goods-brand" @click="opentType(5)">
 				<view class="v-input-title">
 					<text>厂商</text>
 				</view>
 				<view class="v-input">
-					<input type="text" :value="supplier" disabled="true" />
+					<input type="text" placeholder="请选择厂商"  v-model="selRadioList.supplierType" disabled="true" />
+					<image class="base-right" src="../../../static/base/right.png"></image>
 				</view>
 			</view>
 			<view class="v-goods-supplier-code">
@@ -76,7 +79,7 @@
 					<text>厂商货号</text>
 				</view>
 				<view class="v-input">
-					<input type="text" :value="supplierCode" />
+					<input type="text" v-model="goodsInfo.suppliercode" />
 				</view>
 			</view>
 			<view class="v-goods-purchase-price">
@@ -84,7 +87,7 @@
 					<text>进货价</text>
 				</view>
 				<view class="v-input">
-					<input type="text" :value="purchasePrice" />
+					<input type="text"  v-model="goodsInfo.purchaseprice" />
 				</view>
 			</view>
 			<view class="v-goods-retail-sales">
@@ -92,7 +95,7 @@
 					<text>零售价</text>
 				</view>
 				<view class="v-input">
-					<input type="text" :value="retailSales" />
+					<input type="text" v-model="goodsInfo. retailsales" />
 				</view>
 			</view>
 			<view class="v-goods-trade-price">
@@ -100,24 +103,30 @@
 					<text>批发价</text>
 				</view>
 				<view class="v-input">
-					<input type="text" :value="tradePrice" />
+					<input type="text" v-model="goodsInfo.tradeprice" />
 				</view>
 			</view>
-			<view class="v-goods-goods-color">
+			<view class="v-goods-brand" @click="opentType(6)">
 				<view class="v-input-title">
 					<text>颜色</text>
 				</view>
 				<view class="v-input">
-					<input type="text" :value="goodsColor" />
+					<input type="text" placeholder="请选择颜色"  v-model="selRadioList.colorType" disabled="true" />
+					<image class="base-right" src="../../../static/base/right.png"></image>
 				</view>
 			</view>
 		</view>
-		<view class="v-save" >
+		<view class="v-save" @click="save" >
 			<text>保存</text>
 		</view>
 		<!-- 单选 -->
-		<view v-if="isShowRadio">
-			<radioItem :list="selRadioList" @closeAlert="closeAlert"  @okRadioValue="okRadioValue"></radioItem>
+		<view v-if="isShowType">
+			<radioItem v-if="typeNumber === 1" :list="classTypeInfo" @closeAlert="closeAlert"  @okRadioValue="okRadioValue"></radioItem>
+			<radioItem v-if="typeNumber === 2" :list="brandTypeInfo" @closeAlert="closeAlert"  @okRadioValue="okRadioValue"></radioItem>
+			<radioItem v-if="typeNumber === 3" :list="ageTypeInfo" @closeAlert="closeAlert"  @okRadioValue="okRadioValue"></radioItem>
+			<radioItem v-if="typeNumber === 4" :list="seasonTypeInfo" @closeAlert="closeAlert"  @okRadioValue="okRadioValue"></radioItem>
+			<radioItem v-if="typeNumber === 5" :list="supplierTypeInfo" @closeAlert="closeAlert"  @okRadioValue="okRadioValue"></radioItem>
+			<radioItem v-if="typeNumber === 6" :list="colorTypeInfo" @closeAlert="closeAlert"  @okRadioValue="okRadioValue"></radioItem>
 		</view>
 	</view>
 </template>
@@ -128,59 +137,162 @@
 		data() {
 			return {
 				goodImg: '/static/image/pic.jpg',
-				goodsCode: '0102003',
-				goodsName: '测试货品',
-				goodsType: '毛衣',
-				goodsBrand: '七匹狼',
-				goodsYear: '12',
-				goodsSeason: '春季',
-				supplier: '测试厂商',
-				supplierCode: '101010101',
-				purchasePrice: '99.5',
-				retailSales: '108',
-				tradePrice: '102',
-				goodsColor: '红色',
-				//
-				goodsInfo: {},
+				goodsInfo: {
+					goodsCode: '',
+					goodsName: '',
+					goodsType: '',
+					goodsBrand: '',
+					goodsYear: '',
+					goodsSeason: '',
+					supplier: '',
+					supplierCode: '101010101',
+					purchasePrice: '99.5',
+					retailSales: '108',
+					tradePrice: '102',
+					goodsColor: '红色',
+				},
 				isShowRadio: false,
-				selRadioType: 1,
-				selRadioList: [],
-				// 分类
-				selClassInfo: {},
-				classS: [
-					{id: 1,name: '上衣'},
-					{id: 2,name: '裙子'},
-					{id: 3,name: '裤子'}
-				],
-				brandS: [
-					{id: 1,name: '花花公子'},
-					{id: 2,name: '耐克'},
-					{id: 3,name: '香奈儿'},
-					{id: 4,name: '迪奥'}
-				]
+				selRadioList: {classType: '', brandType: '', ageType: '', seasonType: '', supplierType: '', colorType:''},
+				//
+				classTypeInfo: [],
+				brandTypeInfo: [],
+				ageTypeInfo: [],
+				seasonTypeInfo: [],
+				supplierTypeInfo: [],
+				colorTypeInfo: [],
+				isShowType: false,
+				typeNumber: 1
+				
 			}
 		},
 		methods: {
-			goSelRadio(type) { // 打开单选列表
-				this.selRadioType = type;
-				this.isShowRadio = true;
-				if (type === 1) {
-					this.selRadioList = this.classS;
-				} else if (type === 2) {
-					this.selRadioList = this.brandS;
-				}
-			},
 			closeAlert () {
-				this.isShowRadio = false;
+				this.isShowType = false;
 			},
-			okRadioValue (val) { // 确定选择类别/品牌
-				this.isShowRadio = false;
-				this.selClassInfo = val;
-				if (this.selRadioType === 1) {
-					this.goodsInfo.className = this.selClassInfo.name;
-				} else if (this.selRadioType === 2) {
-					this.goodsInfo.brandName = this.selClassInfo.name;
+			okRadioValue (val) { // 确定选择类别
+				this.isShowType = false;
+				if (this.typeNumber === 1) {
+					this.goodsInfo.goodstypeid = val.id;
+					this.selRadioList.classType = val.name;
+				} else if (this.typeNumber === 2) {
+					this.goodsInfo.brandid = val.id;
+					this.selRadioList.brandType = val.name;
+				} else if (this.typeNumber === 3) {
+					this.goodsInfo.age = val.id;
+					this.selRadioList.ageType = val.name;
+				} else if (this.typeNumber === 4) {
+					this.goodsInfo.season = val.id;
+					this.selRadioList.seasonType = val.name;
+				} else if (this.typeNumber === 5) {
+					this.goodsInfo.suppliercode = val.id;
+					this.selRadioList.supplierType = val.name;
+				} else if (this.typeNumber === 6) {
+					this.goodsInfo.colorid = val.id;
+					this.selRadioList.colorType = val.name;
 				}
+			},
+			uploadImg () { // 上传图片
+				this.$API.upload().then(res => {
+					this.goodImg = res.imageSrc;
+				});
+			},
+			opentType (index) { // 打开筛选类型
+				this.typeNumber = index;
+				this.isShowType = true;
+				if (index === 1) {
+					if (this.classTypeInfo.length > 0) {
+						return;
+					}
+					this.$API.get('/fuxi/select/query-goods-type').then(res => {
+						if (res.code === 'success') {
+							let arr = res.data;
+							for (let i = 0; i < arr.length; i++) {
+								let info = {id: arr[i].goodsTypeId, name: arr[i].goodsType, goodsTypeId: arr[i].goodsTypeId, flg: false};
+								this.classTypeInfo.push(info);
+							}
+							
+						}
+					});
+				} else if (index === 2) {
+					if (this.brandTypeInfo.length > 0) {
+						return;
+					}
+					this.$API.get('/fuxi/select/query-brand').then(res => {
+						if (res.code === 'success') {
+							let arr = res.data;
+							for (let i = 0; i < arr.length; i++) {
+								let info = {id: arr[i].brandId, name: arr[i].brand, flg: false};
+								this.brandTypeInfo.push(info);
+							}
+							
+						}
+					});
+				} else if (index === 3) {
+					if (this.ageTypeInfo.length > 0) {
+						return;
+					}
+					this.$API.get('/fuxi/select/query-age').then(res => {
+						if (res.code === 'success') {
+							let arr = res.data;
+							for (let i = 0; i < arr.length; i++) {
+								let info = {id: arr[i].age, name: arr[i].age, flg: false};
+								this.ageTypeInfo.push(info);
+							}
+						}
+					});
+				} else if (index === 4) {
+					if (this.seasonTypeInfo.length > 0) {
+						return;
+					}
+					this.$API.get('/fuxi/select/query-season').then(res => {
+						if (res.code === 'success') {
+							let arr = res.data;
+							for (let i = 0; i < arr.length; i++) {
+								let info = {id: arr[i].goodsTypeId, name: arr[i].season, flg: false};
+								this.seasonTypeInfo.push(info);
+							}
+							
+						}
+					});
+				} else if (index === 5) {
+					if (this.supplierTypeInfo.length > 0) {
+						return;
+					}
+					this.$API.get('/fuxi/select/query-supplier').then(res => {
+						if (res.code === 'success') {
+							let arr = res.data;
+							for (let i = 0; i < arr.length; i++) {
+								let info = {id: arr[i].supplierId, name: arr[i].supplier, flg: false};
+								this.supplierTypeInfo.push(info);
+							}
+							
+						}
+					});
+				} else if (index === 6) {
+					if (this.colorTypeInfo.length > 0) {
+						return;
+					}
+					this.$API.get('/fuxi/select/query-color').then(res => {
+						if (res.code === 'success') {
+							let arr = res.data;
+							for (let i = 0; i < arr.length; i++) {
+								let info = {id: arr[i].colorId, name: arr[i].color, flg: false};
+								this.colorTypeInfo.push(info);
+							}
+							
+						}
+					});
+				}
+			},
+			save () {
+				this.$API.post(' /fuxi/goods/add-goods', {goodsDTO: this.goodsInfo}).then(res => {
+					if (res.code === 'success') {
+						uni.showToast({
+							title: '保存成功!'
+						});	
+						this.$API.tab('../../tab/main/main');
+					}
+				});
 			}
 		},
 		components: {

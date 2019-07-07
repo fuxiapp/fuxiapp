@@ -1,0 +1,91 @@
+@charset "UTF-8";
+/* 颜色变量 */
+/* 行为相关颜色 */
+/* 文字基本颜色 */
+/* 背景颜色 */
+/* 边框颜色 */
+/* 尺寸变量 */
+/* 文字尺寸 */
+/* 图片尺寸 */
+/* Border Radius */
+/* 水平间距 */
+/* 垂直间距 */
+/* 透明度 */
+/* 文章场景相关 */
+/* 超出部分省略号 */
+.v-config-view .list-con {
+  width: 100%;
+  overflow: hidden;
+  background: #fff;
+  padding-bottom: 110rpx;
+}
+.v-config-view .list-con .list {
+    width: 92%;
+    overflow: hidden;
+    border-bottom: 1rpx solid #f4f4f4;
+    padding: 10rpx 4%;
+    line-height: 50rpx;
+}
+.v-config-view .list-con .list .name {
+      color: #333;
+      font-size: 30rpx;
+      overflow: hidden;
+      white-space: nowrap;
+      -o-text-overflow: ellipsis;
+         text-overflow: ellipsis;
+}
+.v-config-view .list-con .list .base-info {
+      display: -webkit-box;
+      display: -webkit-flex;
+      display: -ms-flexbox;
+      display: flex;
+      -webkit-box-pack: justify;
+      -webkit-justify-content: space-between;
+          -ms-flex-pack: justify;
+              justify-content: space-between;
+      font-size: 28rpx;
+      color: #333;
+}
+.v-config-view .list-con .list .price {
+      color: #427CAC;
+}
+.v-config-view .list-con .list .price text {
+        color: orange;
+        padding-right: 5rpx;
+}
+.v-config-view .footer {
+  width: 100%;
+  height: 100rpx;
+  background: #fff;
+  border-top: 1rpx solid #f4f4f4;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  z-index: 2;
+  font-size: 28rpx;
+  color: #333;
+  line-height: 100rpx;
+  font-weight: bold;
+}
+.v-config-view .footer .left {
+    margin-left: 4%;
+    width: 50%;
+}
+.v-config-view .footer .btn {
+    width: 50%;
+    text-align: center;
+}
+.v-config-view .footer text {
+    font-size: 34rpx;
+    color: #427CAC;
+    padding-left: 10rpx;
+}
+

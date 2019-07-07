@@ -7,7 +7,7 @@
 			</view>
 			<view class="v-content">
 				<view class="item-list" hover-class="uni-list-cell-hover" v-for="(item,index) in noInfo" v-if="index<4" :key="index"
-				 @tap="clickModule" v-bind:id="item.url">
+				@tap="clickModule(item.url)" v-bind:id="item.url">
 					<view class="v-item-img">
 						<image class="item-img" :src="item.icon" mode="aspectFit"></image>
 					</view>
@@ -16,7 +16,7 @@
 			</view>
 			<view class="v-content">
 				<view class="item-list" hover-class="uni-list-cell-hover" v-for="(item,index) in noInfo" v-if="index>3 && index<8"
-				 :key="index" @tap="clickModule" v-bind:id="item.url">
+				 :key="index" @tap="clickModule(item.url)" v-bind:id="item.url">
 					<view class="v-item-img">
 						<image class="item-img" :src="item.icon" mode="aspectFit"></image>
 					</view>
@@ -25,7 +25,7 @@
 			</view>
 			<view class="v-content">
 				<view class="item-list" hover-class="uni-list-cell-hover" v-for="(item,index) in noInfo" v-if="index>7 && index<12"
-				 :key="index" @tap="clickModule" v-bind:id="item.url">
+				 :key="index" @tap="clickModule(item.url)" v-bind:id="item.url">
 					<view class="v-item-img">
 						<image class="item-img" :src="item.icon" mode="aspectFit"></image>
 					</view>
@@ -40,7 +40,7 @@
 			<!-- 循环遍历 -->
 			<view class="v-content">
 				<view class="item-list" hover-class="uni-list-cell-hover" v-for="(item,index) in docInfo" v-if="index<4" :key="index"
-				 @tap="clickModule" v-bind:id="item.url">
+				@tap="clickModule(item.url)" v-bind:id="item.url">
 					<view class="v-item-img">
 						<image class="item-img" :src="item.icon" mode="aspectFit"></image>
 					</view>
@@ -49,7 +49,7 @@
 			</view>
 			<view class="v-content">
 				<view class="item-list" hover-class="uni-list-cell-hover" v-for="(item,index) in docInfo" v-if="index>3 && index<8"
-				 :key="index" @tap="clickModule" v-bind:id="item.url">
+				 :key="index" @tap="clickModule(item.url)" v-bind:id="item.url">
 					<view class="v-item-img">
 						<image class="item-img" :src="item.icon" mode="aspectFit"></image>
 					</view>
@@ -64,7 +64,7 @@
 			<!-- 循环遍历 -->
 			<view class="v-content">
 				<view class="item-list" hover-class="uni-list-cell-hover" v-for="(item,index) in receivalInfo" v-if="index<4" :key="index"
-				 @tap="clickModule" v-bind:id="item.url">
+				 @tap="clickModule(item.url)" v-bind:id="item.url">
 					<view class="v-item-img">
 						<image class="item-img" :src="item.icon" mode="aspectFit"></image>
 					</view>
@@ -73,7 +73,7 @@
 			</view>
 			<view class="v-content">
 				<view class="item-list" hover-class="uni-list-cell-hover" v-for="(item,index) in receivalInfo" v-if="index>3 && index<8"
-				 :key="index" @tap="clickModule" v-bind:id="item.url">
+				 :key="index" @tap="clickModule(item.url)" v-bind:id="item.url">
 					<view class="v-item-img">
 						<image class="item-img" :src="item.icon" mode="aspectFit"></image>
 					</view>
@@ -114,7 +114,7 @@
 				serverData: '',
 				noInfo: [{
 						icon: '/static/image/icon-tab-me-select.png',
-						url: '../salesOrder/salesOrder',
+						url: '../sale/salesSelCustomer/salesSelCustomer',
 						title: '销售订单'
 					},
 					{
@@ -241,6 +241,7 @@
 			};
 		},
 		onLoad() {
+			alert(1);
 			_self = this;
 			//#ifdef H5 || MP-ALIPAY || MP-BAIDU || MP-TOUTIAO
 			uni.getSystemInfo({
@@ -322,11 +323,9 @@
 				});
 
 			},
-			clickModule(e) {
-				console.info(e)
-				uni.navigateTo({
-					url: e.currentTarget.id
-				});
+			clickModule(url) {
+				console.log(121);
+				this.$API.to(url);
 			}
 		}
 	}

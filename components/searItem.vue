@@ -1,7 +1,7 @@
 <template>
 	<view class="cgh-search-item-childe">
 		<view class="info-con">
-			<view class="list" v-for="(v, index) in list" :key="index" @click="toPath(v.id)">
+			<view class="list" v-for="(v, index) in list" :key="index" @click="toPath(index)">
 				<view class="name" v-if="type === '1'">广州市伏羲计算机系统工程有限公司</view>
 				<view class="name" v-if="type === '2'">白马店</view>
 				<view class="class-type">
@@ -25,7 +25,16 @@
 			type: {
 				type: String,
 				default: '1'
-			}
+			},
+			moduleType: {
+				type: Number,
+				default: 1
+			},
+			companyOrStrore: {
+				type: Number,
+				default: 0 // 0: 公司 1:店面 
+			},
+			 
 		},
 		data() {
 			return {
@@ -79,7 +88,7 @@
 						@include cgh-right-img();
 						margin-left: 10upx;
 					}
-				}
+				}	
 			}
 		}
 	}

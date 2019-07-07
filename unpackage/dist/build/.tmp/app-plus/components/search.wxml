@@ -1,0 +1,1 @@
+<view class="cgh-search-childe data-v-672cc252"><view class="search-con data-v-672cc252"><view class="left data-v-672cc252"><image src="../../../static/base/search.png" class="data-v-672cc252"></image><input placeholder="{{placeholderStr}}" class="data-v-672cc252"/></view><view class="right data-v-672cc252">搜索</view></view></view>

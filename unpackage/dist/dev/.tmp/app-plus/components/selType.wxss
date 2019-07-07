@@ -1,0 +1,75 @@
+@charset "UTF-8";
+/* 颜色变量 */
+/* 行为相关颜色 */
+/* 文字基本颜色 */
+/* 背景颜色 */
+/* 边框颜色 */
+/* 尺寸变量 */
+/* 文字尺寸 */
+/* 图片尺寸 */
+/* Border Radius */
+/* 水平间距 */
+/* 垂直间距 */
+/* 透明度 */
+/* 文章场景相关 */
+/* 超出部分省略号 */
+.cgh-type-childe.data-v-3a8d061b {
+  width: 100%;
+  overflow: hidden;
+}
+.cgh-type-childe .cgh-black.data-v-3a8d061b {
+    display: black;
+    position: fixed;
+    top: 0%;
+    left: 0%;
+    width: 100%;
+    height: 100%;
+    background-color: black;
+    z-index: 2;
+    -moz-opacity: 0.5;
+    opacity: .80;
+    filter: alpha(opacity=88);
+}
+.cgh-type-childe .cgh-white.data-v-3a8d061b {
+    width: 100%;
+    height: 70%;
+    background: #fff;
+    display: black;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    z-index: 3;
+    -webkit-overflow-scrolling: touch;
+}
+.cgh-type-childe .cgh-white .cgh-white-con.data-v-3a8d061b {
+      width: 92%;
+      height: 85%;
+      margin: 0rpx auto;
+      overflow: scroll;
+}
+.cgh-type-childe .cgh-white .cgh-white-con .item.data-v-3a8d061b {
+        float: left;
+        padding: 10rpx 30rpx;
+        border: 1rpx solid #f4f4f4;
+        margin-top: 30rpx;
+        margin-right: 30rpx;
+}
+.cgh-type-childe .cgh-white .cgh-white-con .check-item.data-v-3a8d061b {
+        background: #427CAC !important;
+        color: #fff !important;
+}
+.cgh-type-childe .cgh-white .btn.data-v-3a8d061b {
+      width: 100%;
+      height: 100rpx;
+      position: fixed;
+      left: 0;
+      bottom: 0;
+      z-index: 3;
+      font-size: 34rpx;
+      border-top: 1rpx solid #f4f4f4;
+      background: #427CAC;
+      text-align: center;
+      line-height: 100rpx;
+      color: #fff;
+}
+

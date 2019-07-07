@@ -1,0 +1,25 @@
+{
+  "navigationBarTitleText": "货品管理",
+  "scrollIndicator": "none",
+  "bounce": "none",
+  "titleNView": {
+    "buttons": [
+      {
+        "fontSrc": "/static/iconfont.ttf",
+        "text": "",
+        "fontSize": "24px",
+        "color": "#FFFFFF"
+      },
+      {
+        "fontSrc": "/static/iconfont.ttf",
+        "text": "",
+        "fontSize": "24px",
+        "color": "#FFFFFF"
+      }
+    ]
+  },
+  "usingComponents": {
+    "uni-load-more": "/components/uni/uni-load-more/uni-load-more",
+    "sel-type": "/components/selType"
+  }
+}
