@@ -84,10 +84,10 @@
 		</view>
 		<uni-load-more :status="status" :content-text="contentText" />
 		<view class="sel-type" v-if="isShowType">
-			<selType v-if="typeNumber === 1" :classTypeInfo="classTypeInfo" @onType="onType" @okType="okType"></selType>
-			<selType v-if="typeNumber === 2" :classTypeInfo="AgeTypeInfo" @onType="onType" @okType="okType"></selType>
-			<selType v-if="typeNumber === 3" :classTypeInfo="seasonTypeInfo" @onType="onType" @okType="okType"></selType>
-			<selType v-if="typeNumber === 4" :classTypeInfo="supplierTypeInfo" @onType="onType" @okType="okType"></selType>
+			<selType v-if="typeNumber === 1" :classTypeInfo="classTypeInfo" @onType="onType" @okType="okType" @resetType="resetType"></selType>
+			<selType v-if="typeNumber === 2" :classTypeInfo="AgeTypeInfo" @onType="onType" @okType="okType" @resetType="resetType"></selType>
+			<selType v-if="typeNumber === 3" :classTypeInfo="seasonTypeInfo" @onType="onType" @okType="okType" @resetType="resetType" ></selType>
+			<selType v-if="typeNumber === 4" :classTypeInfo="supplierTypeInfo" @onType="onType" @okType="okType" @resetType="resetType"></selType>
 		</view>
 	</scroll-view>
 </template>
@@ -139,6 +139,7 @@
 				this.getList();
 			},
 			getList() { // 获取货品列表
+				console.log(this.isShowType);
 				this.countPage = 0;
 				this.listData = [];
 				this.last_id = '';
@@ -197,14 +198,34 @@
 			},
 			onType (index) { // 选择类型
 				if (this.typeNumber === 1) {
-					this.classTypeInfo[index].flg = !this.classTypeInfo[index].flg ;
+					this.classTypeInfo[index].flg = !this.classTypeInfo[index].flg;
 				} else if (this.typeNumber === 2) {
-					this.AgeTypeInfo[index].flg = !this.AgeTypeInfo[index].flg ;
+					this.AgeTypeInfo[index].flg = !this.AgeTypeInfo[index].flg;
 				} else if (this.typeNumber === 3) {
-					this.seasonTypeInfo[index].flg = !this.seasonTypeInfo[index].flg ;
+					this.seasonTypeInfo[index].flg = !this.seasonTypeInfo[index].flg;
 				} else if (this.typeNumber === 4) {
-					this.supplierTypeInfo[index].flg = !this.supplierTypeInfo[index].flg ;
+					this.supplierTypeInfo[index].flg = !this.supplierTypeInfo[index].flg;
 				}
+			},
+			resetType () { // 重置筛选类型
+				if (this.typeNumber === 1) {
+					for (let i = 0; i < this.classTypeInfo.length; i++) {
+						this.classTypeInfo[i].flg = false;
+					}
+				} else if (this.typeNumber === 2) {
+					for (let i = 0; i < this.AgeTypeInfo.length; i++) {
+						this.AgeTypeInfo[i].flg = false;
+					}
+				} else if (this.typeNumber === 3) {
+					for (let i = 0; i < this.seasonTypeInfo.length; i++) {
+						this.seasonTypeInfo[i].flg = false;
+					}
+				} else if (this.typeNumber === 4) {
+					for (let i = 0; i < this.supplierTypeInfo.length; i++) {
+						this.supplierTypeInfo[i].flg = false;
+					}
+				}
+				this.getList();
 			},
 			opentType (index) { // 打开筛选类型
 				this.typeNumber = index;

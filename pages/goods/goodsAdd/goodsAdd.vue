@@ -1,42 +1,42 @@
 <template>
 	<view class="v-add-goods-view">
-		<view class="v-goods-detail-top">
-			<view class="v-goods-img">
-				<image :src="goodImg" @click="uploadImg"></image>
+		<view class="cgh-head-con">
+			<view class="left">
+				<view class="goods-img" @click="uploadImg">
+					<image :src="goodImg"></image>
+				</view>
 			</view>
-			<view class="v-goods-title">
-				<view class="v-goods-title-item">
-					<view class="v-input-title">
-						<text class="mark">*</text>
-						<text>货号</text>
+			<view class="right">
+				<view class="head-item">
+					<view class="head-title">
+						<text class="mark">*</text>货号
 					</view>
-					<view class="v-input">
-						<input type="text" v-model="goodsInfo.code" maxlength="200" />
-					</view>
-				</view>
-				<view class="v-goods-title-item">
-					<view class="v-input-title">
-						<text class="mark">*</text>
-						<text>品名</text>
-					</view>
-					<view class="v-input">
-						<input type="text" v-model="goodsInfo.name" />
+					<view class="head-val">
+						<input type="text" placeholder="请输入货号" v-model="goodsInfo.code" maxlength="100" />
 					</view>
 				</view>
-				<view class="v-goods-title-item" @click="opentType(1)">
-					<view class="v-input-title">
-						<text class="mark">*</text>
-						<text>类别</text>
+				<view class="head-item">
+					<view class="head-title">
+						<text class="mark">*</text>品名
 					</view>
-					<view class="v-input">
-						<input type="text" placeholder="请选择分类" v-model="selRadioList.classType" disabled="true" />
+					<view class="head-val">
+						<input type="text" placeholder="请输入品名" v-model="goodsInfo.name" maxlength="100" />
 					</view>
-					<view class="v-right">
-						<image class="top-right" src="../../../static/base/right.png"></image>
+				</view>
+				<view class="head-item">
+					<view class="head-title">
+						<text class="mark">*</text>类别
+					</view>
+					<view class="head-val"  @click="opentType(1)">
+						<input type="text" placeholder="请选择类别" disabled v-model="selRadioList.classType" maxlength="100" />
+					</view>
+					<view class="top-right">
+						<image src="../../../static/base/right.png"></image>
 					</view>
 				</view>
 			</view>
 		</view>
+		
 		<view class="v-goods-content">
 			<view class="v-goods-brand" @click="opentType(2)">
 				<view class="v-input-title">
@@ -79,7 +79,7 @@
 					<text>厂商货号</text>
 				</view>
 				<view class="v-input">
-					<input type="text" v-model="goodsInfo.suppliercode" />
+					<input type="text" placeholder="请输入厂商货号" v-model="goodsInfo.suppliercode" />
 				</view>
 			</view>
 			<view class="v-goods-purchase-price">
@@ -87,7 +87,7 @@
 					<text>进货价</text>
 				</view>
 				<view class="v-input">
-					<input type="text"  v-model="goodsInfo.purchaseprice" />
+					<input type="text" placeholder="请输入进货价"   v-model="goodsInfo.purchaseprice" />
 				</view>
 			</view>
 			<view class="v-goods-retail-sales">
@@ -95,7 +95,7 @@
 					<text>零售价</text>
 				</view>
 				<view class="v-input">
-					<input type="text" v-model="goodsInfo. retailsales" />
+					<input type="text" placeholder="请输入零售价"   v-model="goodsInfo.retailsales" />
 				</view>
 			</view>
 			<view class="v-goods-trade-price">
@@ -103,7 +103,7 @@
 					<text>批发价</text>
 				</view>
 				<view class="v-input">
-					<input type="text" v-model="goodsInfo.tradeprice" />
+					<input type="text" placeholder="请输入批发价"  v-model="goodsInfo.tradeprice" />
 				</view>
 			</view>
 			<view class="v-goods-brand" @click="opentType(6)">
@@ -116,7 +116,7 @@
 				</view>
 			</view>
 		</view>
-		<view class="v-save" @click="save" >
+		<view class="v-save" v-if="!isShowType" @click="save" >
 			<text>保存</text>
 		</view>
 		<!-- 单选 -->
@@ -126,18 +126,21 @@
 			<radioItem v-if="typeNumber === 3" :list="ageTypeInfo" @closeAlert="closeAlert"  @okRadioValue="okRadioValue"></radioItem>
 			<radioItem v-if="typeNumber === 4" :list="seasonTypeInfo" @closeAlert="closeAlert"  @okRadioValue="okRadioValue"></radioItem>
 			<radioItem v-if="typeNumber === 5" :list="supplierTypeInfo" @closeAlert="closeAlert"  @okRadioValue="okRadioValue"></radioItem>
-			<radioItem v-if="typeNumber === 6" :list="colorTypeInfo" @closeAlert="closeAlert"  @okRadioValue="okRadioValue"></radioItem>
+			<radioItem v-if="typeNumber === 96" :list="colorTypeInfo" @closeAlert="closeAlert"  @okRadioValue="okRadioValue"></radioItem>
+			<selType v-if="typeNumber === 6" :classTypeInfo="colorTypeInfo" @onType="onType" @okType="okType" :moduleType="moduleType"></selType>
 		</view>
 	</view>
 </template>
 
 <script>
 	import radioItem from '../../../components/radioItem.vue';
+	import selType from '../../../components/selType.vue';
 	export default {
 		data() {
 			return {
-				goodImg: '/static/image/pic.jpg',
+				goodImg: '../../../static/err_img.png',
 				goodsInfo: {
+					id: '',
 					goodsCode: '',
 					goodsName: '',
 					goodsType: '',
@@ -161,9 +164,12 @@
 				supplierTypeInfo: [],
 				colorTypeInfo: [],
 				isShowType: false,
-				typeNumber: 1
+				typeNumber: 1,
+				moduleType: 10
 				
 			}
+		},
+		onLoad() {
 		},
 		methods: {
 			closeAlert () {
@@ -192,9 +198,33 @@
 				}
 			},
 			uploadImg () { // 上传图片
+				if (this.goodsInfo.id === '') {
+					uni.showToast({
+						title: '请先保存商品信息!',
+						icon:'none'
+					});
+					return;
+				}
 				this.$API.upload().then(res => {
 					this.goodImg = res.imageSrc;
 				});
+			},
+			onType (index) { // 选择颜色
+				this.colorTypeInfo[index].flg = !this.colorTypeInfo[index].flg ;
+			},
+			okType () { // 确定选择颜色
+				this.isShowType = false;
+				let selArr = '';
+				let id = '';
+				for (let i = 0; i < this.colorTypeInfo.length; i++) {
+					if (this.colorTypeInfo[i].flg === true) {
+					
+						selArr = selArr +  this.colorTypeInfo[i].name + ',';
+						id = id +  this.colorTypeInfo[i].id + ',';
+					}
+				}
+				this.selRadioList.colorType = selArr;
+				this.goodsInfo.id = val.id;
 			},
 			opentType (index) { // 打开筛选类型
 				this.typeNumber = index;
@@ -296,7 +326,8 @@
 			}
 		},
 		components: {
-			radioItem
+			radioItem,
+			selType
 		}
 	}
 </script>
@@ -308,11 +339,54 @@
 		overflow: hidden;
 		background: #fff;
 		font-size: 30upx;
-		.top-right {
-			padding-bottom: 25upx;
-			padding-right: 20upx;
-			@include cgh-right-img();
+		// 头部
+		.cgh-head-con {
+			width: 94%;
+			overflow: hidden;
+			margin-left: 3%;
+			display: flex;
+			justify-items: center;
+			align-content: center;
+			.left {
+				width: 33%;
+				margin-right: 2%;
+				image {
+					width: 98%;
+					height: 220upx;
+					vertical-align: middle;
+				}
+			}
+			.right{
+				width: 64%;
+				overflow: hidden;
+				color: #333;
+				font-size: 28upx;
+				.head-item {
+					display: flex;
+					align-content: center;
+					.head-title {
+						width: 15%;
+						line-height: 80upx;
+					}
+					.head-val {
+						width: 78%;
+						input {
+							width: 100%;
+						}
+					}
+				}
+				.top-right {
+					width: 5%;
+					margin-left: 2%;
+					image {
+						@include cgh-right-img();
+						vertical-align: middle;
+						margin-top: 30upx;
+					}
+				}
+			}
 		}
+		
 		.base-right {
 				margin-left: 20upx;
 				@include cgh-right-img();

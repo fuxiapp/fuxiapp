@@ -8,8 +8,9 @@
 						{{item.name}}
 					</view>
 				</view>
-				<view class="btn" @click="okType">
-					确定
+				<view class="btn" >
+					<view class="reset" @click="resetType">重置</view>
+					<view class="config" @click="okType">确定</view>
 				</view>
 			</view>
 		</view>
@@ -58,6 +59,9 @@
 			},
 			okType (index) { // 关闭选择类型
 				this.$emit('okType');
+			},
+			resetType () {
+				this.$emit('resetType');
 			}
 		}
 		
@@ -112,6 +116,15 @@
 				text-align: center;
 				line-height: 100upx;
 				color: #fff;
+				display: flex;
+				view {
+					width: 50%;
+					height: 100%;
+				}
+				.reset {
+					background: #fff;
+					color: black;
+				}
 			}
 		}
 	}
