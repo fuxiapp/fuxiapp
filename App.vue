@@ -18,6 +18,8 @@
 
 	page {
 		background-color: #F2F2F2;
+		font-size: 28upx;
+		color: #333;;
 	}
 
 	/* @font-face {

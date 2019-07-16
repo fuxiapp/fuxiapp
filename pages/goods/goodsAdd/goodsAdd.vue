@@ -12,7 +12,8 @@
 						<text class="mark">*</text>货号
 					</view>
 					<view class="head-val">
-						<input type="text" placeholder="请输入货号" v-model="goodsInfo.code" maxlength="100" />
+						<input type="text" v-if="goodsId === '' || goodsId === undefined || goodsId === null " placeholder="请输入货号" v-model="goodsInfo.code" maxlength="100" />
+						<input type="text " v-else placeholder="请输入货号" disabled v-model="goodsInfo.code" maxlength="100" />
 					</view>
 				</view>
 				<view class="head-item">
@@ -36,7 +37,6 @@
 				</view>
 			</view>
 		</view>
-		
 		<view class="v-goods-content">
 			<view class="v-goods-brand" @click="opentType(2)">
 				<view class="v-input-title">
@@ -44,8 +44,8 @@
 				</view>
 				<view class="v-input">
 					<input type="text" placeholder="请选择品牌" v-model="selRadioList.brandType" disabled="true" />
-					<image class="base-right" src="../../../static/base/right.png"></image>
 				</view>
+				<view class="content-right"><image class="base-right" src="../../../static/base/right.png"></image></view>
 			</view>
 			<view class="v-goods-brand" @click="opentType(3)">
 				<view class="v-input-title">
@@ -53,8 +53,8 @@
 				</view>
 				<view class="v-input">
 					<input type="text" placeholder="请选择年份"  v-model="selRadioList.ageType" disabled="true" />
-					<image class="base-right" src="../../../static/base/right.png"></image>
 				</view>
+				<view class="content-right"><image class="base-right" src="../../../static/base/right.png"></image></view>
 			</view>
 			<view class="v-goods-brand" @click="opentType(4)">
 				<view class="v-input-title">
@@ -62,8 +62,8 @@
 				</view>
 				<view class="v-input">
 					<input type="text" placeholder="请选择季节"  v-model="selRadioList.seasonType" disabled="true" />
-					<image class="base-right" src="../../../static/base/right.png"></image>
 				</view>
+				<view class="content-right"><image class="base-right" src="../../../static/base/right.png"></image></view>
 			</view>
 			<view class="v-goods-brand" @click="opentType(5)">
 				<view class="v-input-title">
@@ -71,10 +71,10 @@
 				</view>
 				<view class="v-input">
 					<input type="text" placeholder="请选择厂商"  v-model="selRadioList.supplierType" disabled="true" />
-					<image class="base-right" src="../../../static/base/right.png"></image>
 				</view>
+				<view class="content-right"><image class="base-right" src="../../../static/base/right.png"></image></view>
 			</view>
-			<view class="v-goods-supplier-code">
+			<view class="v-goods-brand">
 				<view class="v-input-title">
 					<text>厂商货号</text>
 				</view>
@@ -82,15 +82,15 @@
 					<input type="text" placeholder="请输入厂商货号" v-model="goodsInfo.suppliercode" />
 				</view>
 			</view>
-			<view class="v-goods-purchase-price">
+			<view class="v-goods-brand">
 				<view class="v-input-title">
 					<text>进货价</text>
 				</view>
 				<view class="v-input">
-					<input type="text" placeholder="请输入进货价"   v-model="goodsInfo.purchaseprice" />
+					<input type="text" placeholder="请输入进货价"  v-model="goodsInfo.purchasePrice" />
 				</view>
 			</view>
-			<view class="v-goods-retail-sales">
+			<view class="v-goods-brand">
 				<view class="v-input-title">
 					<text>零售价</text>
 				</view>
@@ -98,12 +98,12 @@
 					<input type="text" placeholder="请输入零售价"   v-model="goodsInfo.retailsales" />
 				</view>
 			</view>
-			<view class="v-goods-trade-price">
+			<view class="v-goods-brand">
 				<view class="v-input-title">
 					<text>批发价</text>
 				</view>
 				<view class="v-input">
-					<input type="text" placeholder="请输入批发价"  v-model="goodsInfo.tradeprice" />
+					<input type="text" placeholder="请输入批发价"  v-model="goodsInfo.tradePrice" />
 				</view>
 			</view>
 			<view class="v-goods-brand" @click="opentType(6)">
@@ -112,8 +112,8 @@
 				</view>
 				<view class="v-input">
 					<input type="text" placeholder="请选择颜色"  v-model="selRadioList.colorType" disabled="true" />
-					<image class="base-right" src="../../../static/base/right.png"></image>
 				</view>
+				<view class="content-right"><image class="base-right" src="../../../static/base/right.png"></image></view>
 			</view>
 		</view>
 		<view class="v-save" v-if="!isShowType" @click="save" >
@@ -126,8 +126,7 @@
 			<radioItem v-if="typeNumber === 3" :list="ageTypeInfo" @closeAlert="closeAlert"  @okRadioValue="okRadioValue"></radioItem>
 			<radioItem v-if="typeNumber === 4" :list="seasonTypeInfo" @closeAlert="closeAlert"  @okRadioValue="okRadioValue"></radioItem>
 			<radioItem v-if="typeNumber === 5" :list="supplierTypeInfo" @closeAlert="closeAlert"  @okRadioValue="okRadioValue"></radioItem>
-			<radioItem v-if="typeNumber === 96" :list="colorTypeInfo" @closeAlert="closeAlert"  @okRadioValue="okRadioValue"></radioItem>
-			<selType v-if="typeNumber === 6" :classTypeInfo="colorTypeInfo" @onType="onType" @okType="okType" :moduleType="moduleType"></selType>
+			<selType v-if="typeNumber === 6" :selTypeChidenItem="selTypeChidenItem" :classTypeInfo="colorTypeInfo" @onType="onType" @resetType="resetType"  @closeMoreType="closeMoreType" @okType="okType" :moduleType="moduleType"></selType>
 		</view>
 	</view>
 </template>
@@ -135,24 +134,25 @@
 <script>
 	import radioItem from '../../../components/radioItem.vue';
 	import selType from '../../../components/selType.vue';
+	import { pricePass } from '../../../components/filter/index.js';
 	export default {
 		data() {
 			return {
 				goodImg: '../../../static/err_img.png',
 				goodsInfo: {
-					id: '',
-					goodsCode: '',
-					goodsName: '',
-					goodsType: '',
-					goodsBrand: '',
-					goodsYear: '',
-					goodsSeason: '',
-					supplier: '',
-					supplierCode: '101010101',
-					purchasePrice: '99.5',
-					retailSales: '108',
-					tradePrice: '102',
-					goodsColor: '红色',
+					  age: "",
+					  brandid: "",
+					  code: "",
+					  goodscolor: "",
+					  goodsid: "",
+					  goodstypeid: "",
+					  name: "",
+					  purchasePrice: '',
+					  retailsales:'',
+					  season: "",
+					  suppliercode:"",
+					  supplierid: "",
+					  tradePrice: ''
 				},
 				isShowRadio: false,
 				selRadioList: {classType: '', brandType: '', ageType: '', seasonType: '', supplierType: '', colorType:''},
@@ -165,13 +165,32 @@
 				colorTypeInfo: [],
 				isShowType: false,
 				typeNumber: 1,
-				moduleType: 10
-				
+				moduleType: 10,
+				selTypeChidenItem: [],
+				goodsId: '',
+				url: '/fuxi/goods/add-goods',
+				typeRq: 1 // 1: 新增 2: 修改
 			}
 		},
-		onLoad() {
+		onLoad(option) {
+			 this.goodsId = option.id;
+			// this.goodsId = '019W7';
+			if (this.goodsId !== '' && this.goodsId !== undefined && this.goodsId !== null) {
+				this.url = '/fuxi/goods/update-goods';
+				this.typeRq = 2;
+				this.getDetailsInfo();
+			}
 		},
 		methods: {
+			getDetailsInfo () { // 获取商品详情
+				this.$API.get('/fuxi/goods/query-goods', {goodsId: this.goodsId}).then(res => {
+					if (res.code === 'success') { 
+						this.goodsInfo = res.data;
+						this.goodImg = this.$URL + res.data.code + '.jpg';
+						this.selRadioList = {classType: res.data.goodsType, brandType: res.data.brand, ageType: res.data.age, seasonType: res.data.season, supplierType: res.data.supplierName, colorType: res.data.goodscolorName};
+					}
+				});
+			},
 			closeAlert () {
 				this.isShowType = false;
 			},
@@ -190,11 +209,8 @@
 					this.goodsInfo.season = val.id;
 					this.selRadioList.seasonType = val.name;
 				} else if (this.typeNumber === 5) {
-					this.goodsInfo.suppliercode = val.id;
+					this.goodsInfo.supplierid = val.id;
 					this.selRadioList.supplierType = val.name;
-				} else if (this.typeNumber === 6) {
-					this.goodsInfo.colorid = val.id;
-					this.selRadioList.colorType = val.name;
 				}
 			},
 			uploadImg () { // 上传图片
@@ -210,6 +226,7 @@
 				});
 			},
 			onType (index) { // 选择颜色
+				this.selTypeChidenItem.push(index);
 				this.colorTypeInfo[index].flg = !this.colorTypeInfo[index].flg ;
 			},
 			okType () { // 确定选择颜色
@@ -218,13 +235,17 @@
 				let id = '';
 				for (let i = 0; i < this.colorTypeInfo.length; i++) {
 					if (this.colorTypeInfo[i].flg === true) {
-					
-						selArr = selArr +  this.colorTypeInfo[i].name + ',';
-						id = id +  this.colorTypeInfo[i].id + ',';
+						if (selArr === '') {
+							selArr = selArr + this.colorTypeInfo[i].name;
+							id = id + this.colorTypeInfo[i].id;
+						} else {
+							selArr = selArr + ','+ this.colorTypeInfo[i].name;
+							id = id + ','+ this.colorTypeInfo[i].id;
+						}
 					}
 				}
+				this.goodsInfo.goodscolor = id;
 				this.selRadioList.colorType = selArr;
-				this.goodsInfo.id = val.id;
 			},
 			opentType (index) { // 打开筛选类型
 				this.typeNumber = index;
@@ -314,15 +335,126 @@
 					});
 				}
 			},
+			closeMoreType () { // 关闭多选
+				let list = this.selTypeChidenItem;
+				for (let i = 0; i < list.length; i++) {
+					this.colorTypeInfo[list[i]].flg = false;
+				}
+				this.okType();
+			},
+			resetType () {// 重置多选
+				for (let i = 0; i < this.colorTypeInfo.length; i++) {
+					this.colorTypeInfo[i].flg = false;
+				}
+				this.okType();
+			},
 			save () {
-				this.$API.post(' /fuxi/goods/add-goods', {goodsDTO: this.goodsInfo}).then(res => {
-					if (res.code === 'success') {
+				if (this.goodsInfo.code === '' || this.goodsInfo.code === undefined || this.goodsInfo.code === null ) {
+					uni.showToast({
+						title: '请输入货号',
+						icon: 'none'
+					});
+					return;
+				}
+				if (this.goodsInfo.name === '' || this.goodsInfo.name === undefined || this.goodsInfo.code === null) {
+					uni.showToast({
+						title: '请输入品名',
+						icon: 'none'
+					});
+					return;
+				}
+				if (this.goodsInfo.goodstypeid === '' || this.goodsInfo.goodstypeid === undefined || this.goodsInfo.goodstypeid === null) {
+					uni.showToast({
+						title: '请输入类别',
+						icon: 'none'
+					});
+					return;
+				}
+				let purchasePrice = this.goodsInfo.purchasePrice;
+				if (purchasePrice !== '' && purchasePrice !== undefined && purchasePrice !== null ) {
+					if (!pricePass(purchasePrice)) {
 						uni.showToast({
-							title: '保存成功!'
-						});	
-						this.$API.tab('../../tab/main/main');
+							title: '请输入正确的进货价!',
+							icon: 'none'
+						});
+						return;
+					}
+				}
+				let retailsales = this.goodsInfo.retailsales;
+				if (retailsales !== '' && retailsales !== undefined && retailsales !== null ) {
+					if (!pricePass(retailsales)) {
+						uni.showToast({
+							title: '请输入正确的零售价!',
+							icon: 'none'
+						});
+						return;
+					}
+				}
+				let tradePrice = this.goodsInfo.tradePrice;
+				if (tradePrice !== '' && tradePrice !== undefined && tradePrice !== null ) {
+					if (!pricePass(tradePrice)) {
+						uni.showToast({
+							title: '请输入正确的批发价!',
+							icon: 'none'
+						});
+						return;
+					}
+				}
+				let method = 'POST';
+				if (this.typeRq === 2) {
+					method = 'PUT'
+				}
+				this.$API.post(this.url, this.goodsInfo, method).then(res => {
+					console.log(res);
+					if (res.code === 'success') {
+						if (this.typeRq === 2) {
+							uni.showToast({
+								title: '编辑成功!'
+							});	
+							setTimeout(() => {
+								this.$API.to('../../goods/goodsList/goodsList');
+							}, 2000)
+						} else {
+							uni.showToast({
+								title: '添加成功!'
+							});	
+							this.resetData();
+						}
 					}
 				});
+			},
+			resetData () {
+				this.goodImg = '../../../static/err_img.png';
+				this.goodsInfo =  {
+					  age: "",
+					  brandid: "",
+					  code: "",
+					  goodscolor: "",
+					  goodsid: "",
+					  goodstypeid: "",
+					  name: "",
+					  purchasePrice: '',
+					  retailsales:'',
+					  season: "",
+					  suppliercode:"",
+					  supplierid: "",
+					  tradePrice: ''
+				};
+				this.isShowRadio = false;
+				this.selRadioList = {classType: '', brandType: '', ageType: '', seasonType: '', supplierType: '', colorType:''};
+				this.classTypeInfo = [];
+				this.brandTypeInfo =  [];
+				this.ageTypeInfo = [];
+				this.seasonTypeInfo = [];
+				this.supplierTypeInfo = [];
+				this.colorTypeInfo = [];
+				this.isShowType = false;
+				this.typeNumber = 1;
+				this.moduleType = 10;
+				this.selTypeChidenItem = [];
+				this.goodsId = '';
+				this.url = '/fuxi/goods/add-goods';
+				this.typeRq = 1;
 			}
 		},
 		components: {
@@ -347,6 +479,7 @@
 			display: flex;
 			justify-items: center;
 			align-content: center;
+			padding-top: 20upx;
 			.left {
 				width: 33%;
 				margin-right: 2%;
@@ -357,13 +490,14 @@
 				}
 			}
 			.right{
-				width: 64%;
+				width: 66%;
 				overflow: hidden;
 				color: #333;
 				font-size: 28upx;
 				.head-item {
 					display: flex;
 					align-content: center;
+					border-bottom: 1upx solid $boder-se;
 					.head-title {
 						width: 15%;
 						line-height: 80upx;
@@ -386,88 +520,48 @@
 				}
 			}
 		}
-		
 		.base-right {
-				margin-left: 20upx;
-				@include cgh-right-img();
+			margin-left: 20upx;
+			@include cgh-right-img();
 		}
-		.v-goods-detail-top {
-			display: flex;
-			flex-direction: row;
-			height: 240upx;
+		// 中间内容
+		.v-goods-content {
 			width: 100%;
-			padding: 10upx 0upx;
-			border-bottom: 2upx solid #F6F6F6;
-			background-color: #FFFFFF;
-		}
-		
-		.v-goods-img {
-			margin-left: 15upx;
-			height: 240upx;
-			width: 35%;
-		}
-		
-		.v-goods-img image {
-			width: 100%;
-			height: 100%;
-			border: 1upx solid #F6F6F6;
-		}
-		
-		.v-goods-title {
-			height: 240upx;
-			width: 65%;
-		}
-		
-		.v-goods-title view {
-			height: 80upx;
-			line-height: 80upx;
-			border-bottom: 2upx solid #F6F6F6;
-			display: flex;
-			flex-direction: row;
-			align-items: flex-end;
-			justify-content: flex-end;
-		}
-		.v-goods-title view:last-child {
-			border-bottom: 0upx;
-		}
-		.v-goods-title view:nth-of-type(1) {
-			border-bottom: 0upx;
-		}
-		.v-input-title {
-			width: 20%;
-			margin-left: 15upx;
-		}
-		
-		.v-input {
-			width: 80%;
-			margin-right: 30upx;
-			text-align: right;
-			input {
-				width: 92%;
+			overflow: hidden;
+			padding-bottom: 110upx;
+			.v-goods-brand view:last-child {
+				border-bottom: 0upx;
+			}
+			.v-goods-brand {
+				width: 100%;
+				overflow: hidden;
+				display: flex;
+				align-items: center;
+				border-bottom: 1upx solid $boder-se;
+				.v-input-title {
+					width: 20%;
+					margin-left: 15upx;
+					line-height: 100upx;
+				}
+				.v-input {
+					width: 69%;
+					height: 100upx;
+					margin-top: 20upx;
+					input {
+						width: 100%;
+					}
+				}
+				.content-right {
+					width: 5%;
+					image {
+						margin-right: 20upx;
+					}
+				}
 			}
 		}
-		
 		.mark {
 			color: red;
 		}
-		
-		.v-goods-content {
-			background-color: #FFFFFF;
-			margin-top: 15upx;
-			margin-bottom: 180upx;
-		}
-		
-		.v-goods-content view {
-			height: 100upx;
-			width: 100%;
-			line-height: 100upx;
-			border-bottom: 2upx solid #F6F6F6;
-			display: flex;
-			flex-direction: row;
-			align-items: center;
-			justify-content: flex-start;
-		}
-		
 		.v-save {
 			background-color: #FFFFFF;
 			position: fixed;
@@ -483,12 +577,10 @@
 			line-height: 90upx;
 			z-index: 9;
 		}
-		
 		input {
 			text-align: right;
 			height: 80upx;
 			line-height: 80upx;
 		}
-		
 	}
 </style>

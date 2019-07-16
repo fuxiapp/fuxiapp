@@ -131,8 +131,7 @@
 								icon: 'none',
 								duration: 2500,
 								success: () => {
-									let timer = setTimeout(() => {
-										clearInterval(timer);
+									setTimeout(() => {
 										this.$API.tab('../tab/main/main');
 									}, 2000);
 								}

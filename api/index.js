@@ -3,74 +3,97 @@ const API = {
 		return new Promise((resolve,reject) => {
 			// 获取网络类型
 			url = `http://116.55.248.84:9090${url}`;
-			uni.request({
-				url,
-				method: method,
-				data: data,
-				header:{ //自定义请求头信息
-					'content-type': 'application/x-www-form-urlencoded',
-				},
+			let tokenId = '';
+			uni.getStorage({
+				key: 'fuxiUserInfo',
 				success: (res) => {
-					let data = res.data;
-					if(data.code === 'success') {
-						resolve(data);
-					} else if (data.code === 'no-login') {
-						uni.navigateTo({
-							url: '../../login/login'
-						});
-					} else {
+					console.log(res.data.onlineId);
+					tokenId = res.data.onlineId;
+				}
+			})
+			setTimeout(() => {
+				uni.request({
+					url,
+					method: method,
+					data: data,
+					header:{ //自定义请求头信息
+						'content-type': 'application/x-www-form-urlencoded',
+						"tokenId": tokenId
+					},
+					success: (res) => {
+						let data = res.data;
+						if(data.code === 'success') {
+							resolve(data);
+						} else if (data.code === 'no-login') {
+							uni.navigateTo({
+								url: '../../login/login'
+							});
+						} else {
+							console.log(JSON.stringify(data));
+							uni.showToast({
+								title: '' + data.msg,
+								icon: 'none'
+							});
+							resolve(data);
+						}	
+					},
+					fail: (err) => {
 						uni.showToast({
-							title: '' + data.msg,
+							title:'请求异常',
 							icon: 'none'
 						});
-						resolve(data);
-					}	
-				},
-				fail: (err) => {
-					uni.showToast({
-						title:'请求异常',
-						icon: 'none'
-					});
-					reject(err);
-				}
-			});
+						reject(err);
+					}
+				});
+			}, 10);
+		
 		});
 	},
-	post(url, data = {}){ 	// post请求
+	post(url, data = {}, method ='POST'){ 	// post请求
 		return new Promise((resolve,reject) => {
 			// 获取网络类型
 			url = `http://116.55.248.84:9090${url}`;
-			uni.request({
-				url,
-				data,
-				method: 'POST',
-				header:{ //自定义请求头信息
-					'content-type': 'application/json'
-				},
+			let tokenId = '';
+			uni.getStorage({
+				key: 'fuxiUserInfo',
 				success: (res) => {
-					let data = res.data;
-					if( data.code === 'success' ){
-						resolve(data);
-					} else if (data.code === 'no-login') {
-						uni.navigateTo({
-							url: '../../login/login'
-						});
-					}  else{
-						uni.showToast({
-							title: '' + data.message,
-							icon: 'none'
-						});
-						resolve(data);
-					}	
-				},
-				fail: (err) => {
-					uni.showToast({
-						title:'请求异常',
-						icon: 'none'
-					});
-					reject(err);
+					tokenId = res.data.onlineId;
 				}
 			});
+			setTimeout(() => {
+				uni.request({
+					url,
+					data,
+					method: method,
+					header:{ //自定义请求头信息
+						'content-type': 'application/json',
+						"tokenId": tokenId
+					},
+					success: (res) => {
+						let data = res.data;
+						if( data.code === 'success' ){
+							resolve(data);
+						} else if (data.code === 'no-login') {
+							uni.navigateTo({
+								url: '../../login/login'
+							});
+						}  else{
+							uni.showToast({
+								title: '' + data.message,
+								icon: 'none'
+							});
+							resolve(data);
+						}	
+					},
+					fail: (err) => {
+						uni.showToast({
+							title:'请求异常',
+							icon: 'none'
+						});
+						reject(err);
+					}
+				});
+			}, 10);
 		});
 	},
 	//图片上传

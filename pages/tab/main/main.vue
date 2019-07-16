@@ -44,36 +44,46 @@
 		</view>
 		<view class="bac-line"></view>
 		<!--数据统计  -->
-		<view class="info">
-			<view class="info-con">
-				<view class="title">商品销售统计</view>
-				<view class="qiun-charts">
-					<!--#ifdef H5 || MP-ALIPAY || MP-BAIDU || MP-TOUTIAO-->
-					<canvas canvas-id="canvasRing" id="canvasRing" class="charts" :style="{'width':cWidth*pixelRatio+'px','height':cHeight*pixelRatio+'px', 'transform': 'scale('+(1/pixelRatio)+')','margin-left':-cWidth*(pixelRatio-1)/2+'px','margin-top':-cHeight*(pixelRatio-1)/2+'px'}"></canvas>
-					<!--#endif-->
-					<!--#ifdef MP-WEIXIN || APP-PLUS -->
-					<canvas canvas-id="canvasRing" id="canvasRing" class="charts"></canvas>
-					<!--#endif-->
+		<view class="qiun-columns">
+			<view class="usharts-title">
+				<view class="title-name">商品销售统计</view>
+				<view class="date-con">
+					2018-11.13-2018.11.12<image src="../../../static/base/down.png"></image>
 				</view>
 			</view>
+			<view class="qiun-charts">
+				<!--#ifndef MP-ALIPAY -->
+				<canvas canvas-id="canvasRing" id="canvasRing" class="charts"></canvas>
+				<!--#endif-->
+			</view>
 		</view>
+		
+		<view v-if="isDateShow">
+			<view class="cgh-black" @click="closeMask"></view>
+			<view class="cgh-white">
+				<view class="calendar-box">
+					<uni-calendar :lunar="checkedFlg" :fixed-heihgt="checkedFlg" :slide="checkedFlg" :disable-before="checkedFlg" :start-date="startDate" :end-date="endDate" :date="date" @change="change" @to-click="toClick" />
+					<view class="calendar-button-groups">
+						<button class="calendar-button-confirm" @click="closeMask">取消</button>
+						<button class="calendar-button-confirm" @click="confirm">确认</button>
+					</view>
+				</view>
+			</view>
+			
 		</view>
 	</view>
 </template>
 
 <script>
-	import wxCharts from '../../../components/wxcharts.js';
+	import uCharts from '../../../components/u-charts.js';
+	import uniCalendar from '../../../components/uni-calendar/uni-calendar.vue';
 	var _self;
-	var canvaColumn = null;
-	var canvaLineA = null;
-	var canvaLineB = null;
-	var canvaArea = null;
-	var canvaGauge = null;
 	export default {
 		data() {
 			return {
 				cWidth: '',
 				cHeight: '',
+				cHeight3: '', //圆弧进度图
 				pixelRatio: 1,
 				serverData: '',
 				noInfo: [{
@@ -273,22 +283,18 @@
 						type: 23
 					}
 
-				]
+				],
+				isDateShow: true,
+				slide: 'none',
+				date: '',
+				startDate: '',
+				endDate: '',
+				timeData: {},
+				checkedFlg: false
 			};
 		},
 		onLoad() {
 			_self = this;
-			//#ifdef H5 || MP-ALIPAY || MP-BAIDU || MP-TOUTIAO
-			uni.getSystemInfo({
-				success: function(res) {
-					if (res.pixelRatio > 1) {
-						//正常这里给2就行，如果pixelRatio=3性能会降低一点
-						//_self.pixelRatio =res.pixelRatio;
-						_self.pixelRatio = 2;
-					}
-				}
-			});
-			//#endif
 			this.cWidth = uni.upx2px(750);
 			this.cHeight = uni.upx2px(500);
 			this.getServerData();
@@ -303,40 +309,44 @@
 				}
 			},
 			getServerData() {
+				uni.showLoading({
+					title: "正在加载数据..."
+				})
 				uni.request({
-					url: 'https://www.easy-mock.com/mock/5cc586b64fc5576cba3d647b/uni-wx-charts/chartsdata',
+					url: 'https://unidemo.dcloud.net.cn/hello-uniapp-ucharts-data.json',
 					data: {},
 					success: function(res) {
-						console.log(res.data.data)
-						//下面这个根据需要保存后台数据，我是为了模拟更新柱状图，所以存下来了
-						_self.serverData = res.data.data;
-						let Ring = {
-							series: []
-						};
-						//这里的series数据是后台做好的，如果您的数据没有和前面我注释掉的格式一样，请自行拼接数据
-						Ring.series = res.data.data.Ring.series;
-						//自定义文案示例，需设置format字段
-						for (let i = 0; i < Ring.series.length; i++) {
-							Ring.series[i].format = () => {
-								return Ring.series[i].name + Ring.series[i].data
-							};
-						}
-						//实例化图表前，请先检查您的数据是否为空，空数据会造成客户端卡死
-						if (Ring.series.length > 0) {
-							_self.showRing("canvasRing", Ring);
-						}
+						_self.fillData(res.data);
 					},
 					fail: () => {
-						console.log("数据获取失败！")
+						_self.tips = "网络错误，小程序端请检查合法域名";
 					},
+					complete() {
+						uni.hideLoading();
+					}
 				});
 			},
+			fillData(data) {
+				this.serverData = data;
+				let Ring = {
+					series: []
+				};
+				Ring.series = data.Ring.series;
+				//自定义文案示例，需设置format字段
+				for (let i = 0; i < Ring.series.length; i++) {
+					Ring.series[i].format = () => {
+						return Ring.series[i].name + Ring.series[i].data
+					};
+				}
+				this.showRing("canvasRing", Ring);
+			},
 			showRing(canvasId, chartData) {
-				new wxCharts({
+				new uCharts({
+					$this: _self,
 					canvasId: canvasId,
 					type: 'ring',
 					fontSize: 11,
-					legend: true,
+					legend: false,
 					title: {
 						name: '70%',
 						color: '#7cb5ec',
@@ -350,8 +360,9 @@
 						offsetY: 30 * _self.pixelRatio, //新增参数，自定义调整Y轴文案距离
 					},
 					extra: {
-						ringWidth: 40 * _self.pixelRatio, //圆环的宽度
 						pie: {
+							lableWidth: 15,
+							ringWidth: 40 * _self.pixelRatio, //圆环的宽度
 							offsetAngle: -45 //圆环的角度
 						}
 					},
@@ -364,9 +375,26 @@
 					disablePieStroke: true,
 					dataLabel: true,
 				});
-
-			}
-		}
+			
+			},
+			change(e) {
+				console.log('change 返回:', e.fulldate)
+				this.timeData = e
+			},
+			toClick(e) {
+				console.log('点击事件', e.fulldate)
+				this.timeData = e
+			},
+			confirm() {
+				this.show = false;
+			},
+			closeMask() {
+				this.checkedFlg = false;
+			},
+		},
+		components: {
+			uniCalendar
+		},
 	}
 </script>
 
@@ -382,16 +410,13 @@
 			background: #fff;
 			padding-bottom: 30upx;
 			.info-con {
-				width: 92%;
+				width: 100%;
 				overflow: hidden;
 				margin: 0upx auto;
-				.title {
-					@include tab-title();
-					border-bottom: 1upx solid $boder-se;
-				}
 				.list-con {
-					width: 100%;
+					width: 92%;
 					overflow: hidden;
+						margin: 0upx auto;
 					display: flex;
 					justify-content: flex-start;
 					align-items: center;
@@ -442,36 +467,67 @@
 		}
 		.bac-line {
 			@include bac-line(20upx);
+		
+		}
+		.cgh-black {
+			@include cgh-alert-black();
+		}
+		.cgh-white {
+			width: 80%;
+			height: 60%;
+			background: #fff;
+			display: black; 
+			position: fixed; 
+			left: 10%;
+			top: 10%;
+			z-index: 3;
+			-webkit-overflow-scrolling: touch;
 		}
 	}
-	/* 报表样式 */
-	.v-data-statistics {
-		.qiun-charts {
-			width: 750upx;
-			height: 500upx;
-			background-color: #FFFFFF;
-		}
-		
-		.charts {
-			width: 750upx;
-			height: 500upx;
-			background-color: #FFFFFF;
-		}
-		
-		/* 圆弧进度样式 */
-		.qiun-charts3 {
-			width: 750upx;
-			height: 250upx;
-			background-color: #FFFFFF;
-			position: relative;
-		}
-		
-		.charts3 {
-			position: absolute;
-			width: 250upx;
-			height: 250upx;
-			background-color: #FFFFFF;
-		}
+	.title {
+		background: #fff;
+		@include tab-title();
+		border-bottom: 1upx solid $boder-se;
+		padding-left: 4%;
+	}
 	
+	/* 报表样式 */
+	.usharts-title {
+		width: 100%;
+		overflow: hidden;
+		background: #fff;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		border-bottom: 1upx solid $boder-se;
+		.title-name {
+			width: 30%;
+			margin-left: 4%;
+			background: #fff;
+			@include tab-title();
+		}
+		image {
+			width: 30upx;
+			height: 30upx;
+			vertical-align: middle;
+			margin-left: 10upx;
+		}
+		.date-con {
+			font-size: 28upx;
+			color: #333;
+			margin-left: 20upx;
+			margin-right: 20upx;
+		}
+			
+	}
+	.qiun-charts {
+		width: 750upx;
+		height: 500upx;
+		background-color: #FFFFFF;
+	}
+	.charts {
+		width: 750upx;
+		height: 500upx;
+		background-color: #FFFFFF;
 	}
 </style>

@@ -1,7 +1,7 @@
 <template>
 	<view class="cgh-type-childe">
 		<view>
-			<view class="cgh-black"></view>
+			<view class="cgh-black" @click="closeMoreType"></view>
 			<view class="cgh-white">
 				<view class="cgh-white-con" >
 					<view v-for="(item, index) in classTypeInfo"  :key="index" :class="item.flg === true ? 'item check-item' : 'item'" @click="onType(index)">
@@ -44,7 +44,11 @@
 				type: Number,
 				default: 1
 			},
-			selCityNameS: {}
+			selCityNameS: {},
+			selTypeChidenItem: {
+				type: Array,
+				default: []
+			}
 		},
 		data() {
 			return {
@@ -54,7 +58,7 @@
 			
 		},
 		methods: {
-			onType (index) { // 选择类型
+			onType (index, flg) { // 选择类型
 				this.$emit('onType', index);
 			},
 			okType (index) { // 关闭选择类型
@@ -62,6 +66,9 @@
 			},
 			resetType () {
 				this.$emit('resetType');
+			},
+			closeMoreType() {
+				this.$emit('closeMoreType');
 			}
 		}
 		
@@ -92,11 +99,16 @@
 				margin: 0upx auto;
 				overflow: scroll;
 				.item {
+					width: 27%;
+					height: 65upx;
+					padding: 0upx 5upx;
+					line-height: 65upx;
 					float: left;
-					padding: 10upx 30upx;
 					border: 1upx solid $boder-se;
 					margin-top: 30upx;
 					margin-right: 30upx;
+					text-align: center;
+					@include lineEllipsis(1);
 				}
 				.check-item {
 					background: $themeColor!important;

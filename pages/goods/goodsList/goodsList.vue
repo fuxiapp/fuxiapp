@@ -52,8 +52,8 @@
 		</view>
 		<view class="v-goods-list" scroll-x="false" scroll-y="true">
 			<!-- #ifdef MP-WEIXIN -->
-			<button style="background: #0077AA;" @click="scoInfo">扫描</button>
-			<button style="background: #0077AA;" @click="toAddGoods">添加</button>
+			<!-- <button style="background: #0077AA;" @click="scoInfo">扫描</button>
+			<button style="background: #0077AA;" @click="toAddGoods">添加</button> -->
 			<!-- #endif -->
 			<view class="v-goods" v-for="(goods,index) in listData" :key="index">
 				<view class="v-goods-top">
@@ -71,11 +71,11 @@
 					</view>
 				</view>
 				<view class="v-goods-bottom">
-					<view class="share-goods">
+					<view class="share-goods"  @click="share(index)">
 						<text>&#xe61a;</text>
 						<text>&nbsp;推广</text>
 					</view>
-					<view class="edit-goods">
+					<view class="edit-goods" @click="toPath(1, goods.goodsid)">
 						<text>&#xe626;</text>
 						<text>&nbsp;编辑</text>
 					</view>
@@ -84,14 +84,13 @@
 		</view>
 		<uni-load-more :status="status" :content-text="contentText" />
 		<view class="sel-type" v-if="isShowType">
-			<selType v-if="typeNumber === 1" :classTypeInfo="classTypeInfo" @onType="onType" @okType="okType" @resetType="resetType"></selType>
-			<selType v-if="typeNumber === 2" :classTypeInfo="AgeTypeInfo" @onType="onType" @okType="okType" @resetType="resetType"></selType>
-			<selType v-if="typeNumber === 3" :classTypeInfo="seasonTypeInfo" @onType="onType" @okType="okType" @resetType="resetType" ></selType>
-			<selType v-if="typeNumber === 4" :classTypeInfo="supplierTypeInfo" @onType="onType" @okType="okType" @resetType="resetType"></selType>
+			<selType v-if="typeNumber === 1" :selTypeChidenItem="selTypeChidenItem" :classTypeInfo="classTypeInfo" @onType="onType" @okType="okType" @resetType="resetType" @closeMoreType="closeMoreType"></selType>
+			<selType v-if="typeNumber === 2" :selTypeChidenItem="selTypeChidenItem" :classTypeInfo="AgeTypeInfo" @onType="onType" @okType="okType" @resetType="resetType" @closeMoreType="closeMoreType"></selType>
+			<selType v-if="typeNumber === 3" :selTypeChidenItem="selTypeChidenItem" :classTypeInfo="seasonTypeInfo" @onType="onType" @okType="okType" @resetType="resetType" @closeMoreType="closeMoreType" ></selType>
+			<selType v-if="typeNumber === 4" :selTypeChidenItem="selTypeChidenItem" :classTypeInfo="supplierTypeInfo" @onType="onType" @okType="okType" @resetType="resetType" @closeMoreType="closeMoreType"  ></selType>
 		</view>
 	</scroll-view>
 </template>
-
 <script>
 	import uniLoadMore from '../../../components/uni/uni-load-more/uni-load-more.vue';
 	import selType from '../../../components/selType.vue';
@@ -115,7 +114,8 @@
 				seasonTypeInfo: [],
 				supplierTypeInfo: [],
 				isShowType: false,
-				typeNumber: 1
+				typeNumber: 1,
+				selTypeChidenItem: []
 			}
 		},
 		onReachBottom() { // 页面下拉 
@@ -123,6 +123,7 @@
 			this.getMoreInfo();
 		},
 		onLoad() {
+			// this.$API.to('../../login/login');
 			this.getList();
 		},
 		onNavigationBarButtonTap (e) {
@@ -138,8 +139,38 @@
 				this.para.keyword = '';
 				this.getList();
 			},
+			toPath (type, id) {
+				let url = '';
+				if (type === 1) { // 编辑商品
+					url = 	`../../goods/goodsAdd/goodsAdd?id=${id}`;
+				}
+				this.$API.to(url);
+			},
+			share (index) {
+				let info = this.listData[index];
+				uni.share({
+					provider: "weixin",
+					scene: "WXSceneSession",
+					type: 0,
+					href: "https://www.baidu.com/",
+					title: '西奈应用',
+					summary: info.name,
+					imageUrl: info.image,
+					success: (res) =>  {
+						uni.showToast({
+							title: '分享成功!',
+							icon: 'none'
+						});
+					},
+					fail: (err) =>  {
+						uni.showToast({
+							title: '' + JSON.stringify(err),
+							icon: 'none'
+						});
+					}
+				});
+			},
 			getList() { // 获取货品列表
-				console.log(this.isShowType);
 				this.countPage = 0;
 				this.listData = [];
 				this.last_id = '';
@@ -184,12 +215,15 @@
 				});
 			},
 			sortPrice() { // 价格排序
-				if (this.priceByType === 0 || this.priceByType === 2) {
+				if (this.priceByType === 0) {
 					this.priceByType = 1;
 					this.para.orderBy = 'retailsales asc';
 				} else if (this.priceByType === 1) {
 					this.priceByType = 2;
 					this.para.orderBy = 'retailsales desc';
+				} else if (this.priceByType === 2) {
+					this.priceByType = 0;
+					this.para.orderBy = '';
 				}
 				this.getList();
 			},
@@ -197,6 +231,7 @@
                 this.listData[index].image = '../../../static/err_img.png';  
 			},
 			onType (index) { // 选择类型
+				this.selTypeChidenItem.push(index);
 				if (this.typeNumber === 1) {
 					this.classTypeInfo[index].flg = !this.classTypeInfo[index].flg;
 				} else if (this.typeNumber === 2) {
@@ -225,11 +260,33 @@
 						this.supplierTypeInfo[i].flg = false;
 					}
 				}
-				this.getList();
+				this.okType();
+			},
+			closeMoreType () { // 关闭多选
+				let list = this.selTypeChidenItem;
+				if (this.typeNumber === 1) {
+					for (let i = 0; i < list.length; i++) {
+						this.classTypeInfo[list[i]].flg = false;
+					}
+				} else if (this.typeNumber === 2) {
+					for (let i = 0; i < list.length; i++) {
+						this.AgeTypeInfo[list[i]].flg = false;
+					}
+				} else if (this.typeNumber === 3) {
+					for (let i = 0; i < list.length; i++) {
+						this.seasonTypeInfo[list[i]].flg = false;
+					}
+				} else if (this.typeNumber === 4) {
+					for (let i = 0; i < list.length; i++) {
+						this.supplierTypeInfo[list[i]].flg = false;
+					}
+				}
+				this.okType();
 			},
 			opentType (index) { // 打开筛选类型
 				this.typeNumber = index;
 				this.isShowType = true;
+				this.selTypeChidenItem = [];
 				if (index === 1) {
 					if (this.classTypeInfo.length > 0) {
 						return;
@@ -266,7 +323,7 @@
 						if (res.code === 'success') {
 							let arr = res.data;
 							for (let i = 0; i < arr.length; i++) {
-								let info = {name: arr[i].season, goodsTypeId: arr[i].goodsTypeId, flg: false};
+								let info = {name: arr[i].season, goodsTypeId: '', flg: false};
 								this.seasonTypeInfo.push(info);
 							}
 							
@@ -294,29 +351,46 @@
 				if (this.typeNumber === 1) {
 					for (let i = 0; i < this.classTypeInfo.length; i++) {
 						if (this.classTypeInfo[i].flg === true) {
-							selArr = selArr +  this.classTypeInfo[i].name + ',';
+							if (selArr === '') {
+								selArr = this.classTypeInfo[i].goodsTypeId;
+							} else {
+								selArr = selArr + ',' + this.classTypeInfo[i].goodsTypeId;
+							}
 						}
 					}
 					this.para.goodsType = selArr;
 				} else if (this.typeNumber === 2) {
 					for (let i = 0; i < this.AgeTypeInfo.length; i++) {
 						if (this.AgeTypeInfo[i].flg) {
-							selArr = selArr + this.AgeTypeInfo[i].name + ',';
+							if (selArr === '') {
+								selArr = this.AgeTypeInfo[i].name;
+							} else {
+								selArr = selArr + ',' + this.AgeTypeInfo[i].name;
+							}
 						}
 					}
 					this.para.age = selArr;
 				} else if (this.typeNumber === 3) {
 					for (let i = 0; i < this.seasonTypeInfo.length; i++) {
-						if (this.seasonTypeInfo[i].flg) {
-							selArr = selArr +  this.seasonTypeInfo[i].name + ',';
+						if (this.seasonTypeInfo[i].flg) { 
+							if (selArr === '') {
+								selArr = this.seasonTypeInfo[i].name;
+							} else {
+								selArr = selArr + ',' + this.seasonTypeInfo[i].name;
+							}
 						}
 					}
 					this.para.season = selArr;
 				} else if (this.typeNumber === 4) {
 					for (let i = 0; i < this.supplierTypeInfo.length; i++) {
-						if (this.supplierTypeInfo[i].flg) {
-							selArr = selArr +  this.supplierTypeInfo[i].name + ',';
+						if (this.supplierTypeInfo[i].flg) { 
+							if (selArr === '') {
+								selArr = this.supplierTypeInfo[i].supplierId;
+							} else {
+								selArr = selArr + ',' + this.supplierTypeInfo[i].supplierId;
+							}
 						}
+						
 					}
 					this.para.supplier = selArr;
 				} 
@@ -325,6 +399,7 @@
 			scoInfo () {
 				uni.scanCode({
 					success: (res) => {
+						console.log(res);
 						this.$API.get('	/fuxi/barcode/barcode-parsing', {barcode: res.result}).then(res => {
 							if (res.code === 'success') {
 							}
@@ -394,32 +469,33 @@
 					display: flex;
 					justify-content: space-around;
 					.title {
-						line-height: 80upx;
+						line-height: 85upx;
 					}
 					.icon {
 						width: 50upx;
 						height: 50upx;
 						image {
-							width: 40upx;
-							height: 40upx;
+							width: 25upx;
+							height: 25upx;
 							vertical-align: middle;
-							margin-top: 25upx;
+							margin-top: 32upx;
 						}
 					}
 					.price-title {
-						line-height: 75upx;
+						line-height: 80upx;
 					}
 					.icon-price {
 						width: 50upx;
 						height: 50upx;
 						clear: both;
+						margin-top: 14upx;
 						view {
 							width: 30upx;
-							height: 30upx;
+							height: 20upx;
 						}
 						image {
-							width: 30upx;
-							height: 30upx;
+							width: 20upx;
+							height: 20upx;
 						}
 					}
 				}
@@ -435,7 +511,7 @@
 			background-color: #FFFFFF;
 			margin-top: 10upx;
 			width: 100%;
-			height: 210upx;
+			overflow: hidden;
 		}
 		
 		.v-goods-top {
@@ -446,23 +522,29 @@
 		}
 		
 		.v-goods-bottom {
-			width: 100%;
-			height: 50upx;
-			display: flex;
-			flex-direction: row;
+			width: 94%;
+			overflow: hidden;
+			padding: 20upx 0upx;
 			font-size: 32upx;
 			line-height: 50upx;
 			color: #427CAC;
 			border-top: 3upx solid #F2F2F2;
-		}
-		
-		.v-goods-bottom view {
-			width: 50%;
-			font-family: iconfont;
-		}
-		
-		.share-goods {
-			margin-left: 30upx;
+			clear: both;
+			padding-right: 5%;
+			view {
+				float: right;
+				text-align: right;
+				font-family: iconfont;
+			}
+			view:last-child {
+				margin-right: 50upx;
+			}
+			.share-goods {
+				margin-left: 30upx;
+			}
+			text:first-child {
+				padding-right: 10upx;
+			}
 		}
 		
 		.v-image {

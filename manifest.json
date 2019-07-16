@@ -15,7 +15,8 @@
             "delay" : 0
         },
         "modules" : {
-            "SQLite" : {}
+            "SQLite" : {},
+            "Share" : {}
         },
         /* 模块配置 */
         "distribute" : {
@@ -50,7 +51,13 @@
             "ios" : {},
             /* ios打包配置 */
             "sdkConfigs" : {
-                "push" : {}
+                "push" : {},
+                "share" : {
+                    "weixin" : {
+                        "appid" : "",
+                        "appsecret" : ""
+                    }
+                }
             },
             "icons" : {
                 "ios" : {
