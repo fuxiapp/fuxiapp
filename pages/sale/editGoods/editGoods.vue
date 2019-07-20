@@ -1,13 +1,13 @@
 <template>
 	<view class="v-edit-goods-view">
 		<view class="con goods-base-info">
-			<view class="img"><image src="../../../static/err_img.png"></image></view>
+			<view class="img"><image @error="handleError" :src="goodsInfo.image"></image></view>
 			<view class="info">
-				<view class="name">连衣裙</view>
-				<view class="no">113112</view>
+				<view class="name">{{goodsInfo.name}}</view>
+				<view class="no">{{goodsInfo.code}}</view>
 				<view class="prices">
 					<text class="there">¥</text>
-					<text class="org" @click="openUpPrice(1)">{{goodsInfo.price}}</text>
+					<text class="org" @click="openUpPrice(1)">{{goodsInfo.retailsales}}</text>
 					<image @click="onMore()" src="../../../static/base/time.png"></image>
 					<text class="sel-more" @click="onMore()">更多价格</text>
 				</view>
@@ -116,7 +116,7 @@
 				priceType: 0,
 				upTitle: '修改价格',
 				moduleType: 0,
-				id: ''
+				id: '019W7'
 			}
 		},
 		onLoad(option) {
@@ -129,8 +129,20 @@
 				}
 			}
 			this.goodsInfo.price = this.decimalNumber(this.goodsInfo.price);
+			this.getByIdInfo();
 		},
 		methods: {
+			getByIdInfo () { // 获取详情信息
+				this.$API.get('/fuxi/goods/query-goods', {goodsId:this.id}).then(res => {
+					if (res.code === 'success') {
+						this.goodsInfo = res.data;
+						this.goodsInfo.image = this.$URL + this.goodsInfo.code + '.jpg';
+					}
+				});
+			},
+			handleError () { // 图片错误
+				this.goodsInfo.image = '../../../static/err_img.png'; 
+			},
 			toPath () {
 				if (this.moduleType === 7) {
 					this.$API.to(`../../sale/addGoodsConfig/addGoodsConfig?id=${this.id}&type=${this.moduleType}`);

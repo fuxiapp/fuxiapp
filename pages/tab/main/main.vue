@@ -48,7 +48,10 @@
 			<view class="usharts-title">
 				<view class="title-name">商品销售统计</view>
 				<view class="date-con">
-					2018-11.13-2018.11.12<image src="../../../static/base/down.png"></image>
+					<input type="text" disabled @click="selDate(1)" v-model="startDate" placeholder="开始时间" />
+					-
+					<input type="text" disabled  @click="selDate(2)" v-model="endDate" placeholder="结束时间"  />
+					<image src="../../../static/base/down.png"></image>
 				</view>
 			</view>
 			<view class="qiun-charts">
@@ -62,10 +65,10 @@
 			<view class="cgh-black" @click="closeMask"></view>
 			<view class="cgh-white">
 				<view class="calendar-box">
-					<uni-calendar :lunar="checkedFlg" :fixed-heihgt="checkedFlg" :slide="checkedFlg" :disable-before="checkedFlg" :start-date="startDate" :end-date="endDate" :date="date" @change="change" @to-click="toClick" />
-					<view class="calendar-button-groups">
-						<button class="calendar-button-confirm" @click="closeMask">取消</button>
-						<button class="calendar-button-confirm" @click="confirm">确认</button>
+					<uni-calendar :lunar="checkedFlg" :fixed-heihgt="checkedFlg" :slide="checkedFlg" :disable-before="checkedFlg"  @change="change" @to-click="toClick" />
+					<view class="cgh-calendar-button">
+						<view class="cel" @click="closeMask">取消</view>
+						<view class="confirm" @click="confirm">确认</view>
 					</view>
 				</view>
 			</view>
@@ -179,7 +182,7 @@
 					},
 					{
 						icon: 'iconcangkuguanli',
-						url:'../../department/department',
+						url:'../../store/department/department',
 						title: '店仓管理',
 						bac: '#427CAC',
 						routeType: 2,
@@ -284,13 +287,14 @@
 					}
 
 				],
-				isDateShow: true,
+				isDateShow: false,
 				slide: 'none',
 				date: '',
 				startDate: '',
 				endDate: '',
-				timeData: {},
-				checkedFlg: false
+				timeData: '',
+				checkedFlg: false,
+				selDateIndex: 1,
 			};
 		},
 		onLoad() {
@@ -298,6 +302,12 @@
 			this.cWidth = uni.upx2px(750);
 			this.cHeight = uni.upx2px(500);
 			this.getServerData();
+			// 获取当前时间
+			let dd = new Date();
+			let y = dd.getFullYear()
+			let m = dd.getMonth() + 1 < 10 ? '0' + (dd.getMonth() + 1) : dd.getMonth() + 1 // 获取当前月份的日期，不足10补0
+			let d = dd.getDate() < 10 ? '0' + dd.getDate() : dd.getDate() // 获取当前几号，不足10补0
+			this.startDate =  y + '-' + m + '-' + d;
 		},
 		methods: {
 			toPath (url, routeType, type) { // tab页面跳转
@@ -378,19 +388,26 @@
 			
 			},
 			change(e) {
-				console.log('change 返回:', e.fulldate)
-				this.timeData = e
+				this.timeData =  e.fulldate;
 			},
 			toClick(e) {
-				console.log('点击事件', e.fulldate)
-				this.timeData = e
+				this.timeData =  e.fulldate;
 			},
 			confirm() {
-				this.show = false;
+				this.isDateShow = false;
+				if (this.selDateIndex === 1) {
+					this.startDate = this.timeData;
+				} else if (this.selDateIndex === 2) {
+					this.endDate = this.timeData;
+				}
 			},
 			closeMask() {
-				this.checkedFlg = false;
+				this.isDateShow = false;
 			},
+			selDate (index) {
+				this.isDateShow = true;
+				this.selDateIndex = index;
+			}
 		},
 		components: {
 			uniCalendar
@@ -482,6 +499,23 @@
 			top: 10%;
 			z-index: 3;
 			-webkit-overflow-scrolling: touch;
+			.cgh-calendar-button {
+				display: flex;
+				border-top: 1upx solid $boder-se;
+				view {
+					width: 50%;
+					height: 80upx;
+					font-size: 30upx;
+					color: $themeColor;
+					background: #fff;
+					text-align: center;
+					line-height: 80upx;
+				}
+				view:last-child {
+					background: $themeColor;
+					color: #fff;
+				}
+			}
 		}
 	}
 	.title {
@@ -513,10 +547,20 @@
 			margin-left: 10upx;
 		}
 		.date-con {
+			width: 50%;
+			display: flex;
 			font-size: 28upx;
 			color: #333;
 			margin-left: 20upx;
 			margin-right: 20upx;
+			input {
+				width: 45%;
+				height: 50upx;
+				border: 1upx solid $boder-se;
+			}
+			image {
+				margin-top: 20upx;
+			}
 		}
 			
 	}

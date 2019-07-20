@@ -1,24 +1,31 @@
 <template>
-	<view class="v-sel-strore">
+	<view class="cgh-deparment-view">
 		<view class="search">
-			<search placeholderStr="店仓编码/店仓名称" type="2" @search="search" ></search>
+			<searchLeft placeholderStr="店仓编码/店仓名称" :type="moduleType" :store="store" @onSelStore="onSelStore" @search="search"  ></searchLeft>
 		</view>
 		<view class="list-con">
 			<searItem :moduleType="moduleType" :companyOrStrore="companyOrStrore" :list="listData" type="2" @toPath="toInvoice"></searItem>
 		</view>
-		<uni-load-more :status="status" :content-text="contentText" />
+		<view v-if="isShowStore">
+			<radioItem :list="storeList" :type="moduleType"  @closeAlert="closeAlert"  @okRadioValue="okRadioValue"></radioItem>
+		</view>
 	</view>
 </template>
 
 <script>
-	import search from '../../../components/search.vue';
+	import searchLeft from '../../../components/searchLeft.vue';
 	import searItem from '../../../components/searItem.vue';
-	import uniLoadMore from '../../../components/uni/uni-load-more/uni-load-more.vue';
+	import radioItem from '../../../components/radioItem.vue';
 	export default {
 		data() {
 			return {
+				moduleType: 0,
+				companyOrStrore: 0,
+				store: '店仓',
+				isShowStore: false,
+				storeList: [],
 				// 分页
-				listData: [],
+				listData: [1,1,1],
 				last_id: '',
 				reload: false,
 				status: 'more',
@@ -29,13 +36,10 @@
 				},
 				countPage: '',
 				para: {pageSize: 10, pageNum: 1, keyword: ''},
-				moduleType: 1 ,// main 模块
-				companyOrStrore: 0,
-				supperId: ''
 			}
 		},
 		onLoad (option) {
-			this.supperId = option.id;
+			this.moduleType = +option.type;
 			this.moduleType = parseInt(option.type);
 			this.getList();
 		},
@@ -54,6 +58,24 @@
 				} else {
 					this.$API.to(`../../sale/invoice/invoice?id=${id}&type=${this.moduleType}`);
 				}	
+			},
+			onSelStore () { // 店仓筛选
+				this.isShowStore = true;
+				if (this.storeList.length !== 0) {
+					return;
+				}
+				this.$API.get('/fuxi/select/query-department-type').then(res => {
+					if (res.code === 'success') {
+						this.storeList = res.data;
+					}
+				});
+			},
+			okRadioValue (val) { // 确认选择店仓
+				this.isShowStore = false;
+				this.store = val;
+			},
+			closeAlert () { // 关闭选择店仓
+				this.isShowStore = false;
 			},
 			getList() { // 获取店仓列表
 				this.countPage = 0;
@@ -99,15 +121,18 @@
 			},
 		},
 		components: {
-			search,
+			searchLeft,
 			searItem,
-			uniLoadMore
+			radioItem
 		}
 	}
 </script>
 
-<style lang="scss">
-	.v-sel-strore {
+<style lang="scss" scoped>
+	@import "../../../components/mixin.scss";
+	.cgh-deparment-view {
+		width: 100%;
+		overflow: hidden;
 		.list-con {
 			margin-top: 140upx;
 		}

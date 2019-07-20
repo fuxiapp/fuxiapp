@@ -1,13 +1,16 @@
 <template>
 	<view class="cgh-search-item-childe">
 		<view class="info-con">
-			<view class="list" v-for="(v, index) in list" :key="index" @click="toPath(index)">
-				<view class="name" v-if="type === '1'">广州市伏羲计算机系统工程有限公司</view>
-				<view class="name" v-if="type === '2'">白马店</view>
+			<view class="list" v-for="(v, index) in list" :key="index" @click="toPath(v.id)">
+				<view class="name" v-if="type === '1'">{{v.supplier}}</view>
+				<view class="name" v-if="type === '2'">{{v.department}}</view>
 				<view class="class-type">
-					<view class="type-name" v-if="type === '1'">手机号: 15216168437</view>
-					<view class="type-name" v-if="type === '2'">店仓分类: 门店</view>
-					<view><image src="../../static/base/right.png"></image></view>
+					<view class="type-name" v-if="type === '1'">手机号: 
+						<text v-if="v.mobilephone === ''">未提供</text>
+						<text v-if="v.mobilephone !== ''">{{v.mobilephone}}</text>
+					</view>
+					<view class="type-name" v-if="type === '2'">店仓分类: {{v.depttype}}</view>
+					<view v-if="type === 2"><image src="../../../static/base/right.png"></image></view>
 				</view>
 			</view>
 		</view>

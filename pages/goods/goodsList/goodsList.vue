@@ -175,13 +175,10 @@
 				this.listData = [];
 				this.last_id = '';
 				this.status = 'more';
+				this.para.pageNum = 1;
 				this.$API.get('/fuxi/goods/query-goods-list', this.para).then(res => {
 					if (res.code === 'success') {
 						this.countPage = res.data.pages;
-						if (res.data.total === 0) {
-							this.status = 'finish';
-							return;
-						}
 						let list = res.data.list;
 						for (let i = 0; i < list.length; i++) {
 							list[i].image = this.$URL + list[i].code + '.jpg';
@@ -189,6 +186,9 @@
 						this.listData = this.reload ? list : this.listData.concat(list);
 						this.last_id = list[list.length - 1].id;
 						this.reload = false;
+						if (this.para.pageNum === res.data.pages ) {
+							this.status = 'finish';
+						}
 					}
 				});
 			},
@@ -399,11 +399,8 @@
 			scoInfo () {
 				uni.scanCode({
 					success: (res) => {
-						console.log(res);
-						this.$API.get('	/fuxi/barcode/barcode-parsing', {barcode: res.result}).then(res => {
-							if (res.code === 'success') {
-							}
-						});
+						this.para.keyword = res.result;
+						this.getList();
 					},
 					fail: (err) => {
 						console.log(err);

@@ -7,7 +7,6 @@ const API = {
 			uni.getStorage({
 				key: 'fuxiUserInfo',
 				success: (res) => {
-					console.log(res.data.onlineId);
 					tokenId = res.data.onlineId;
 				}
 			})
@@ -219,6 +218,14 @@ const API = {
 		currentWebview.setStyle({
 			titleNView: titleObj
 		});
+	},
+	getContentScoll (type) { // 页面内容是否滚动
+		if (type === 2) {
+			document.documentElement.style.overflow = "hidden";
+		} else {
+			document.documentElement.style.overflow = "scroll";
+		}
 	}
+
 };
 export default API;

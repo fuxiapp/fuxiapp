@@ -1,0 +1,23 @@
+@charset "UTF-8";
+/* 颜色变量 */
+/* 行为相关颜色 */
+/* 文字基本颜色 */
+/* 背景颜色 */
+/* 边框颜色 */
+/* 尺寸变量 */
+/* 文字尺寸 */
+/* 图片尺寸 */
+/* Border Radius */
+/* 水平间距 */
+/* 垂直间距 */
+/* 透明度 */
+/* 文章场景相关 */
+/* 超出部分省略号 */
+.cgh-deparment-view.data-v-7342f3f4 {
+  width: 100%;
+  overflow: hidden;
+}
+.cgh-deparment-view .list-con.data-v-7342f3f4 {
+    margin-top: 140rpx;
+}
+

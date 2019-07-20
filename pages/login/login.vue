@@ -120,7 +120,6 @@
 			},
 			login() { // 登录成功
 				if (this.btnDisabled) {
-					console.log(23232);
 					let userInfo = {no: this.username, password: this.password, hostName: this.platform,  regUserId: this.regUserId};
 					this.$API.get('/fuxi/login/login', userInfo, 'POST').then(res => {
 						if (res.code === 'success') {

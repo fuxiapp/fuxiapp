@@ -5,7 +5,8 @@
 		<view class="radio-con">
 			<view class="radio-info-con">
 				<view class="item" v-for="(item, index) in list" :key="index" @click="okRadioValue(item)">
-					{{item.name}}
+					<text v-if="type === -1">{{item.name}}</text>
+					<text v-if="type === 11">{{item.departmentType}}</text>
 				</view>
 			</view>
 		</view>
@@ -18,6 +19,10 @@
 			list: {
 				type: Array,
 				default: []
+			},
+			type: {
+				type: Number,
+				default: -1
 			}
 			
 		},

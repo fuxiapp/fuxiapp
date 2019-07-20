@@ -1,16 +1,17 @@
 <template>
 	<view class="cgh-search-item-childe">
 		<view class="info-con">
-			<view class="list" v-for="(v, index) in list" :key="index" @click="toPath(v.id)">
-				<view class="img"><image src="../../../static/err_img.png" lazy-load="true" mode="aspectFit"></image></view>
+			<view class="list" v-for="(v, index) in list" :key="index" @click="toPath(v.goodsid)">
+				<view class="img"><image :src="v.image" @error="imgError(index)" lazy-load="true" mode="aspectFit"></image></view>
 				<view class="info">
-					<view class="name">超级大围裙</view>
-					<view class="no">22003001</view>
+					<view class="name">{{v.name}}</view>
+					<view class="no">{{v.code}}</view>
 					<view class="prices">
-						<view class="price">¥<text>689.00</text></view>
+						<view class="price">¥
+							<text>{{v.retailsales}}</text>
+						</view>
 						<view class="order-number" v-if="type === '3'">下单数 30</view>
 					</view>
-				
 				</view>
 			</view>
 		</view>
@@ -44,7 +45,10 @@
 		methods: {
 			toPath(id) {
 				this.$emit('toPath', id);
-			}
+			},
+			imgError (index) {
+				this.$emit('handleError', index);
+			},
 		}
 		
 	}

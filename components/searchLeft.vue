@@ -1,12 +1,15 @@
 <template>
 	<view class="cgh-search-childe">
 		<view class="search-con">
-			<view class="left" @click="scanCode"><image src="../../../static/base/sm.png"></image></view>
+			<view class="left" @click="scanCode" v-if="type === 1"><image src="../../../static/base/sm.png"></image></view>
+			<view class="left" @click="onSelStore" v-if="type === 11">
+				{{store}}<image class="down-img" src="../../../static/base/down.png"></image>
+			</view>
 			<view class="main">
 				<image src="../../../static/base/search.png"></image>
-				<input placeholder="请输入内容" />
+				<input v-model="keyWord" placeholder="请输入内容" />
 			</view>
-			<view class="right">搜索</view>
+			<view class="right" @click="search">搜索</view>
 		</view>
 	</view>
 </template>
@@ -22,28 +25,32 @@
 				type: String,
 				default: ''
 			},
-			type: { // 1: 销售发货单
+			type: { // 1: 销售发货单  11: 店仓管理
 				type: String,
 				default: '1'
-			}
+			},
+			store: {
+				type: String,
+				default: '店仓'
+			},
 		},
 		data() {
 			return {
-				selIndex: 0
+				selIndex: 0,
+				keyWord: ''
 			}
 		},
 		onLoad() {
 		},
 		methods: {
-			radioChange(val, index) {
-				this.selIndex = index;
-				this.$emit('radioChange', val);
-			},
-			okRadioValue () {
-				this.$emit('okRadioValue');	
+			search() {
+				this.$emit('search', this.keyWord);
 			},
 			scanCode () { // 二维码识别
 				this.$emit('scanCode');
+			},
+			onSelStore () { // 选择店仓
+				this.$emit('onSelStore');
 			}
 		}
 		
@@ -59,7 +66,7 @@
 		padding: 30upx 0upx;
 		position: fixed;
 		left: 0;
-		/* #ifdef APP-PLUS */
+		/* #ifndef H5 */
 			top: 0;
 		/*  #endif */
 		/* #ifdef H5 */
@@ -82,9 +89,15 @@
 					height: 65upx;
 					vertical-align: middle;
 				}
+				.down-img {
+					width: 25upx;
+					height: 25upx;
+					vertical-align: middle;
+					margin-left: 10upx;
+				}
 			}
 			.main {
-				width: 63%;
+				width: 60%;
 				height: 100%;
 				display: flex;
 				align-items: center;

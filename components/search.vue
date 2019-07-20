@@ -3,9 +3,9 @@
 		<view class="search-con">
 			<view class="left">
 				<image src="../../../static/base/search.png"></image>
-				<input :placeholder="placeholderStr" />
+				<input v-model="keyWord" :placeholder="placeholderStr" />
 			</view>
-			<view class="right">搜索</view>
+			<view class="right" @click="search">搜索</view>
 		</view>
 	</view>
 </template>
@@ -24,22 +24,20 @@
 			type: {
 				type: String,
 				default: '1'
-			}
+			},
+			
 		},
 		data() {
 			return {
-				selIndex: 0
+				selIndex: 0,
+				keyWord: ''
 			}
 		},
 		onLoad() {
 		},
 		methods: {
-			radioChange(val, index) {
-				this.selIndex = index;
-				this.$emit('radioChange', val);
-			},
-			okRadioValue () {
-				this.$emit('okRadioValue');	
+			search() {
+				this.$emit('search', this.keyWord);
 			}
 		}
 		
@@ -55,7 +53,7 @@
 		padding: 30upx 0upx;
 		position: fixed;
 		left: 0;
-		/* #ifdef APP-PLUS */
+		/* #ifndef H5 */
 			top: 0;
 		/*  #endif */
 		/* #ifdef H5 */
