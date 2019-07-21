@@ -1,7 +1,7 @@
 // 手机号码验证
 function meetsTel(str){
 	let reg = /^[0-9]{8,11}$/;
-	if( str.trim().length === 0 ){
+	if(str.trim().length === 0 ){
 		return true;
 	}
 	return  reg.test(str);
@@ -69,6 +69,13 @@ function pricePass(str){
 	}
 	return true ;
 }
+// 空验证
+function nullPass(str){
+	if (str === '' || str === undefined || str === null){
+		return false;
+	}
+	return true ;
+}
 module.exports = {
 	meetsTel,
 	meetsId,
@@ -76,5 +83,6 @@ module.exports = {
 	meetsEmail,
 	isChinese,
 	formatTime,
-	pricePass
+	pricePass,
+	nullPass
 }

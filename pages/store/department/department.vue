@@ -1,14 +1,19 @@
 <template>
 	<view class="cgh-deparment-view">
 		<view class="search">
-			<searchLeft placeholderStr="店仓编码/店仓名称" :type="moduleType" :store="store" @onSelStore="onSelStore" @search="search"  ></searchLeft>
+			<searchLeft placeholderStr="店仓编码/店仓名称" :type="moduleType" :store="store.departmentType" @onSelStore="onSelStore" @search="search"  ></searchLeft>
 		</view>
 		<view class="list-con">
+			 <!-- #ifdef MP-WEIXIN -->
+			<button @click="addStore">添加</button>
+			<!-- #endif -->
 			<searItem :moduleType="moduleType" :companyOrStrore="companyOrStrore" :list="listData" type="2" @toPath="toInvoice"></searItem>
 		</view>
+		<uni-load-more :status="status" :content-text="contentText" />
 		<view v-if="isShowStore">
 			<radioItem :list="storeList" :type="moduleType"  @closeAlert="closeAlert"  @okRadioValue="okRadioValue"></radioItem>
 		</view>
+		
 	</view>
 </template>
 
@@ -16,12 +21,13 @@
 	import searchLeft from '../../../components/searchLeft.vue';
 	import searItem from '../../../components/searItem.vue';
 	import radioItem from '../../../components/radioItem.vue';
+	import uniLoadMore from '../../../components/uni/uni-load-more/uni-load-more.vue';
 	export default {
 		data() {
 			return {
-				moduleType: 0,
+				moduleType: 11,
 				companyOrStrore: 0,
-				store: '店仓',
+				store:  {departmentTypeId: -1, departmentType: '全部'},
 				isShowStore: false,
 				storeList: [],
 				// 分页
@@ -39,40 +45,53 @@
 			}
 		},
 		onLoad (option) {
-			this.moduleType = +option.type;
-			this.moduleType = parseInt(option.type);
+			this.moduleType = option.type;
+			this.getStoreInfo();
 			this.getList();
 		},
 		onReachBottom() { // 页面下拉 
 			this.status = 'more';
 			this.getMoreInfo();
 		},
+		onNavigationBarButtonTap() {
+			this.addStore();
+		},
 		methods: {
+			addStore () { // 添加店仓
+				this.$API.to('../../store/addStore/addStore');
+			},
 			search (keyword) { // 关键字搜索
 				this.para.keyword = keyword;
 				this.getList();
 			},
 			toInvoice (id) { // 选择店仓
-				if (this.moduleType === 2) { // 销售退货单
+				/* if (this.moduleType === 2) { // 销售退货单
 					this.$API.to(`../../sale/salesSelCustomer/salesSelCustomer?id=${id}`);
 				} else {
 					this.$API.to(`../../sale/invoice/invoice?id=${id}&type=${this.moduleType}`);
-				}	
+				}	 */
 			},
-			onSelStore () { // 店仓筛选
-				this.isShowStore = true;
-				if (this.storeList.length !== 0) {
-					return;
-				}
+			getStoreInfo () { // 获取店仓信息
 				this.$API.get('/fuxi/select/query-department-type').then(res => {
 					if (res.code === 'success') {
 						this.storeList = res.data;
+						let val = {departmentTypeId: -1, departmentType: '全部'};
+						this.storeList.unshift(val);
 					}
 				});
+			},
+			onSelStore () { // 店仓筛选
+				this.isShowStore = true;
 			},
 			okRadioValue (val) { // 确认选择店仓
 				this.isShowStore = false;
 				this.store = val;
+				if (val.departmentTypeId === -1) {
+					this.para.departmentTypeId = '';
+				} else {
+					this.para.departmentTypeId = val.departmentTypeId;
+				}
+				this.getList();
 			},
 			closeAlert () { // 关闭选择店仓
 				this.isShowStore = false;
@@ -123,7 +142,8 @@
 		components: {
 			searchLeft,
 			searItem,
-			radioItem
+			radioItem,
+			uniLoadMore
 		}
 	}
 </script>

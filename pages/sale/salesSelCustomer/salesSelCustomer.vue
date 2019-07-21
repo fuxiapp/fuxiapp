@@ -53,7 +53,7 @@
 		},
 		methods: {
 			showAdd () {
-				this.$API.to('../../sale//addCustomer/addCustomer');
+				this.$API.to('../../sale/addCustomer/addCustomer');
 			},
 			search (keyword) { // 关键字搜索
 				this.para.keyword = keyword;

@@ -2,7 +2,7 @@
 	<view class="v-add-goods-view">
 		<view class="cgh-head-con">
 			<view class="left">
-				<view class="goods-img" @click="uploadImg">
+				<view class="goods-img"  @error="handleError()" @click="uploadImg">
 					<image :src="goodImg"></image>
 				</view>
 			</view>
@@ -169,19 +169,27 @@
 				selTypeChidenItem: [],
 				goodsId: '',
 				url: '/fuxi/goods/add-goods',
-				typeRq: 1 // 1: 新增 2: 修改
+				typeRq: 1, // 1: 新增 2: 修改
+				isonSave: false,
 			}
 		},
 		onLoad(option) {
 			 this.goodsId = option.id;
-			// this.goodsId = '019W7';
 			if (this.goodsId !== '' && this.goodsId !== undefined && this.goodsId !== null) {
 				this.url = '/fuxi/goods/update-goods';
 				this.typeRq = 2;
 				this.getDetailsInfo();
 			}
+			if (this.goodsId === '' || this.goodsId === undefined || this.goodsId === null) {
+				this.$API.generateNo().then(res => {
+					this.goodsInfo.code = res;
+				});
+			}
 		},
 		methods: {
+			handleError (index) { // 图片加载错误
+			    this.goodImg = '../../../static/err_img.png';  
+			},
 			getDetailsInfo () { // 获取商品详情
 				this.$API.get('/fuxi/goods/query-goods', {goodsId: this.goodsId}).then(res => {
 					if (res.code === 'success') { 
@@ -214,7 +222,7 @@
 				}
 			},
 			uploadImg () { // 上传图片
-				if (this.goodsInfo.id === '') {
+				if (!this.isonSave) {
 					uni.showToast({
 						title: '请先保存商品信息!',
 						icon:'none'
@@ -329,6 +337,11 @@
 							for (let i = 0; i < arr.length; i++) {
 								let info = {id: arr[i].colorId, name: arr[i].color, flg: false};
 								this.colorTypeInfo.push(info);
+								/* for (let i = 0; i < this.colorTypeInfo.length; i++) {
+									if (this.colorTypeInfo[i].colorId === this.goodsInfo.colorId) {
+										
+									}
+								} */
 							}
 							
 						}
@@ -418,6 +431,7 @@
 							uni.showToast({
 								title: '添加成功!'
 							});	
+							this.isonSave = true;
 							this.resetData();
 						}
 					}

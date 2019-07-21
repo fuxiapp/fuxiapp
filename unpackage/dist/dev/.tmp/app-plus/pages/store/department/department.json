@@ -1,0 +1,21 @@
+{
+  "navigationBarTitleText": "店仓管理",
+  "scrollIndicator": "none",
+  "titleNView": {
+    "buttons": [
+      {
+        "fontSrc": "/static/iconfont.ttf",
+        "text": "",
+        "fontSize": "24px",
+        "color": "#FFFFFF"
+      }
+    ]
+  },
+  "bounce": "none",
+  "usingComponents": {
+    "search-left": "/components/searchLeft",
+    "sear-item": "/components/searItem",
+    "radio-item": "/components/radioItem",
+    "uni-load-more": "/components/uni/uni-load-more/uni-load-more"
+  }
+}

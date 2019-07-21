@@ -1,7 +1,7 @@
 <template>
 	<view class="cgh-search-item-childe">
 		<view class="info-con">
-			<view class="list" v-for="(v, index) in list" :key="index" @click="toPath(v.id)">
+			<view class="list"  v-if="type !== '15'" v-for="(v, index) in list" :key="index" @click="toPath(v.id)">
 				<view class="name" v-if="type === '1'">{{v.supplier}}</view>
 				<view class="name" v-if="type === '2'">{{v.department}}</view>
 				<view class="class-type">
@@ -12,6 +12,9 @@
 					<view class="type-name" v-if="type === '2'">店仓分类: {{v.depttype}}</view>
 					<view v-if="type === 2"><image src="../../../static/base/right.png"></image></view>
 				</view>
+			</view>
+			<view class="list" v-if="type === '15'" v-for="(v, index) in list" :key="index" @click="toPath(v.colorid)">
+				<view class="name">{{v.color}}</view>
 			</view>
 		</view>
 	</view>

@@ -1,0 +1,19 @@
+{
+  "navigationBarTitleText": "客户管理",
+  "scrollIndicator": "none",
+  "titleNView": {
+    "buttons": [
+      {
+        "fontSrc": "/static/iconfont.ttf",
+        "text": "",
+        "fontSize": "24px",
+        "color": "#FFFFFF"
+      }
+    ]
+  },
+  "bounce": "none",
+  "usingComponents": {
+    "search": "/components/search",
+    "uni-load-more": "/components/uni/uni-load-more/uni-load-more"
+  }
+}

@@ -1,0 +1,137 @@
+@charset "UTF-8";
+/* 颜色变量 */
+/* 行为相关颜色 */
+/* 文字基本颜色 */
+/* 背景颜色 */
+/* 边框颜色 */
+/* 尺寸变量 */
+/* 文字尺寸 */
+/* 图片尺寸 */
+/* Border Radius */
+/* 水平间距 */
+/* 垂直间距 */
+/* 透明度 */
+/* 文章场景相关 */
+/* 超出部分省略号 */
+.cgh-add-customer-view.data-v-658b8ef7 {
+  width: 100%;
+  overflow: hidden;
+  font-size: 28rpx;
+  padding-bottom: 100rpx;
+}
+.cgh-add-customer-view .add-base-info.data-v-658b8ef7 {
+    width: 94%;
+    overflow: hidden;
+    padding: 0rpx 3%;
+    margin-bottom: 20rpx;
+    background: #fff;
+}
+.cgh-add-customer-view .add-base-info .item.data-v-658b8ef7 {
+      display: -webkit-box;
+      display: -webkit-flex;
+      display: -ms-flexbox;
+      display: flex;
+      -webkit-box-align: center;
+      -webkit-align-items: center;
+          -ms-flex-align: center;
+              align-items: center;
+      white-space: nowrap;
+      border-bottom: 1rpx solid #f4f4f4;
+      line-height: 80rpx;
+      -webkit-box-pack: justify;
+      -webkit-justify-content: space-between;
+          -ms-flex-pack: justify;
+              justify-content: space-between;
+}
+.cgh-add-customer-view .add-base-info .item .add-title.data-v-658b8ef7 {
+        width: 20%;
+        color: #333;
+        font-weight: bold;
+        font-size: 30rpx;
+}
+.cgh-add-customer-view .add-base-info .item .add-input.data-v-658b8ef7 {
+        width: 78%;
+}
+.cgh-add-customer-view .add-base-info .item .add-input input.data-v-658b8ef7 {
+          width: 98%;
+          height: 100%;
+          color: #333;
+          padding-left: 5rpx;
+}
+.cgh-add-customer-view .no.data-v-658b8ef7 {
+    background: #F2F0F0;
+    border: 1rpx solid #f4f4f4;
+}
+.cgh-add-customer-view .red-title.data-v-658b8ef7 {
+    color: red !important;
+}
+.cgh-add-customer-view .btn.data-v-658b8ef7 {
+    width: 100%;
+    height: 80rpx;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    z-index: 4;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-justify-content: space-around;
+        -ms-flex-pack: distribute;
+            justify-content: space-around;
+    text-align: center;
+    line-height: 80rpx;
+    background: #427CAC;
+    color: #fff;
+}
+.cgh-add-customer-view .btn .cel.data-v-658b8ef7 {
+      width: 50%;
+}
+.cgh-add-customer-view .btn .config.data-v-658b8ef7 {
+      width: 50%;
+      border-left: 1rpx solid #f4f4f4;
+}
+.cgh-add-customer-view .cgh-alert-black.data-v-658b8ef7 {
+    display: black;
+    position: fixed;
+    top: 0%;
+    left: 0%;
+    width: 100%;
+    height: 100%;
+    background-color: black;
+    z-index: 2;
+    -moz-opacity: 0.5;
+    opacity: .80;
+    filter: alpha(opacity=88);
+}
+.cgh-add-customer-view .close.data-v-658b8ef7 {
+    width: 100rpx;
+    height: 100rpx;
+    position: fixed;
+    overflow: auto;
+    top: 270rpx;
+    right: 0;
+    z-index: 11;
+}
+.cgh-add-customer-view .close image.data-v-658b8ef7 {
+      width: 90rpx;
+      height: 80rpx;
+}
+.cgh-add-customer-view .radio-con.data-v-658b8ef7 {
+    width: 100%;
+    height: 70%;
+    position: fixed;
+    overflow: auto;
+    bottom: 0;
+    left: 0;
+    z-index: 11;
+    background: #fff;
+}
+.cgh-add-customer-view .radio-con .radio-info-con .item.data-v-658b8ef7 {
+      font-size: 36rpx;
+      color: #333;
+      font-weight: bold;
+      border-bottom: 1rpx solid #f4f4f4;
+      padding: 25rpx 0rpx 25rpx 30rpx;
+}
+

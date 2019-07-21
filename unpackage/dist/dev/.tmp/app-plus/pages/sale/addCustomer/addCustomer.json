@@ -1,0 +1,14 @@
+{
+  "navigationBarTitleText": "添加客户",
+  "scrollIndicator": "none",
+  "titleNView": {
+    "buttons": [
+      {
+        "text": "保存",
+        "fontSize": "14"
+      }
+    ]
+  },
+  "bounce": "none",
+  "usingComponents": {}
+}

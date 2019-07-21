@@ -1,0 +1,20 @@
+{
+  "navigationBarTitleText": "颜色管理",
+  "scrollIndicator": "none",
+  "titleNView": {
+    "buttons": [
+      {
+        "fontSrc": "/static/iconfont.ttf",
+        "text": "",
+        "fontSize": "24px",
+        "color": "#FFFFFF"
+      }
+    ]
+  },
+  "bounce": "none",
+  "usingComponents": {
+    "search": "/components/search",
+    "sear-item": "/components/searItem",
+    "uni-load-more": "/components/uni/uni-load-more/uni-load-more"
+  }
+}

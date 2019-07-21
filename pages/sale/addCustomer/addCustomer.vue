@@ -125,7 +125,9 @@
 			}
 		},
 		onLoad() {
-			
+			this.$API.generateNo().then(res => {
+				this.customerInfo.code = res;
+			});
 		},
 		onNavigationBarButtonTap(e) {
 			this.saveCustomer();

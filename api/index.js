@@ -219,13 +219,30 @@ const API = {
 			titleNView: titleObj
 		});
 	},
-	getContentScoll (type) { // 页面内容是否滚动
-		if (type === 2) {
-			document.documentElement.style.overflow = "hidden";
-		} else {
-			document.documentElement.style.overflow = "scroll";
-		}
-	}
-
+	generateNo () { // 生成流水号(部门编码+年月日+两位流水号 departmentNo)
+		return new Promise( (resolve,reject) =>{
+			// 获取部门编号
+			let departmentNo = '';
+			uni.getStorage({
+				key: 'fuxiUserInfo',
+				success:(res) =>{
+					departmentNo = res.data.departmentNo;
+				}
+			});
+			setTimeout(() => {
+				// 获取当前时间
+				let dd = new Date();
+				let y = dd.getFullYear();
+				let m = dd.getMonth() + 1 < 10 ? '0' + (dd.getMonth() + 1) : dd.getMonth() + 1; // 获取当前月份的日期，不足10补0
+				let d = dd.getDate() < 10 ? '0' + dd.getDate() : dd.getDate(); // 获取当前几号，不足10补0
+				let day =  y +  m + d;
+				// 流水号
+				let no = Math.floor(Math.random()*10);
+				let no2 = Math.floor(Math.random()*10);
+				let val = departmentNo + '' +day + '' + no + '' +no2;
+				resolve(val);
+			}, 20);
+		});
+	},
 };
 export default API;

@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "新增厂商",
+  "usingComponents": {
+    "search": "/components/search"
+  }
+}

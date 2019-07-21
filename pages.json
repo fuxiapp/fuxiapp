@@ -139,19 +139,61 @@
 				"navigationBarTitleText": "员工管理"
 			}
 		}, {
-			"path": "pages/supplier/supplier",
+			"path": "pages/supplier/supplierList/supplierList",
 			"style": {
-				"navigationBarTitleText": "厂商管理"
+				"navigationBarTitleText": "厂商管理",
+				 "app-plus" : {
+					"scrollIndicator":"none",
+				    "titleNView" : {
+				        "buttons" : [
+				          {
+				          	"fontSrc": "/static/iconfont.ttf",
+				          	"text": "\ue6ea",
+				          	"fontSize": "24px",
+				          	"color": "#FFFFFF"
+				          }
+				        ]
+				    },
+				    "bounce" : "none"
+				}
 			}
 		}, {
-			"path": "pages/color/color",
+			"path": "pages/colors/color/color",
 			"style": {
-				"navigationBarTitleText": "颜色管理"
+				"navigationBarTitleText": "颜色管理",
+				 "app-plus" : {
+					"scrollIndicator":"none",
+				    "titleNView" : {
+				        "buttons" : [
+				          {
+				          	"fontSrc": "/static/iconfont.ttf",
+				          	"text": "\ue6ea",
+				          	"fontSize": "24px",
+				          	"color": "#FFFFFF"
+				          }
+				        ]
+				    },
+				    "bounce" : "none"
+				}
 			}
 		}, {
-			"path": "pages/customer/customer",
+			"path": "pages/customerPage/customerList/customerList",
 			"style": {
-				"navigationBarTitleText": "客户管理"
+				"navigationBarTitleText": "客户管理",
+				 "app-plus" : {
+					"scrollIndicator":"none",
+				    "titleNView" : {
+				        "buttons" : [
+				          {
+				          	"fontSrc": "/static/iconfont.ttf",
+				          	"text": "\ue6ea",
+				          	"fontSize": "24px",
+				          	"color": "#FFFFFF"
+				          }
+				        ]
+				    },
+				    "bounce" : "none"
+				}
 			}
 		}, {
 			"path": "pages/receival/receival",
@@ -187,7 +229,7 @@
 			"path": "pages/goods/goodsAdd/goodsAdd",
 			"style": {
 				"navigationBarTitleText": "新增货品",
-				"app-plus": {
+				/* "app-plus": {
 					"bounce": "none",
 					"titleNView": {
 						"buttons": [ //原生标题栏按钮配置,
@@ -200,7 +242,7 @@
 							}
 						]
 					}
-				},
+				}, */
 				"scrollIndicator": "none"
 			}
 		}, {
@@ -328,16 +370,32 @@
 				    "bounce" : "none"
 				}
 			}
+		},
+		{
+			"path": "pages/store/addStore/addStore",
+			"style": {
+				"navigationBarTitleText": "新增店仓"
+			}
+		},
+		{
+			"path": "pages/colors/addOrUpdate/addOrUpdate",
+			"style": {
+				"navigationBarTitleText": "新增颜色"
+			}
+		},
+		{
+			"path": "pages/supplier/addSupplier/addSupplier",
+			"style": {
+				"navigationBarTitleText": "新增厂商"
+			}
 		}
-		
-		
 	],
 	"tabBar": {
 		"color": "#6C6C6C",
 		"selectedColor": "#54B0D5",
 		"backgroundColor": "#ffffff",
 		"list": [{
-				"pagePath": "pages/tab/sales/sales",
+				"pagePath": "pages/sale/salesSelCustomer/salesSelCustomer",
 				"iconPath": "static/tabs/xs.png",
 				"selectedIconPath": "static/tabs/sel_xs.png",
 				"text": "销售"
@@ -377,8 +435,8 @@
 	"condition": { //模式配置，仅开发期间生效
 		"current": 0, // 当前激活的模式(list 的索引项)
 		"list": [{
-			"name": "login", //模式名称
-			"path": "pages/login/login", //启动页面，必选
+			"name": "main", //模式名称
+			"path": "pages/tab/main/main", //启动页面，必选
 			"query": "" //启动参数，在页面的onLoad函数里面得到
 		}]
 	}

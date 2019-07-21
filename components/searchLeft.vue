@@ -1,8 +1,8 @@
 <template>
 	<view class="cgh-search-childe">
 		<view class="search-con">
-			<view class="left" @click="scanCode" v-if="type === 1"><image src="../../../static/base/sm.png"></image></view>
-			<view class="left" @click="onSelStore" v-if="type === 11">
+			<view class="left" @click="scanCode" v-if="dataType === 1"><image src="../../../static/base/sm.png"></image></view>
+			<view class="left" @click="onSelStore" v-if="dataType === 11">
 				{{store}}<image class="down-img" src="../../../static/base/down.png"></image>
 			</view>
 			<view class="main">
@@ -37,10 +37,14 @@
 		data() {
 			return {
 				selIndex: 0,
-				keyWord: ''
+				keyWord: '',
+				dataType: 1
 			}
 		},
 		onLoad() {
+		},
+		created (){
+			this.dataType = +this.type;
 		},
 		methods: {
 			search() {

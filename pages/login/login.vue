@@ -132,7 +132,7 @@
 								success: () => {
 									setTimeout(() => {
 										this.$API.tab('../tab/main/main');
-									}, 2000);
+									}, 1500);
 								}
 							});
 						} else {

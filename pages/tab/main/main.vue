@@ -206,14 +206,14 @@
 					},
 					{
 						icon: 'iconchangshang',
-						url:'../supplier/supplier',
+						url:'../../supplier/supplierList/supplierList',
 						title: '厂商管理',
 						routeType: 2,
 						type: 14
 					},
 					{
 						icon: 'iconyanse',
-						url:'../../color/color',
+						url:'../../colors/color/color',
 						title: '颜色管理',
 						bac: '#BC7AF1',
 						routeType: 2,
@@ -221,7 +221,7 @@
 					},
 					{
 						icon: 'iconkehuguanli',
-						url:'../../customer/customer',
+						url:'../../customerPage/customerList/customerList',
 						title: '客户管理',
 						bac: '#427CAC',
 						routeType: 2,
@@ -431,9 +431,9 @@
 				overflow: hidden;
 				margin: 0upx auto;
 				.list-con {
-					width: 92%;
+					width: 94%;
 					overflow: hidden;
-						margin: 0upx auto;
+					margin: 0upx auto;
 					display: flex;
 					justify-content: flex-start;
 					align-items: center;
@@ -547,16 +547,17 @@
 			margin-left: 10upx;
 		}
 		.date-con {
-			width: 50%;
+			width: 58%;
 			display: flex;
 			font-size: 28upx;
 			color: #333;
 			margin-left: 20upx;
 			margin-right: 20upx;
 			input {
-				width: 45%;
+				width: 48%;
 				height: 50upx;
 				border: 1upx solid $boder-se;
+				padding-left: 5upx;
 			}
 			image {
 				margin-top: 20upx;

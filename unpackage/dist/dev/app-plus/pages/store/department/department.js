@@ -1,0 +1,2 @@
+setCssToHead(["@charset \x22UTF-8\x22;\n.",[1],"cgh-deparment-view.",[1],"data-v-7342f3f4 { width: 100%; overflow: hidden; }\n.",[1],"cgh-deparment-view .",[1],"list-con.",[1],"data-v-7342f3f4 { margin-top: ",[0,140],"; }\n",],undefined,{path:"./pages/store/department/department.wxss"})();
+document.dispatchEvent(new CustomEvent("generateFuncReady", { detail: { generateFunc: $gwx('./pages/store/department/department.wxml') } }));
