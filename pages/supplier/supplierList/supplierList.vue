@@ -16,7 +16,10 @@
 							<text v-if="v.contact !== ''">{{v.contact}}</text>
 							<text v-if="v.contact === ''">未知</text>
 						 </view>
-						<view class="desc">欠款: <text class="price">{{v.supplier}}</text></view>
+						<view class="desc">欠款:
+							<text class="price" v-if="v.supplier !== ''">{{v.supplier}}</text>
+							<text class="price" v-if="v.supplier === ''">0</text>
+						 </view>
 					</view>
 					<view class="right"><image src="../../../static/base/right.png"></image></view>
 				</view>
@@ -35,7 +38,7 @@
 			return {
 				moduleType: 1 ,// 0: 销售订单 1: 销售发货单
 				// 分页
-				listData: [],
+				listData: [1,1,2,1,21,],
 				last_id: '',
 				reload: false,
 				status: 'more',

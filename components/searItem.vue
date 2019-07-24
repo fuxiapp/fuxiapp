@@ -47,8 +47,6 @@
 				selIndex: 0
 			}
 		},
-		onLoad() {
-		},
 		methods: {
 			toPath(id) {
 				this.$emit('toPath', id);

@@ -176,6 +176,7 @@
 		onLoad(option) {
 			 this.goodsId = option.id;
 			if (this.goodsId !== '' && this.goodsId !== undefined && this.goodsId !== null) {
+				this.isonSave = true;
 				this.url = '/fuxi/goods/update-goods';
 				this.typeRq = 2;
 				this.getDetailsInfo();

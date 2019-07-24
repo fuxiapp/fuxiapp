@@ -1,6 +1,17 @@
 {
 	"pages": [ //pages数组中第一项表示应用启动页
 		{
+			"path": "pages/tab/main/main",
+			"style": {
+				"navigationBarTitleText": "工作台",
+				"app-plus": {
+					"autoBackButton":"false",
+					"bounce": "none"
+				}
+			},
+			"scrollIndicator": "none"
+		},
+		{
 			"path": "pages/login/login",
 			"style": {
 				"app-plus": {
@@ -9,17 +20,17 @@
 				}
 			}
 		},
+		
 		{
-			"path": "pages/tab/main/main",
+			"path": "pages/tab/sales/sales",
 			"style": {
-				"navigationBarTitleText": "工作台",
+				"navigationBarTitleText": "销售",
 				"app-plus": {
 					"bounce": "none"
 				}
 			},
 			"scrollIndicator": "none"
 		},
-		
 		 {
 			"path": "pages/tab/possales/possales",
 			"style": {
@@ -29,11 +40,6 @@
 			"path": "pages/purchase/purchase",
 			"style": {
 				"navigationBarTitleText": "采购收货单"
-			}
-		}, {
-			"path": "pages/tab/sales/sales",
-			"style": {
-				"navigationBarTitleText": "销售发货单"
 			}
 		}, {
 			"path": "pages/tab/setting/setting",
@@ -129,9 +135,23 @@
 				}
 			}
 		}, {
-			"path": "pages/vip/vip",
+			"path": "pages/vipPages/vip/vip",
 			"style": {
-				"navigationBarTitleText": "会员管理"
+				"navigationBarTitleText": "VIP管理",
+				 "app-plus" : {
+					"scrollIndicator":"none",
+				    "titleNView" : {
+				        "buttons" : [
+				          {
+				          	"fontSrc": "/static/iconfont.ttf",
+				          	"text": "\ue6ea",
+				          	"fontSize": "24px",
+				          	"color": "#FFFFFF"
+				          }
+				        ]
+				    },
+				    "bounce" : "none"
+				}
 			}
 		}, {
 			"path": "pages/employee/employee",
@@ -356,19 +376,7 @@
 		},{
 			"path": "pages/sale/addCustomer/addCustomer",
 			"style": {
-				"navigationBarTitleText": "添加客户",
-				 "app-plus" : {
-					"scrollIndicator":"none",
-				    "titleNView" : {
-				        "buttons" : [
-				            {
-				               "text": "保存",
-				               "fontSize": "14"
-				            }
-				        ]
-				    },
-				    "bounce" : "none"
-				}
+				"navigationBarTitleText": "添加客户"
 			}
 		},
 		{
@@ -388,6 +396,12 @@
 			"style": {
 				"navigationBarTitleText": "新增厂商"
 			}
+		},
+		{
+			"path": "pages/vipPages/addVip/addVip",
+			"style": {
+				"navigationBarTitleText": "新增会员"
+			}
 		}
 	],
 	"tabBar": {
@@ -395,7 +409,7 @@
 		"selectedColor": "#54B0D5",
 		"backgroundColor": "#ffffff",
 		"list": [{
-				"pagePath": "pages/sale/salesSelCustomer/salesSelCustomer",
+				"pagePath": "pages/tab/sales/sales",
 				"iconPath": "static/tabs/xs.png",
 				"selectedIconPath": "static/tabs/sel_xs.png",
 				"text": "销售"
@@ -435,8 +449,8 @@
 	"condition": { //模式配置，仅开发期间生效
 		"current": 0, // 当前激活的模式(list 的索引项)
 		"list": [{
-			"name": "main", //模式名称
-			"path": "pages/tab/main/main", //启动页面，必选
+			"name": "login", //模式名称
+			"path": "pages/login/login", //启动页面，必选
 			"query": "" //启动参数，在页面的onLoad函数里面得到
 		}]
 	}

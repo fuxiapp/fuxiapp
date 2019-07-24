@@ -2,32 +2,47 @@
 	<view class="cgh-add-customer-view">
 		<view v-if="!isShowCity">
 			<view class="add-base-info">
-				<view class="item" @click="onselInfo(1)">
-					<view class="add-title">客户分类</view>
-					<view class="add-input"><input placeholder="盘点客户" v-model="selCustomerInfo.customerType" disabled /></view>
-				</view>
 				<view class="item">
 					<view class="add-title">客户编码</view>
-					<view class="add-input"><input  class="no" placeholder="编码"  v-model="customerInfo.code" /></view>
+					<view class="add-input">
+						<input v-if="type === 1" placeholder="编码"  v-model="customerInfo.code" />
+						<input v-if="type === 2" class="no" placeholder="编码" disabled v-model="customerInfo.code" />
+					</view>
 				</view>
 				<view class="item">
 					<view class="add-title red-title">客户名称</view>
-					<view class="add-input"><input placeholder="名称" v-model="customerInfo.customer"  /></view>
+					<view class="add-input"><input placeholder="客户名称" v-model="customerInfo.customer"  /></view>
 				</view>
-				<view class="item" @click="onselInfo(2)">
+				<view class="item" @click="onselInfo(1)">
 					<view class="add-title red-title">所在门店</view>
 					<view class="add-input"><input placeholder="门店" disabled v-model="selStoreInfo.departmentType" /></view>
+				</view>
+				<view class="item">
+					<view class="add-title">手机</view>
+					<view class="add-input"><input type="number" placeholder="手机" v-model="customerInfo.mobilephone" /></view>
+				</view>
+				<view class="item">
+					<view class="add-title">所属业务员</view>
+					<view class="add-input"><input placeholder="所属业务员" v-model="customerInfo.accountno"  /></view>
 				</view>
 			</view>
 			<view class="add-base-info">
 				<view class="item">
-					<view class="add-title">手机</view>
-					<view class="add-input"><input placeholder="手机" v-model="customerInfo.mobilephone" /></view>
+					<view class="add-title">客户欠款</view>
+					<view class="add-input"><input type="number" placeholder="客户欠款"  v-model="customerInfo.customer" /></view>
 				</view>
 				<view class="item">
-					<view class="add-title">业务员</view>
-					<view class="add-input"><input placeholder="业务员" v-model="customerInfo.accountno"  /></view>
+					<view class="add-title">历史交易</view>
+					<view class="add-right"><image src="../../../static/base/right.png"></image></view>
 				</view>
+				<view class="item">
+					<view class="add-title">停用</view>
+					<view class="add-sWitch">
+						 <switch @change="useWitchChange" color="#427CAC" style="transform:scale(0.6)" />
+					</view>
+				</view>
+			</view>
+			<view class="add-base-info">
 				<view class="item" @click="selCity(1)">
 					<view class="add-title">省份</view>
 					<view class="add-input"><input placeholder="省份" disabled  v-model="selCityNameS.privinceName"  /></view>
@@ -115,16 +130,24 @@
 				selPrivinceIndex: 0,
 				selCityIndex: 0,
 				selCountyIndex: 0,
-				moduleType: 1 ,// 0: 销售订单 1: 销售发货单
+				moduleType: 1,
 				isShowStore: false,
 				storeList: [],
 				customerList: [],
 				alterType: 1, // 1: 客户分类 2: 店仓
 				selCustomerInfo: {},
-				selStoreInfo: {}
+				selStoreInfo: {},
+				isUser: false,
+				id: '',
+				type: 1 // 1:添加 2: 编辑
 			}
 		},
-		onLoad() {
+		onLoad(option) {
+			this.id = option.id;
+			if (this.id !== '' && this.id !== undefined && this.id !== null) {
+				this.type = 2;
+				this.getInfo();
+			}
 			this.$API.generateNo().then(res => {
 				this.customerInfo.code = res;
 			});
@@ -133,7 +156,17 @@
 			this.saveCustomer();
 		},
 		methods: {
-			onselInfo (type) { // 选择客服分类/门店
+			getInfo () { // 获取详情
+				this.$API.get('', {id: this.id}).then(res => {
+					if (res.code === 'success') {
+						this.customerInfo = res.data;
+					}
+				});
+			},
+			useWitchChange (e) { // 是否停用
+				this.isUser = e.target.value;
+			},
+			onselInfo (type) { // 选择门店/所属业务员
 				this.isShowStore = true;
 				this.alterType = type;
 				uni.showLoading({
@@ -222,12 +255,16 @@
 				uni.navigateBack();
 			},
 			saveCustomer () { // 保存 
+				let url = '/fuxi/customer/add-customer';
+				if (this.type === 2) {
+					url = '';
+				}
 				this.customerInfo.customertypeid  = this.selCustomerInfo.customerTypeId;
 				this.customerInfo.departmentid  = this.selStoreInfo.departmentTypeId;
 				this.customerInfo.province  = this.selCityNameS.privinceName;
 				this.customerInfo.city = this.selCityNameS.cityName;
 				this.customerInfo.address = this.customerInfo.address + this.selCityNameS.countyArea;
-				this.$API.post('/fuxi/customer/add-customer', this.customerInfo).then(res => {
+				this.$API.post(url, this.customerInfo).then(res => {
 					if (res.code === 'success') {
 						uni.showToast({
 							title: '保存成功!'
@@ -246,19 +283,22 @@
 	.cgh-add-customer-view {
 		width: 100%;
 		overflow: hidden;
-		background: #fff;
+	
 		font-size: 28upx;
 		padding-bottom: 100upx;
 		.add-base-info {
 			width: 94%;
 			overflow: hidden;
-			margin: 0upx auto;
+			margin-bottom: 20upx;
+			padding: 0upx 3%;
+			background: #fff;
 			.item {
 				display: flex;
 				align-items: center;
 				white-space: nowrap;
 				border-bottom: 1upx solid $boder-se;
 				line-height: 80upx;
+				justify-content: space-between;
 				.add-title {
 					width: 22%;
 					color: #333;
@@ -271,6 +311,12 @@
 						width: 100%;
 						height: 100%;
 						color: #333;
+					}
+				}
+				.add-right {
+					width: 10%;
+					image {
+						@include cgh-right-img();
 					}
 				}
 			}

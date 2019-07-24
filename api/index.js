@@ -28,7 +28,6 @@ const API = {
 								url: '../../login/login'
 							});
 						} else {
-							console.log(JSON.stringify(data));
 							uni.showToast({
 								title: '' + data.msg,
 								icon: 'none'

@@ -4,7 +4,7 @@
 			<view class="add-base-info">
 				<view class="item" @click="onselInfo(1)">
 					<view class="add-title red-title">店仓类别</view>
-					<view class="add-input"><input placeholder="店仓" disabled v-model="selStoreInfo.departmentType" /></view>
+					<view class="add-input"><input placeholder="店仓类别" disabled v-model="selStoreInfo.departmentType" /></view>
 				</view>
 			</view>
 			<view class="add-base-info">
@@ -18,8 +18,9 @@
 				</view>
 				<view class="item" @click="onselInfo(2)">
 					<view class="add-title red-title">店仓类型</view>
-					<view class="add-input"><input placeholder="店仓" disabled v-model="selStoreTypeInfo.deptType" /></view>
+					<view class="add-input"><input placeholder="店仓类型" disabled v-model="selStoreTypeInfo.deptType" /></view>
 				</view>
+
 				<view class="item">
 					<view class="add-title red-title">是否是店仓</view>
 					<view class="add-sWitch">
@@ -149,7 +150,7 @@
 			useWitchChange (e) { // 是否停用
 				this.isUser = e.target.value;
 			},
-			onselInfo (type) { // 选择店仓类类别/类型
+			onselInfo (type) { // 选择店仓类类别/类型/部门类型
 				this.isShowStore = true;
 				this.onStoreType = type;
 				uni.showLoading({
@@ -177,8 +178,7 @@
 							this.storeTypeList = res.data;
 						}
 					});
-				}
-				
+				} 
 			},
 			okInfo (val) {// 确认选择店仓分类
 				this.isShowStore = false;
@@ -186,6 +186,8 @@
 					this.selStoreInfo = val;
 				} else if (this.onStoreType === 2){
 					this.selStoreTypeInfo = val;
+				} else if (this.onStoreType === 3){
+					this.departmentInfo = val;
 				}
 			},
 			selCity (type) {

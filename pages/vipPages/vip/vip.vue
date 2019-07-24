@@ -1,7 +1,7 @@
 <template>
 	<view class="v-sel-customer">
 		<view class="search">
-			<search placeholderStr="客户编码/客户名称/手机号" type="1" @search="search"></search>
+			<search placeholderStr="会员卡/手机号/姓名" type="1" @search="search"></search>
 		</view>
 		<view class="list-con">
 			<!-- #ifdef MP-WEIXIN -->
@@ -12,12 +12,12 @@
 				<view class="list" v-for="(v, index) in 20" :key="index" @click="toPath(index)">
 					<view class="base-info">
 						<view class="name">张家界</view>
-						<view class="desc">客户分类:
-							<text>盘点客户</text>
+						<view class="desc">所在门店:
+							<text>天河店</text>
 						 </view>
-						<view class="desc">客户余额: <text class="price">121211</text></view>
-						<view class="desc">手机:
-							<text>15216188439</text>
+						<view class="desc">积分/增值: <text class="price">121211</text></view>
+						<view class="desc">创建时间:
+							<text>2109-07-12</text>
 						 </view>
 					</view>
 					<view class="right"><image src="../../../static/base/right.png"></image></view>
@@ -53,9 +53,6 @@
 		onNavigationBarButtonTap(e) {
 			this.showAdd();
 		},
-		methods: {
-			
-		},
 		onLoad(option) {
 			this.moduleType = option.type === undefined? 1 : parseInt(option.type);
 			// this.getList();
@@ -66,7 +63,7 @@
 		},
 		methods: {
 			showAdd () {
-				this.$API.to(`../../sale/addCustomer/addCustomer`);
+				this.$API.to(`../../vipPages/addVip/addVip`);
 			},
 			search (keyword) { // 关键字搜索
 				this.para.keyword = keyword;
@@ -116,7 +113,7 @@
 				});
 			},
 			toPath (id) { // 跳转
-				this.$API.to(`../../sale/addCustomer/addCustomer?id=${id}`);
+				this.$API.to(`../../vipPages/addVip/addVip?id=${id}`);
 			}
 		},
 		components: {

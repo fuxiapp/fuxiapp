@@ -56,12 +56,22 @@
 					<view class="add-input"><input placeholder="区县" disabled  v-model="selCityNameS.countyArea"  /></view>
 				</view>
 				<view class="item">
+					<view class="add-title">详情地址</view>
+					<view class="add-input"><input placeholder="详情地址"  v-model="selCityNameS.countyArea"  /></view>
+				</view>
+				<view class="item">
 					<view class="add-title">开户银行</view>
 					<view class="add-input"><input placeholder="开户银行"  v-model="supplierInfo.addr" /></view>
 				</view>
 				<view class="item">
 					<view class="add-title">银行账户</view>
 					<view class="add-input"><input placeholder="银行账户" v-model="supplierInfo.memo"  /></view>
+				</view>
+			</view>
+			<view class="add-base-info">
+				<view class="item">
+					<view class="add-title">备注</view>
+					<view class="add-input"><input placeholder="备注" v-model="supplierInfo.memo"  /></view>
 				</view>
 			</view>
 			<view class="btn" @click="save">保存</view>
@@ -85,7 +95,7 @@
 			</view>
 		
 		</view>
-		<view  v-if="isShowStore">
+		<view v-if="isShowStore">
 			<view class="cgh-alert-black" @click="isShowStore = false"></view>
 			<view class="radio-con">
 				<view class="close" @click="isShowStore = false">
@@ -130,8 +140,10 @@
 				selCountyIndex: 0,
 				moduleType: 1 ,// 0: 销售订单 1: 销售发货单
 				isShowStore: false,
-				storeList: [1,1,1,1 ,1,1,1,,1,1,1],
-				storeTypeList: [1,1,1,1 ,1,1,1,,1,1,1],
+				conctList: [], // 负责人
+				supplierList: [], // 所属部门
+				supplierTypeList: [], // 厂商类型
+				selconctInfo: {},
 				selsupplierInfo: {},
 				selStoreTypeInfo: {},
 				onStoreType: 1,
@@ -139,7 +151,10 @@
 				isStock: true,
 				isUser: false,
 				alertTitle: '选择负责人',
-				id: '' 
+				id: '' ,
+				para: {keyWord: ''},
+				storeList: [],
+				storeTypeList: []
 			}
 		},
 		onLoad() {
@@ -164,7 +179,8 @@
 				this.isShowStore = true;
 				this.onStoreType = type;
 				uni.showLoading({
-					title: '加载中...'
+					title: '加载中...',
+					duration: 2000
 				});
 				if (type === 1) {
 					this.alertTitle = '选择负责人';
@@ -249,9 +265,6 @@
 			},
 			closeAdd () {
 				uni.navigateBack();
-			},
-			judgeataNull (val) {
-				
 			},
 			save () { // 保存
 				if (!nullPass(this.selsupplierInfo.departmentTypeId)) {
@@ -421,7 +434,7 @@
 			}
 			.radio-info-con {
 				width: 100%;
-				height: 56%;
+				height: 70%;
 				overflow: scroll;
 				position: fixed;
 				left: 0;
@@ -447,7 +460,6 @@
 			align-items: center;
 			justify-content: space-between;
 			white-space: nowrap;
-			
 			.left {
 				width: 75%;
 				height: 100%;

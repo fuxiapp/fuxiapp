@@ -224,8 +224,8 @@
 			margin: 80upx 40upx 0 40upx;
 		}
 		input {
+			width: 65%;
 		}
-		
 	}
 	
 </style>

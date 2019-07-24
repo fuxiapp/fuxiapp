@@ -36,10 +36,7 @@
 			getInfo () { // 根据id查询颜色
 				this.$API.get('/fuxi/color/query-color', {colorId: this.id}).then(res => {
 					if (res.code === 'success') {
-						uni.showToast({
-							title: '保存成功!'
-						});
-						this.cleaData();
+						this.colorInfo = res.data;
 					}
 				});
 			},

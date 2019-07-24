@@ -20,10 +20,10 @@
 	export default {
 		data() {
 			return {
-				moduleType: 15,
+				moduleType: '15',
 				companyOrStrore: 0,
 				// 分页
-				listData: [1,1,1],
+				listData: [],
 				last_id: '',
 				reload: false,
 				status: 'more',
@@ -33,7 +33,7 @@
 					contentnomore: '没有更多数据了'
 				},
 				countPage: '',
-				para: {pageSize: 10, pageNum: 1, keyword: ''},
+				para: {pageSize: 20, pageNum: 1, keyword: ''},
 			}
 		},
 		onLoad (option) {
@@ -58,7 +58,7 @@
 				this.para.keyword = keyword;
 				this.getList();
 			},
-			getList() { // 获取店仓列表
+			getList() { // 获取颜色列表
 				this.countPage = 0;
 				this.listData = [];
 				this.last_id = '';
@@ -66,9 +66,8 @@
 				this.para.pageNum = 1;
 				this.$API.get('/fuxi/color/query-color-list', this.para).then(res => {
 					if (res.code === 'success') {
-						if (res.data.pages === 0 ) {
+						if (res.data.pages === 0 ||  res.data.pages === 1) {
 							this.status = 'finish';
-							return;
 						}
 						this.countPage = res.data.pages;
 						let list = res.data.list;

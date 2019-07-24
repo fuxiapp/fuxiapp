@@ -40,9 +40,6 @@
 		onNavigationBarButtonTap(e) {
 			this.showAdd();
 		},
-		methods: {
-			
-		},
 		onLoad(option) {
 			this.moduleType = option.type === undefined? 1 : parseInt(option.type);
 			this.getList();

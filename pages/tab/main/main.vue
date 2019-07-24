@@ -72,7 +72,6 @@
 					</view>
 				</view>
 			</view>
-			
 		</view>
 	</view>
 </template>
@@ -190,7 +189,7 @@
 					},
 					{
 						icon: 'iconhuiyuanguanli',
-						url:'../../vip/vip',
+						url:'../../vipPages/vip/vip',
 						title: '会员管理',
 						bac: '#F65341',
 						routeType: 2,

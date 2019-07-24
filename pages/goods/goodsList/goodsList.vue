@@ -123,7 +123,6 @@
 			this.getMoreInfo();
 		},
 		onLoad() {
-			// this.$API.to('../../login/login');
 			this.getList();
 		},
 		onNavigationBarButtonTap (e) {
