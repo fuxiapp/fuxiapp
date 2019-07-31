@@ -9,15 +9,15 @@
 			<!-- #endif -->
 			<!--  -->
 			<view class="info-con">
-				<view class="list" v-for="(v, index) in 20" :key="index" @click="toPath(index)">
+				<view class="list" v-for="(v, index) in listData" :key="index" @click="toPath(v.customerid)">
 					<view class="base-info">
-						<view class="name">张家界</view>
+						<view class="name">{{v.customer}}</view>
 						<view class="desc">客户分类:
-							<text>盘点客户</text>
+							<text>{{v.customertype}}</text>
 						 </view>
-						<view class="desc">客户余额: <text class="price">121211</text></view>
+						<view class="desc">客户余额: <text class="price">0</text></view>
 						<view class="desc">手机:
-							<text>15216188439</text>
+							<text>{{v.mobilephone}}</text>
 						 </view>
 					</view>
 					<view class="right"><image src="../../../static/base/right.png"></image></view>
@@ -58,11 +58,11 @@
 		},
 		onLoad(option) {
 			this.moduleType = option.type === undefined? 1 : parseInt(option.type);
-			// this.getList();
+			this.getList();
 		},
 		onReachBottom() { // 页面下拉 
 			this.status = 'more';
-			// this.getMoreInfo();
+			this.getMoreInfo();
 		},
 		methods: {
 			showAdd () {
@@ -78,7 +78,7 @@
 				this.last_id = '';
 				this.status = 'more';
 				this.para.pageNum = 1;
-				this.$API.get('/fuxi/supplier/query-supplier-list', this.para).then(res => {
+				this.$API.get('/fuxi/customer/query-customer-list', this.para).then(res => {
 					if (res.code === 'success') {
 						if (res.data.pages === 0 ) {
 							this.status = 'finish';
@@ -103,7 +103,7 @@
 					this.status = 'loading';
 				}
 				this.para.pageNum++;
-				this.$API.get('/fuxi/supplier/query-supplier-list', this.para).then(res => {
+				this.$API.get('/fuxi/customer/query-customer-list', this.para).then(res => {
 					if (res.code === 'success') {
 						let list = res.data.list;
 						for (let i = 0; i < list.length; i++) {
@@ -160,7 +160,7 @@
 							
 						}
 						.desc {
-							color: #ccc;
+							color: #333;
 							font-size: 30upx;
 							text {
 								padding-left: 10upx;
