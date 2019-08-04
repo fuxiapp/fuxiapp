@@ -48,29 +48,19 @@
 			<view class="usharts-title">
 				<view class="title-name">商品销售统计</view>
 				<view class="date-con">
-					<input type="text" disabled @click="selDate(1)" v-model="startDate" placeholder="开始时间" />
-					-
-					<input type="text" disabled  @click="selDate(2)" v-model="endDate" placeholder="结束时间"  />
-					<image src="../../../static/base/down.png"></image>
+					<picker mode="date" :value="startDate" @change="confirmStartDate">
+						<input type="text" disable  v-model="startDate" placeholder="开始时间" />
+					</picker>
+					<text>-</text>
+					<picker mode="date" :value="endDate" @change="confirmEndDate">
+						<input type="text" disabled  v-model="endDate" placeholder="结束时间"  />
+					</picker>
 				</view>
 			</view>
 			<view class="qiun-charts">
 				<!--#ifndef MP-ALIPAY -->
 				<canvas canvas-id="canvasRing" id="canvasRing" class="charts"></canvas>
 				<!--#endif-->
-			</view>
-		</view>
-		
-		<view v-if="isDateShow">
-			<view class="cgh-black" @click="closeMask"></view>
-			<view class="cgh-white">
-				<view class="calendar-box">
-					<uni-calendar :lunar="checkedFlg" :fixed-heihgt="checkedFlg" :slide="checkedFlg" :disable-before="checkedFlg"  @change="change" @to-click="toClick" />
-					<view class="cgh-calendar-button">
-						<view class="cel" @click="closeMask">取消</view>
-						<view class="confirm" @click="confirm">确认</view>
-					</view>
-				</view>
 			</view>
 		</view>
 	</view>
@@ -195,14 +185,14 @@
 						routeType: 2,
 						type: 12
 					},
-					{
+					/* {
 						icon: 'iconyuangongguanli',
 						url:'../../employee/employee',
 						title: '员工管理',
 						bac: '#FD943E',
 						routeType: 2,
 						type: 13
-					},
+					}, */
 					{
 						icon: 'iconchangshang',
 						url:'../../supplier/supplierList/supplierList',
@@ -286,14 +276,6 @@
 					}
 
 				],
-				isDateShow: false,
-				slide: 'none',
-				date: '',
-				startDate: '',
-				endDate: '',
-				timeData: '',
-				checkedFlg: false,
-				selDateIndex: 1,
 			};
 		},
 		onLoad() {
@@ -386,26 +368,11 @@
 				});
 			
 			},
-			change(e) {
-				this.timeData =  e.fulldate;
+			confirmStartDate (e) { // 开始时间
+				this.startDate =  e.target.value;
 			},
-			toClick(e) {
-				this.timeData =  e.fulldate;
-			},
-			confirm() {
-				this.isDateShow = false;
-				if (this.selDateIndex === 1) {
-					this.startDate = this.timeData;
-				} else if (this.selDateIndex === 2) {
-					this.endDate = this.timeData;
-				}
-			},
-			closeMask() {
-				this.isDateShow = false;
-			},
-			selDate (index) {
-				this.isDateShow = true;
-				this.selDateIndex = index;
+			confirmEndDate (e) { // 结束时间
+				this.endDate =  e.target.value;
 			}
 		},
 		components: {
@@ -553,13 +520,18 @@
 			margin-left: 20upx;
 			margin-right: 20upx;
 			input {
-				width: 48%;
+				width: 100%;
 				height: 50upx;
 				border: 1upx solid $boder-se;
 				padding-left: 5upx;
+				text-align: center;
 			}
 			image {
 				margin-top: 20upx;
+			}
+			text {
+				font-size: 30upx;
+				padding: 0upx 10upx;
 			}
 		}
 			

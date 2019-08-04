@@ -2,21 +2,30 @@
 	<view class="cgh-add-customer-view">
 		<view class="add-base-info">
 			<view class="item">
+				<view class="add-title red-title">会员编号</view>
+				<view class="add-input">
+					<input type="text" v-if="type === 1" placeholder="请输入会员编号" v-model="vipInfo.code" />
+					<input type="text" v-if="type === 2 " placeholder="请输入会员编号" disabled v-model="vipInfo.code" />
+				</view>
+			</view>
+			<view class="item">
 				<view class="add-title red-title">姓名</view>
-				<view class="add-input"><input placeholder="姓名" v-model="customerInfo.customer"  /></view>
+				<view class="add-input">
+					<input placeholder="姓名" v-model="vipInfo.vip"  />
+				</view>
 			</view>
 			<view class="item">
 				<view class="add-title">手机</view>
-				<view class="add-input"><input type="number" placeholder="手机" v-model="customerInfo.mobilephone" /></view>
-			</view>
-			<view class="item" @click="onselInfo(1)">
-				<view class="add-title red-title">vip类别</view>
-				<view class="add-input"><input placeholder="vip类别" disabled v-model="selStoreInfo.departmentType" /></view>
-				<view class="add-right"><image src="../../../static/base/right.png"></image></view>
+				<view class="add-input"><input type="number" placeholder="手机" v-model="vipInfo.mobilephone" /></view>
 			</view>
 			<view class="item">
+				<view class="add-title red-title">vip类别</view>
+				<view class="add-input"  @click="onselInfo(1)"><input placeholder="vip类别" disabled v-model="selStoreInfo.name" /></view>
+				<view class="add-type" @click="isShowTypeAdd = true">新增</view>
+			</view>
+			<view class="item" >
 				<view class="add-title">所属门店</view>
-				<view class="add-input"><input placeholder="所属门店" v-model="customerInfo.accountno"  /></view>
+				<view class="add-input " @click="onselInfo(2)"><input placeholder="所属门店" v-model="selCustomerInfo.name" disabled /></view>
 				<view class="add-right"><image src="../../../static/base/right.png"></image></view>
 			</view>
 			<view class="item-radio">
@@ -29,37 +38,35 @@
 			</view>
 			<view class="item">
 				<view class="add-title">生日</view>
-				<view class="add-input" @click="isDateShow = true"><input placeholder="生日" disabled  v-model="customerInfo.birthday"  /></view>
+				<view class="add-input" >
+					<picker mode="date" :value="vipInfo.birthday" @change="confirmBirthday">
+						<input placeholder="生日" disabled  v-model="vipInfo.birthday"  />
+					</picker>
+				</view>
 				<view class="add-right"><image src="../../../static/base/right.png"></image></view>
 			</view>
 		</view>
-		<view class="btn">保存</view>
+		<view class="btn" v-if="!isShowTypeAdd" @click="save" >保存</view>
 		<!-- 弹框选择 -->
-		<view  v-if="isShowStore">
-			<view class="cgh-alert-black" @click="isShowStore = false"></view>
-			<view class="close" @click="isShowStore = false"><image src="../../../static/icon/login/icon_del.png"></image></view>
-			<view class="radio-con">
-				<view class="radio-info-con">
-					<view class="item" v-if="alterType === 1" v-for="(item, index) in customerList" :key="index" @click="okInfo(item)">
-						{{item.customerType}}
+		<view  v-if="isShowStore" >
+			<radioItemsSearch  v-if="alterType === 1" :list="vipTypeList"  title="vip分类" placeholderTitle="关键字搜索"  @closeAlert="closeAlert" @search="search"  @okRadioValue="okInfo()"></radioItemsSearch>
+			<radioItemsSearch  v-if="alterType === 2" :list="storeList"  title="所属门店" placeholderTitle="关键字搜索"  @closeAlert="closeAlert" @search="search"  @okRadioValue="okInfo()" :moreType="alterType"  :isPage="isPage" :isMore="departmentMore"   @moreTypeInfo="moreTypeInfo" ></radioItemsSearch>
+		</view> 
+		<!-- 新增vip类别 -->
+		<view v-if="isShowTypeAdd">
+			<view class="cgh-black" @click="closeAddType"></view>
+			<view class="cgh-add-type-white">
+				<view class="add-base-info">
+					<view class="item">
+						<view class="add-title">类别名称</view>
+						<view class="add-input"><input placeholder="类别名称"  v-model="addVipInfo.vipType"  /></view>
 					</view>
-					<view class="item" v-if="alterType === 2" v-for="(item, index) in storeList" :key="index" @click="okInfo(item)">
-						{{item.departmentType}}
+					<view class="item">
+						<view class="add-title">类别折扣</view>
+						<view class="add-input"><input type="number"  placeholder="类别折扣"  v-model="addVipInfo.discountRate "  /></view>
 					</view>
-				</view>
-			</view>
-		</view>
-		<!-- 日期选择 -->
-		<view v-if="isDateShow">
-			<view class="cgh-black" @click="isDateShow = false"></view>
-			<view class="cgh-white">
-				<view class="calendar-box">
-						<uni-calendar :lunar="checkedFlg" :fixed-heihgt="checkedFlg" slide="vertical" :disable-before="checkedFlg"  @change="changeDate" @to-click="toClick" />
-					<view class="cgh-calendar-button">
-						<view class="cel" @click="isDateShow = false">取消</view>
-						<view class="confirm" @click="confirm">确认</view>
-					</view>
-				</view>
+				</view> 
+				<view class="cgh-add-type-button" @click="saveVipType">确认</view>
 			</view>
 		</view>
 	</view>
@@ -67,14 +74,15 @@
 <script>
 	import city from '../../../common/city-data.json';
 	import uniCalendar from '../../../components/uni-calendar/uni-calendar.vue';
+	import radioItemsSearch from '../../../components/radioItemsSearch';
 	export default {
 		data() {
 			return {
-				customerInfo: {},
+				vipInfo: {code: '', birthday: ''},
 				moduleType: 1,
 				isShowStore: false,
 				storeList: [],
-				customerList: [],
+				vipTypeList: [],
 				alterType: 1, // 1: 客户分类 2: 店仓
 				selCustomerInfo: {},
 				selStoreInfo: {},
@@ -83,96 +91,145 @@
 				type: 1,// 1:添加 2: 编辑
 				sexRadioTab: [{name: '男', val: 0}, {name: '女', val: 1}],
 				selSex: 0,
-				isDateShow: false,
-				timeData: '',
-				checkedFlg: false
+				keyWord: '',
+				isShowTypeAdd: false,
+				addVipInfo: {},
+				// 弹框分页
+				isPage: true,
+				size: 10,
+				departmentPage: 1,  // 所属门店
+				departmentMore: true,
 			}
 		},
 		onLoad(option) {
 			this.id = option.id;
 			if (this.id !== '' && this.id !== undefined && this.id !== null) {
+				uni.setNavigationBarTitle({title: '编辑会员'});
 				this.type = 2;
 				this.getInfo();
+			} else {
+				this.$API.generateNo().then(res => {
+					this.vipInfo.code = res;
+				});
+				this.$API.getStorage('fuxiUserInfo').then(res => {
+					this.selCustomerInfo = {id: res.data.departmentId, name: res.data.departmentName};
+				});
 			}
-			this.$API.generateNo().then(res => {
-				this.customerInfo.code = res;
-			});
 		},
 		onNavigationBarButtonTap(e) {
 			this.saveCustomer();
 		},
 		methods: {
 			getInfo () { // 获取详情
-				this.$API.get('', {id: this.id}).then(res => {
+				this.$API.get('/fuxi/vip/query-vip', {vipId: this.id}).then(res => {
 					if (res.code === 'success') {
-						this.customerInfo = res.data;
+						this.vipInfo = res.data;
+						this.vipInfo.birthday = this.$API.fmtClearTime(this.vipInfo.birthday);
+						this.selCustomerInfo =  {id: this.vipInfo.departmentid, name: this.vipInfo.department};
+						this.selStoreInfo = {id: this.vipInfo.viptypeid, name: this.vipInfo.viptype};
+						this.selSex = this.vipInfo.sex == '男'? 0 : 1;
 					}
 				});
+			},
+			closeAlert () {
+				this.isShowStore = false;
+				this.keyWord = '';
+			},
+			search (str) { // 弹框搜索
+				this.keyWord = str;
+				this.onselInfo(this.alterType);
 			},
 			onSelSex (index) { //  选择性别
 				this.selSex = index;
 			},
-			changeDate(e) {
-				
-				this.timeData = e.fulldate;
-			},
-			toClick(e) {
-				this.timeData =  e.fulldate;
-			},
-			confirm() {
-				this.isDateShow = false;
-				this.customerInfo.birthday = this.timeData;
+			confirmBirthday(e) {
+				this.vipInfo.birthday =  e.target.value;
 			},
 			onselInfo (type) { // 选择类别/门店
-				this.isShowStore = true;
 				this.alterType = type;
 				uni.showLoading({
-					title: '加载中...'
+					title: '加载中...',
 				});
 				if (type === 1) {
-					if (this.customerList.length !== 0) {
-						uni.hideLoading();
-						return;
-					}
-					this.$API.get('/fuxi/select/query-customer-type').then(res => {
+					this.$API.get('/fuxi/select/query-vip-type', {keyWord: this.keyWord}).then(res => {
 						uni.hideLoading();
 						if (res.code === 'success') {
-							this.customerList = res.data;
+							this.vipTypeList = this.$API.fmtSelData(res.data, 15);
+							this.isShowStore = true;
 						}
 					});
 				} else if (type === 2) {
-					if (this.storeList.length !== 0) {
-						uni.hideLoading();
-						return;
-					}
-					this.$API.get('/fuxi/select/query-department-type').then(res => {
+					this.departmentPage = 1;
+					this.departmentMore = true;
+					this.$API.get('/fuxi/select/query-department',  {keyword: this.keyWord, pageNum: this.departmentPage, pageSize: this.size}).then(res => {
 						uni.hideLoading();
 						if (res.code === 'success') {
-							this.storeList = res.data;
+							this.isShowStore = true;
+							this.storeList = this.$API.fmtSelData(res.data.list, 6);
+							if (this.departmentPage === res.data.pages) {
+								this.departmentMore = false;
+							} else {
+								this.departmentMore = true;
+							}
 						}
 					});
 				}
-				
+			
 			},
-			okInfo (val) {// 确认选择选择类别/门店
+			moreTypeInfo (index) { // 更新弹框信息
+				uni.showLoading({
+					title: '加载中...',
+				});
+				 if (index === 2) {
+					this.departmentPage++;
+					this.$API.get('/fuxi/select/query-department',  {keyword: this.keyWord, pageNum: this.departmentPage, pageSize: this.size}).then(res => {
+						uni.hideLoading();
+						if (res.code === 'success') {
+							let list = this.$API.fmtSelData(res.data.list, 6);
+							this.storeList = this.storeList.concat(list);
+							if (this.departmentPage === res.data.pages) {
+								this.departmentMore = false;
+							} else {
+								this.departmentMore = true;
+							}
+						}
+					});
+				} 
+			},
+			okInfo (val) {// 确认选择选择
 				this.isShowStore = false;
 				if (this.alterType === 1) {
-					this.selCustomerInfo = val;
-				} else if (this.alterType === 2) {
 					this.selStoreInfo = val;
+				} else if (this.alterType === 2) {
+					this.selCustomerInfo = val;
 				}
 			},
-			saveCustomer () { // 保存 
-				let url = '/fuxi/customer/add-customer';
+			closeAddType () {
+				this.isShowTypeAdd = false;
+				this.addVipInfo = {};
+			},
+			saveVipType () { // 保存vip类别
+				this.$API.post('/fuxi/vip/add-vip-type', this.addVipInfo).then(res => {
+					console.log(res);
+					if (res.code === 'success') {
+						uni.showToast({
+							title: '保存成功!'
+						});
+						this.closeAddType();
+					}
+				});
+			},
+			save () { // 保存 
+				let url = '/fuxi/vip/add-vip';
+				let method = 'POST';
 				if (this.type === 2) {
-					url = '';
+					url = '/fuxi/vip/update-vip';
+					method = 'PUT';
 				}
-				this.customerInfo.customertypeid  = this.selCustomerInfo.customerTypeId;
-				this.customerInfo.departmentid  = this.selStoreInfo.departmentTypeId;
-				this.customerInfo.province  = this.selCityNameS.privinceName;
-				this.customerInfo.city = this.selCityNameS.cityName;
-				this.customerInfo.address = this.customerInfo.address + this.selCityNameS.countyArea;
-				this.$API.post(url, this.customerInfo).then(res => {
+				this.vipInfo.viptypeid  = this.selStoreInfo.id;
+				this.vipInfo.departmentid  = this.selCustomerInfo.id;
+				this.vipInfo.sex = this.sexRadioTab[this.selSex].name;
+				this.$API.post(url, this.vipInfo, method).then(res => {
 					if (res.code === 'success') {
 						uni.showToast({
 							title: '保存成功!'
@@ -183,7 +240,8 @@
 			}
 		},
 		components: {
-			uniCalendar
+			uniCalendar,
+			radioItemsSearch
 		}
 	}
 </script>
@@ -193,7 +251,6 @@
 	.cgh-add-customer-view {
 		width: 100%;
 		overflow: hidden;
-	
 		font-size: 28upx;
 		padding-bottom: 100upx;
 		.add-base-info {
@@ -215,7 +272,6 @@
 				border-bottom: 1upx solid $boder-se;
 				line-height: 80upx;
 				justify-content: space-between;
-			
 				.add-input {
 					width: 76%;
 					input {
@@ -230,6 +286,14 @@
 					image {
 						@include cgh-right-img();
 					}
+				}
+				.add-type {
+					width: 15%;
+					height: 60upx;
+					background: $themeColor;
+					line-height: 60upx;
+					color: #fff;
+					text-align: center;
 				}
 			}
 		}
@@ -350,5 +414,28 @@
 				}
 			}
 		}
+		.cgh-add-type-white {
+			width: 90%;
+			height: 400upx;
+			background: #fff;
+			display: black; 
+			position: fixed; 
+			left: 5%;
+			top: 20%;
+			z-index: 3;
+			-webkit-overflow-scrolling: touch;
+			padding-top: 20upx;
+			.cgh-add-type-button {
+				width: 80%;
+				height: 70upx;
+				@include default-bac-button();
+				border-radius: 10upx;
+				background: $themeColor;
+				margin-left: 10%;
+				margin-top: 40upx;
+				line-height: 70upx;
+			}
+		}
+		
 	}
 </style>

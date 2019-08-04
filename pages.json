@@ -1,6 +1,15 @@
 {
 	"pages": [ //pages数组中第一项表示应用启动页
 		{
+			"path": "pages/login/login",
+			"style": {
+				"app-plus": {
+					//禁用原生导航栏
+					"titleNView": false
+				}
+			}
+		},
+		{
 			"path": "pages/tab/main/main",
 			"style": {
 				"navigationBarTitleText": "工作台",
@@ -11,16 +20,6 @@
 			},
 			"scrollIndicator": "none"
 		},
-		{
-			"path": "pages/login/login",
-			"style": {
-				"app-plus": {
-					//禁用原生导航栏
-					"titleNView": false
-				}
-			}
-		},
-		
 		{
 			"path": "pages/tab/sales/sales",
 			"style": {
@@ -441,10 +440,10 @@
 		]
 	},
 	"globalStyle": {
-		"navigationBarTextStyle": "white",
+		"navigationBarTextStyle": "#ffffff",
 		"navigationBarTitleText": "西奈移动应用",
-		"navigationBarBackgroundColor": "black",
-		"backgroundColor": "white"
+		"navigationBarBackgroundColor": "#333333",
+		"backgroundColor": "#ffffff"
 	},
 	"condition": { //模式配置，仅开发期间生效
 		"current": 0, // 当前激活的模式(list 的索引项)

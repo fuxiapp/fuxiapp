@@ -7,6 +7,10 @@
 					<view v-for="(item, index) in classTypeInfo"  :key="index" :class="item.flg === true ? 'item check-item' : 'item'" @click="onType(index)">
 						{{item.name}}
 					</view>
+					<block v-if="isPage">
+						<view class="child-more" v-if="isMore"  @click="onMoreType">查看更多</view>
+						<view class="child-more" v-if="!isMore">已加载全部</view>
+					</block>
 				</view>
 				<view class="btn" >
 					<view class="reset" @click="resetType">重置</view>
@@ -24,30 +28,25 @@
 				type: Array,
 				default: []
 			},
-			selCityInfo: {
+			selTypeChidenItem: {
 				type: Array,
 				default: []
-			},
-			selCounty: {
-				type: Array,
-				default: []
-			},
-			isShowCity: {
-				type: Boolean,
-				default: false
-			},
-			cityType: {
-				type: Number,
-				default: 0
 			},
 			moduleType: {
 				type: Number,
 				default: 1
 			},
-			selCityNameS: {},
-			selTypeChidenItem: {
-				type: Array,
-				default: []
+			isPage: { // 是否分页
+				type: Boolean,
+				default: false
+			},
+			moreType: { // 分页类型
+				type: Number,
+				default: 0
+			},
+			isMore: { // 是否更多
+				type: Boolean,
+				default: true
 			}
 		},
 		data() {
@@ -69,7 +68,10 @@
 			},
 			closeMoreType() {
 				this.$emit('closeMoreType');
-			}
+			},
+			onMoreType () {
+				this.$emit('moreTypeInfo', this.moreType);	
+			},
 		}
 		
 	}
@@ -138,6 +140,11 @@
 					color: black;
 				}
 			}
+		}
+		.child-more {
+			float: left;
+			@include base-btn (80%, 70upx);
+			margin-left: 10%;
 		}
 	}
 </style>

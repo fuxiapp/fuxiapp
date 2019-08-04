@@ -1,13 +1,9 @@
 <template>
 	<scroll-view class="goods-list-view">
+		<view class="search">
+			<search placeholderStr="请输入货品条码" type="1" @search="search"></search>
+		</view>
 		<view class="v-filter">
-			<view class="search-conten">
-				<view class="search-con">
-					<image class="search" @click="getList"  src="../../../static/base/search.png"></image>
-					<input v-model="para.keyword" placeholder="请输入货品条码" />
-					<image class="close" @click="clearSearch" src="../../../static/base/colse.png"></image>
-				</view>
-			</view>
 			<view class="head">
 				<view class="v-price" @tap="sortPrice">
 					<view class="price-title">价格</view>
@@ -52,8 +48,8 @@
 		</view>
 		<view class="v-goods-list" scroll-x="false" scroll-y="true">
 			<!-- #ifdef MP-WEIXIN -->
-			<!-- <button style="background: #0077AA;" @click="scoInfo">扫描</button>
-			<button style="background: #0077AA;" @click="toAddGoods">添加</button> -->
+			<button style="background: #0077AA;" @click="scoInfo">扫描</button>
+			<button style="background: #0077AA;" @click="toAddGoods">添加</button>
 			<!-- #endif -->
 			<view class="v-goods" v-for="(goods,index) in listData" :key="index">
 				<view class="v-goods-top">
@@ -87,13 +83,14 @@
 			<selType v-if="typeNumber === 1" :selTypeChidenItem="selTypeChidenItem" :classTypeInfo="classTypeInfo" @onType="onType" @okType="okType" @resetType="resetType" @closeMoreType="closeMoreType"></selType>
 			<selType v-if="typeNumber === 2" :selTypeChidenItem="selTypeChidenItem" :classTypeInfo="AgeTypeInfo" @onType="onType" @okType="okType" @resetType="resetType" @closeMoreType="closeMoreType"></selType>
 			<selType v-if="typeNumber === 3" :selTypeChidenItem="selTypeChidenItem" :classTypeInfo="seasonTypeInfo" @onType="onType" @okType="okType" @resetType="resetType" @closeMoreType="closeMoreType" ></selType>
-			<selType v-if="typeNumber === 4" :selTypeChidenItem="selTypeChidenItem" :classTypeInfo="supplierTypeInfo" @onType="onType" @okType="okType" @resetType="resetType" @closeMoreType="closeMoreType"  ></selType>
+			<selType v-if="typeNumber === 4" :selTypeChidenItem="selTypeChidenItem" :classTypeInfo="supplierTypeInfo" @onType="onType" @okType="okType" @resetType="resetType" @closeMoreType="closeMoreType" :moreType="typeNumber"  :isPage="isPage" :isMore="supplierisMore"   @moreTypeInfo="moreTypeInfo"   ></selType>
 		</view>
 	</scroll-view>
 </template>
 <script>
 	import uniLoadMore from '../../../components/uni/uni-load-more/uni-load-more.vue';
 	import selType from '../../../components/selType.vue';
+	import search from '../../../components/search.vue';
 	export default {
 		data() {
 			return {
@@ -115,9 +112,21 @@
 				supplierTypeInfo: [],
 				isShowType: false,
 				typeNumber: 1,
-				selTypeChidenItem: []
+				selTypeChidenItem: [],
+				// 弹框分页
+				isPage: true,
+				size: 10,
+				supplierPage: 1,  // 厂商
+				supplierisMore: true,
 			}
 		},
+		onBackPress(options) {  
+            if (options.from === 'navigateBack') {  
+                return false;  
+            } 
+			this.$API.to('../../goods/goodsList/goodsList');
+            return true;  
+        }, 		
 		onReachBottom() { // 页面下拉 
 			this.status = 'more';
 			this.getMoreInfo();
@@ -134,8 +143,8 @@
 			}
 		},
 		methods: {
-			clearSearch () {
-				this.para.keyword = '';
+			search (keyword) { // 关键字搜索
+				this.para.keyword = keyword;
 				this.getList();
 			},
 			toPath (type, id) {
@@ -151,7 +160,7 @@
 					provider: "weixin",
 					scene: "WXSceneSession",
 					type: 0,
-					href: "https://www.baidu.com/",
+					href: `${this.$SHARE}/mallgoods/${info.goodsid}/goodsdetail.html`,
 					title: '西奈应用',
 					summary: info.name,
 					imageUrl: info.image,
@@ -292,12 +301,7 @@
 					}
 					this.$API.get('/fuxi/select/query-goods-type').then(res => {
 						if (res.code === 'success') {
-							let arr = res.data;
-							for (let i = 0; i < arr.length; i++) {
-								let info = {name: arr[i].goodsType, goodsTypeId: arr[i].goodsTypeId, flg: false};
-								this.classTypeInfo.push(info);
-							}
-							
+							this.$API.fmtDateInfo(res.data, 11);
 						}
 					});
 				} else if (index === 2) {
@@ -329,20 +333,44 @@
 						}
 					});
 				} else if (index === 4) {
-					if (this.supplierTypeInfo.length > 0) {
-						return;
-					}
-					this.$API.get('/fuxi/select/query-supplier').then(res => {
+					this.supplierPage = 1;
+					this.$API.get('/fuxi/select/query-supplier', {pageNum: this.supplierPage, pageSize: this.size}).then(res => {
 						if (res.code === 'success') {
-							let arr = res.data;
+							let arr = res.data.list;
 							for (let i = 0; i < arr.length; i++) {
 								let info = {name: arr[i].supplier, supplierId: arr[i].supplierId, flg: false};
 								this.supplierTypeInfo.push(info);
+								if (this.supplierPage === res.data.pages) {
+									this.supplierisMore = false;
+								} else {
+									this.supplierisMore = true;
+								}
 							}
 							
 						}
 					});
 				}
+			},
+			moreTypeInfo (index) { // 更新弹框信息
+				 if (index === 4) {
+					this.supplierPage++;
+					this.$API.get('/fuxi/select/query-supplier', {pageNum: this.supplierPage, pageSize: this.size}).then(res => {
+						if (res.code === 'success') {
+							let arr = res.data.list;
+							let list = [];
+							for (let i = 0; i < arr.length; i++) {
+								let info = {name: arr[i].supplier, supplierId: arr[i].supplierId, flg: false};
+								list.push(info);
+							}
+							this.supplierTypeInfo = this.supplierTypeInfo.concat(list);
+							if (this.supplierPage === res.data.pages) {
+								this.supplierisMore = false;
+							} else {
+								this.supplierisMore = true;
+							}
+						}
+					});
+				} 
 			},
 			okType () { // 确定筛选类型
 				this.isShowType = false;
@@ -413,7 +441,8 @@
 		},
 		components: {
 			uniLoadMore,
-			selType
+			selType,
+			search
 		}
 	}
 </script>
@@ -427,35 +456,15 @@
 			position: fixed;
 			width: 100%;
 			overflow: hidden;
-			top: 0;
+			/* #ifndef H5 */
+				top: 110upx;
+			/*  #endif */
+			/* #ifdef H5 */
+				top: 200upx;
+			/*  #endif */
 			left: 0;
 			z-index: 1;
 			padding: 15upx 0upx;
-			.search-conten {
-				width: 100%;
-				border-bottom: 1upx solid $boder-se;
-				padding-bottom: 20upx;
-				.search-con {
-					width: 94%;
-					margin: 0upx 0upx 10upx 2%;
-					display: flex;
-					justify-content: space-around;
-				}
-				.search {
-					width: 50upx;
-					height: 50upx;
-					vertical-align: middle;
-				}
-				input {
-					width: 80%;
-				}
-				.close {
-					width: 50upx;
-					height: 50upx;
-					vertical-align: middle;
-				}
-					
-			}
 			.head {
 				width: 100%;
 				display: flex;
@@ -499,10 +508,9 @@
 		}
 		
 		.v-goods-list {
-			margin-top: 200upx;
+			margin-top: 220upx;
 			overflow: hidden;
 		}
-		
 		.v-goods {
 			background-color: #FFFFFF;
 			margin-top: 10upx;

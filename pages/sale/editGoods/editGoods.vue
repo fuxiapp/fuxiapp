@@ -3,17 +3,19 @@
 		<view class="con goods-base-info">
 			<view class="img"><image @error="handleError" :src="goodsInfo.image"></image></view>
 			<view class="info">
-				<view class="name">{{goodsInfo.name}}</view>
-				<view class="no">{{goodsInfo.code}}</view>
+				<view class="name">{{goodsInfo.goodsName}}</view>
+				<view class="no">{{goodsInfo.goodsCode}}</view>
 				<view class="prices">
 					<text class="there">¥</text>
-					<text class="org" @click="openUpPrice(1)">{{goodsInfo.retailsales}}</text>
+					<text class="org" @click="openUpPrice(1)" v-if="goodsInfo.morePrice === ''">0</text>
+					<text class="org" @click="openUpPrice(1)" v-if="goodsInfo.morePrice !== ''">{{goodsInfo.unitPrice}}</text>
 					<image @click="onMore()" src="../../../static/base/time.png"></image>
 					<text class="sel-more" @click="onMore()">更多价格</text>
 				</view>
-				<view class="name">
+				<view class="name"  @click="openUpPrice(2)">
 					<text class="there">折扣</text>
-					<text  class="org" @click="openUpPrice(2)">{{goodsInfo.discount}}</text>
+					<text class="org" v-if= "goodsInfo.discountRate === ''">1</text>
+					<text class="org" v-if= "goodsInfo.discountRate !== ''">{{goodsInfo.discountRate}}</text>
 				</view>
 			</view>
 		</view>
@@ -27,9 +29,9 @@
 			</view>
 		</view>
 		<view class="color-con">
-			<view class="color-item" v-for="(item, index) in 4" :key="index" >
-				<view class="name">蓝色</view>
-				<view class="number">123</view>
+			<view  v-for="(v, index) in colorList"  :class="index === selColorIndex ? 'color-item check-color':'color-item'" :key="index" @click="onColor(index)" >
+				<view class="name">{{v.colorName}}</view>
+				<view class="number" v-if="v.quantity > 0">{{v.quantity}}</view>
 			</view>
 		</view>
 		<view class="info-con">
@@ -39,12 +41,12 @@
 				<view class="cgh-number">数量</view>
 			</view>
 			<view class="info-details">
-				<view class="list" v-for="(item, index) in infoList" :key="index">
-					<view  class="cgh-size">36</view>
-					<view class="cgh-stock">42</view>
+				<view class="list" v-for="(v, index) in sizeList" :key="index">
+					<view  class="cgh-size">{{v.sizeName}}</view>
+					<view class="cgh-stock">{{v.stock}}</view>
 					<view class="cgh-number">
 						<view class="less" @click="less(index)">-</view>
-						<view class="one-number"><input v-model="item.number" @blur="inputBlur(2, index)"  placeholder="数量"/></view>
+						<view class="one-number"><input type="number" v-model="v.quantity" @input="inputBlur(2, index)"  placeholder="数量"/></view>
 						<view class="add" @click="add(index)">+</view>
 					</view>
 				</view>
@@ -52,21 +54,12 @@
 		</view>
 		
 		<view class="more-con" v-if="isShowMore">
-			<view class="price-con">
-				<view class="type">批发价</view>
-				<view class="price">¥ 350</view>
-			</view>
-			<view class="price-con">
-				<view class="type">零售价</view>
-				<view class="price">¥ 350</view>
-			</view>
-			<view class="company">
+			<!-- <view class="company">
 				<image src="../../../static/base/sjx.png"></image>
 				<text>张家界</text>上次销售价
-			</view>
-			<view class="price-con" v-for="(itme, index) in 2" :key="index">
-				<view class="type">蓝色</view>
-				<view class="price">¥ 350</view>
+			</view> -->
+			<view class="price-con" v-for="(v, index) in morePriceList" :key="index">
+				{{v}}
 			</view>
 		</view>
 		<view v-if="isShowPrice">
@@ -86,28 +79,22 @@
 			确定
 		</view>
 		<view class="footer" v-else>
-			<view class="left">20件<text>¥ 12000.00</text></view>
+			<view class="left">{{totalNumber}}件<text>¥ {{totalPrice}}</text></view>
 			<view class="right" @click="toPath">确定</view>
 		</view>
 		
 	</view>
 </template>
 <script>
+	import {mapState,mapMutations} from 'vuex';
 	export default {
 		data() {
 			return {
-				goodsInfo: {price: 689.00, discount: 10},
-				infoList: [
-					{id:1, number: 0},
-					{id:1, number: 0},
-					{id:1, number: 0},
-					{id:1, number: 0},
-					{id:1, number: 0},
-					{id:1, number: 0},
-					{id:1, number: 0},
-					{id:1, number: 0},
-					{id:1, number: 0},
-				],
+				goodsInfo: {price: 689.00, discount: 10}, // 货品基本信息
+				colorList: [], // 颜色
+				sizeList: [], // 尺码
+				colorAndSize: [],
+				morePriceList: [], // 更多价格
 				numberS: [],
 				allNumber: 1,
 				isShowMore: false,
@@ -116,7 +103,12 @@
 				priceType: 0,
 				upTitle: '修改价格',
 				moduleType: 0,
-				id: '019W7'
+				id: '019W7',
+				selColorIndex: 0, // 选中的颜色  
+				selColorItem: [],
+				totalNumber:  0, // 总数量
+				totalPrice: 0, // 折后价格
+				strogeInfo: [], // 已选择的货品信息
 			}
 		},
 		onLoad(option) {
@@ -132,11 +124,22 @@
 			this.getByIdInfo();
 		},
 		methods: {
+			...mapMutations(['changeSales']),
 			getByIdInfo () { // 获取详情信息
-				this.$API.get('/fuxi/goods/query-goods', {goodsId:this.id}).then(res => {
+				uni.showLoading({
+					title: '加载中...'
+				});
+				this.$API.get('/fuxi/barcode/barcode-parsing', {goodsId: this.id}, 'POST').then(res => {
+					uni.hideLoading();
 					if (res.code === 'success') {
 						this.goodsInfo = res.data;
-						this.goodsInfo.image = this.$URL + this.goodsInfo.code + '.jpg';
+						if (this.goodsInfo.discountRate  === '' || this.goodsInfo.discountRate === null) { 
+							this.goodsInfo.discountRate = 1;
+						}
+						this.morePriceList = res.data.morePrice;
+						this.goodsInfo.image = this.$URL + this.goodsInfo.goodsCode + '.jpg';
+						this.colorList = res.data.colors;
+						this.sizeList = this.colorList[0].sizes;
 					}
 				});
 			},
@@ -146,8 +149,73 @@
 			toPath () {
 				if (this.moduleType === 7) {
 					this.$API.to(`../../sale/addGoodsConfig/addGoodsConfig?id=${this.id}&type=${this.moduleType}`);
-				} else {
-					this.$API.to(`../../sale/saleComfig/saleComfig?id=${this.id}&type=${this.moduleType}`);
+				} else { // 销售发货单
+					let selInfoList = [];
+					let discount = (this.goodsInfo.retailSales - (this.goodsInfo.retailSales * (this.goodsInfo.discountRate / 10))).toFixed(2);
+					for (let j = 0; j < this.colorList.length; j++) {
+						let flg = false;
+						let colorS = {};
+						colorS.amount = this.totalPrice; 
+						colorS.colorid = this.colorList[j].colorId;
+						colorS.discountrate  = this.goodsInfo.discountRate;
+						colorS.goodsid = this.goodsInfo.goodsId;
+						colorS.quantity = this.totalNumber;
+						colorS.unitprice  = this.goodsInfo.unitPrice;
+						colorS.discount = discount;
+						for (let i = 0; i < this.colorList[j].sizes.length; i++) {
+							let s = this.colorList[j].sizes[i].quantity;
+							if (s !== '' && s !== null && parseInt(s) > 0) {
+								flg = true;	
+							} else {
+								s = 0;
+							}
+							switch (i) {
+								case 0:
+									colorS.x1 = s;
+									continue;
+								case 1:
+									colorS.x2 = s;
+									continue;
+								case 2:
+									colorS.x3 = s;
+									continue;
+								case 3:
+									colorS.x4 = s;
+									continue;
+								case 4:
+									colorS.x5 = s;
+									continue;
+								case 5:
+									colorS.x6 = s;
+									continue;
+								case 6:
+									colorS.x7 = s;
+									continue;
+								case 7:
+									colorS.x8 = s;
+									continue;
+								case 8:
+									colorS.x9 = s;
+									continue;
+							}
+						}
+						if (flg) {
+							selInfoList.push(colorS);
+						}
+					}
+					if (selInfoList.length === 0) {
+						uni.showToast({
+							title: '请选择添加一个数量!',
+							icon: 'none'
+						});
+						return;
+					}
+					let info = [{code: this.goodsInfo.goodsCode, totalPrice: this.totalPrice , discount: discount,  image: this.goodsInfo.image ,name: this.goodsInfo.goodsName, price: this.goodsInfo.unitPrice, quantity: this.totalNumber, discountrate: this.goodsInfo.discountrate,  colorList: selInfoList}];
+					this.$API.setStorage('fuxiSelasOrderInfo', info);
+					uni.redirectTo({
+						url: `../../sale/saleComfig/saleComfig?id=${this.id}&type=${this.moduleType}`
+					});
+					// this.$API.to(`../../sale/saleComfig/saleComfig?id=${this.id}&type=${this.moduleType}`);
 				}
 			},
 			allAdd () { // 批量添加数量
@@ -160,21 +228,55 @@
 				this.allNumber--;
 			},
 			add (index)  { // 单个数量加
-				this.infoList[index].number = parseInt( this.infoList[index].number) + parseInt(this.allNumber);
+				this.sizeList[index].quantity = parseInt( this.sizeList[index].quantity) + parseInt(this.allNumber);
+				this.computeAll();
 			},
 			less (index) { // 单个数量减
-				if (this.infoList[index].number < 2) {
-					return; 
+				if (parseInt(this.sizeList[index].quantity) < 1) { 
+					uni.showToast({
+						title: '数量不能小于0!',
+						icon: 'none'
+					});
+					return;
 				}
-				if (parseInt(this.infoList[index].number) <= parseInt(this.allNumber)) {
-					this.infoList[index].number--;
-				} else if ((parseInt(this.infoList[index].number) - parseInt(this.allNumber)) < 2) {
-					if (parseInt(this.infoList[index].number) > 2) {
-						this.infoList[index].number--;
-					}
+				if (parseInt(this.sizeList[index].quantity) <= parseInt(this.allNumber)) {
+					this.sizeList[index].quantity--;
 				} else {
-					this.infoList[index].number = parseInt(this.infoList[index].number) - parseInt(this.allNumber);
+					this.sizeList[index].quantity = parseInt(this.sizeList[index].quantity) - parseInt(this.allNumber);
 				}
+				this.computeAll();
+			},
+			computeAll () { // 计算总数量
+				let temp = 0;
+				for (let i = 0; i < this.sizeList.length; i++) {
+					if (this.sizeList[i].quantity !== '' && this.sizeList[i].quantity !== null && parseInt(this.sizeList[i].quantity) > 0) {
+						temp = temp + parseInt(this.sizeList[i].quantity);
+					}
+				}
+				this.totalNumber = totalTemp;
+				this.colorList[this.selColorIndex].quantity = temp;
+				this.colorList[this.selColorIndex].sizeList = this.sizeList;
+				let totalTemp = 0;
+				for (let j = 0; j < this.colorList.length; j++) {
+					for (let i = 0; i < this.colorList[j].sizes.length; i++) {
+						let s = this.colorList[j].sizes[i].quantity;
+						if (s !== '' && s !== null && parseInt(s) > 0) {
+							totalTemp = totalTemp + parseInt(s);
+						}
+					}
+				}
+				this.totalNumber = totalTemp;
+				let totalPriceTemp = 0;
+				for (let j = 0; j < this.colorList.length; j++) {
+					for (let i = 0; i < this.colorList[j].sizes.length; i++) {
+						let s = this.colorList[j].sizes[i].quantity;
+						if (s !== '' && s !== null && parseInt(s) > 0) {
+							totalPriceTemp = totalPriceTemp + parseFloat(this.goodsInfo.unitPrice) * s;
+						}
+					}
+				}
+				totalPriceTemp =  (totalPriceTemp * parseInt((this.goodsInfo.discountRate / 10)));
+				this.totalPrice = (totalPriceTemp).toFixed(2);
 			},
 			inputBlur (type, index) { // 输入框失去焦点的时候
 				if (type === 1) {
@@ -182,37 +284,77 @@
 						this.allNumber = 1;
 					}
 				} else if (type === 2) {
-					let val = this.infoList[index].number;
-					if (val > 1 || val === '' || val === null) {
-						this.infoList[index].number = 1;
-					}	
+					let val = this.sizeList[index].quantity;
+					let reg = /^(0|[1-9][0-9]*)$/;
+					if (!reg.test(val)) { 
+						this.sizeList[index].quantity = 1;
+						 uni.showToast({
+						 	title: '请输入正确的数量!',
+						 	icon: 'none',
+						 	mask: true
+						 });
+					} 
+					this.computeAll();
 				}
 			},
 			openUpPrice (type) { 
 				this.isShowPrice = true;
 				this.priceType = type;
 				if (type === 1) {
-					this.price = this.goodsInfo.price;
+					 this.price = this.goodsInfo.unitPrice;
 					this.upTitle = '修改价格';
 				} else if (type === 2) {
-					this.price = this.goodsInfo.discount;
+					 this.price = this.goodsInfo.discountRate;
 					this.upTitle = '修改折扣';
 				}
  			},
 			okPirce () { // 修改价格
 				if (this.priceType === 1) {
 					if (this.price !== '' && this.price !== null && parseFloat(this.price) > 0) {
-						this.goodsInfo.price = parseFloat(this.price).toFixed(2);
+						let reg = /((^[1-9]\d*)|^0)(\.\d{0,2}){0,1}$/;
+						if (!reg.test(this.price)) {
+							this.goodsInfo.unitPrice = this.goodsInfo.unitPrice;
+						} else {
+							this.goodsInfo.unitPrice = parseFloat(this.price).toFixed(2);
+						}
 					}
+					this.isShowPrice= false;
+					let totalPriceTemp = 0;
+					for (let j = 0; j < this.colorList.length; j++) {
+						for (let i = 0; i < this.colorList[j].sizes.length; i++) {
+							let s = this.colorList[j].sizes[i].quantity;
+							if (s !== '' && s !== null && parseInt(s) > 0) {
+								totalPriceTemp = totalPriceTemp + parseFloat(this.goodsInfo.unitPrice) * s;
+							}
+						}
+					}
+					totalPriceTemp =  (totalPriceTemp * parseInt((this.goodsInfo.discountRate / 10)));
+					this.totalPrice = (totalPriceTemp).toFixed(2);
 				} else if (this.priceType === 2) {
-					if (this.price !== '' && this.price !== null && parseFloat(this.price) > 0) {
-						this.goodsInfo.discount = this.price;
+					let reg = /^[0-9|10]$/;
+					if (!reg.test(this.price)) {
+						this.goodsInfo.discountRate = 10;
+						uni.showToast({
+							title: '折扣只能输入0~10的数字!',
+							icon: 'none'
+						});
+						this.isShowPrice= true;
+					} else {
+						this.isShowPrice= false;
+						this.goodsInfo.discountRate = this.price;
 					}
-				} 
-				this.isShowPrice = false;
+					if (this.totalNumber > 0) {
+						this.totalPrice =  (this.totalPrice * parseFloat((this.goodsInfo.discountRate / 10))).toFixed(2)
+					}
+				}
 			},
 			onMore () { // 查看/更多价格
 				this.isShowMore = !this.isShowMore;
+			},
+			onColor (index) { // 点击颜色
+				this.selColorIndex = index;
+				this.sizeList = this.colorList[index].sizes;
+				
 			},
 			decimalNumber (val) { //价格保留两位小数
 				if (val === '' || val === null || val === undefined) {
@@ -304,35 +446,45 @@
 		.color-con {
 			width: 96%;
 			overflow: hidden;
-			padding: 20upx 2%;
+			position: relative;
+			padding: 20upx 3%;
 			display: flex;
+			flex-wrap: wrap;
 			align-items: center;
 			white-space: nowrap;
-			justify-content: space-around;
 			border-bottom: 1upx solid $boder-se;
 			background: #fff;
 			font-size: 30upx;
 			color: #333;
 			.color-item {
-				width: 125upx;
+				width: 145upx;
 				height: 70upx;
-				margin-right: 20upx;
+				margin-right: 30upx;
+				margin-top: 40upx;
 				border: 1upx solid $boder-se;
 				position: relative;
 				text-align: center;
 				line-height: 70upx;
+				.name {
+					@include lineEllipsis(1);
+				}
 			}
 			.number {
-				width: 40upx;
-				height: 30upx;
+				width: 70upx;
+				height: 35upx;
 				font-size: 22upx;
 				border: 1upx solid $boder-se;
 				position: absolute;
-				top: -10upx;
-				right: -10upx;
+				top: -26upx;
+				right: -20upx;
 				color: #fff;
-				line-height: 30upx;
+				line-height: 35upx;
 				background: red;
+				@include lineEllipsis(1);
+			}
+			.check-color {
+				background: $themeColor;
+				color: #fff;
 			}
 		}
 		.info-con {

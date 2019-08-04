@@ -5,31 +5,38 @@
 				<view class="item">
 					<view class="add-title">厂商编码</view>
 					<view class="add-input">
-						<input v-if="id !== ''" class="no" placeholder="编码" disabled v-model="supplierInfo.code" />
-						<input v-if="id === ''"  placeholder="编码"  v-model="supplierInfo.code" />
+						<input type="text" v-if="id !== ''" class="no" placeholder="编码" disabled v-model="supplierInfo.code" />
+						<input type="text" v-if="id === ''"  placeholder="编码"  v-model="supplierInfo.code" />
 					</view>
 				</view>
 				<view class="item">
 					<view class="add-title red-title">厂商名称</view>
-					<view class="add-input"><input placeholder="厂商名称" v-model="supplierInfo.department"  /></view>
+					<view class="add-input"><input placeholder="厂商名称" v-model="supplierInfo.supplier"  /></view>
 				</view>
 				<view class="item">
 					<view class="add-title">手机</view>
-					<view class="add-input"><input placeholder="手机" v-model="supplierInfo.tel" /></view>
+					<view class="add-input"><input placeholder="手机" v-model="supplierInfo.mobilephone" /></view>
 				</view>
 				<view class="item" @click="onselInfo(1)">
 					<view class="add-title red-title">负责人</view>
-					<view class="add-input"><input placeholder="店仓" disabled v-model="selsupplierInfo.departmentType" /></view>
+					<view class="add-input"><input placeholder="负责人" disabled v-model="selsupplierInfo.name" /></view>
+					<view class="content-right"><image class="base-right" src="../../../static/base/right.png"></image></view>
 				</view>
 			</view>
 			<view class="add-base-info">
 				<view class="item" @click="onselInfo(2)">
 					<view class="add-title red-title">所属门店</view>
-					<view class="add-input"><input placeholder="所属门店" disabled v-model="selStoreTypeInfo.deptType" /></view>
+					<view class="add-input"><input placeholder="所属门店" disabled v-model="selStoreTypeInfo.name" /></view>
+					<view class="content-right"><image class="base-right" src="../../../static/base/right.png"></image></view>
+				</view>
+				<view class="item" @click="onselInfo(3)">
+					<view class="add-title red-title">厂商类别</view>
+					<view class="add-input"><input placeholder="厂商类别" disabled v-model="selSupplierTypeInfo.name" /></view>
+					<view class="content-right"><image class="base-right" src="../../../static/base/right.png"></image></view>
 				</view>
 				<view class="item">
 					<view class="add-title">厂商欠款</view>
-					<view class="add-input"><input placeholder="厂商欠款" v-model="supplierInfo.tel" /></view>
+					<view class="add-input"><input placeholder="厂商欠款" v-model="supplierInfo.apAmount" disabled= /></view>
 				</view>
 				<view class="item">
 					<view class="add-title">历史交易</view>
@@ -38,34 +45,26 @@
 				<view class="item">
 					<view class="add-title">停用</view>
 					<view class="add-sWitch">
-						 <switch @change="useWitchChange" color="#427CAC" style="transform:scale(0.6)" />
+						 <switch @change="useWitchChange"  :checked="isUser"  color="#427CAC" style="transform:scale(0.6)" />
 					</view>
 				</view>
 			</view>
 			<view class="add-base-info">
-				<view class="item" @click="selCity(1)">
-					<view class="add-title">省份</view>
-					<view class="add-input"><input placeholder="省份" disabled  v-model="selCityNameS.privinceName"  /></view>
-				</view>
-				<view class="item" @click="selCity(2)">
-					<view class="add-title" >城市</view>
-					<view class="add-input"><input placeholder="城市" disabled  v-model="selCityNameS.cityName" /></view>
-				</view>
-				<view class="item" @click="selCity(3)">
-					<view class="add-title">区县</view>
-					<view class="add-input"><input placeholder="区县" disabled  v-model="selCityNameS.countyArea"  /></view>
-				</view>
 				<view class="item">
 					<view class="add-title">详情地址</view>
-					<view class="add-input"><input placeholder="详情地址"  v-model="selCityNameS.countyArea"  /></view>
+					<view class="add-input"><input placeholder="详情地址"  v-model="supplierInfo.address"  /></view>
+				</view>
+				<view class="item">
+					<view class="add-title">银行账号</view>
+					<view class="add-input"><input placeholder="银行账号" v-model="supplierInfo.accountno"  /></view>
 				</view>
 				<view class="item">
 					<view class="add-title">开户银行</view>
-					<view class="add-input"><input placeholder="开户银行"  v-model="supplierInfo.addr" /></view>
+					<view class="add-input"><input placeholder="开户银行"  v-model="supplierInfo.bankname" /></view>
 				</view>
 				<view class="item">
 					<view class="add-title">银行账户</view>
-					<view class="add-input"><input placeholder="银行账户" v-model="supplierInfo.memo"  /></view>
+					<view class="add-input"><input placeholder="银行账户" v-model="supplierInfo.corpname"  /></view>
 				</view>
 			</view>
 			<view class="add-base-info">
@@ -76,53 +75,17 @@
 			</view>
 			<view class="btn" @click="save">保存</view>
 		</view>
-		
-		<view  v-if="isShowCity">
-			<view class="cgh-alert-black" @click="closeAlertCity"></view>
-			<view class="close" @click="closeAlertCity"><image src="../../../static/icon/login/icon_del.png"></image></view>
-			<view class="radio-con">
-				<view class="radio-info-con">
-					<view class="item" v-if="cityType === 1" v-for="(item, index) in selPrivince" :key="index" @click="okCityValue(item, index)">
-						{{item.values}}
-					</view>
-					<view class="item"  v-if="cityType === 2"  v-for="(item, index) in selCityInfo" :key="index" @click="okCityValue(item, index)">
-						{{item.values}}
-					</view>
-					<view class="item" v-if="cityType === 3"  v-for="(item, index) in selCounty" :key="index" @click="okCityValue(item, index)">
-						{{item.values}}
-					</view>
-				</view>
-			</view>
-		
-		</view>
-		<view v-if="isShowStore">
-			<view class="cgh-alert-black" @click="isShowStore = false"></view>
-			<view class="radio-con">
-				<view class="close" @click="isShowStore = false">
-					<image src="../../../static/base/left.png"></image>{{alertTitle}}
-				</view>
-				<view class="search-con">
-					<view class="left">
-						<image src="../../../static/base/search.png"></image>
-						<input v-model="para.keyWord" placeholder="门店/编码/门店名称" />
-					</view>
-					<view class="right" @click="search">搜索</view>
-				</view>
-				<view class="radio-info-con" >
-					<view class="item" v-if="onStoreType  === 1"  v-for="(item, index) in storeList" :key="index" @click="okInfo(item)">
-						小林
-					</view>
-					<view class="item" v-if="onStoreType  === 2"  v-for="(item, index) in storeTypeList" :key="index" @click="okInfo(item)">
-						白马店
-					</view>
-				</view>
-			</view>
+		<view  v-if="isShowStore" >
+			<radioItemsSearch  v-if="onStoreType  === 1" :list="storeList" :keyWord="keyWord"  title="选择负责人" placeholderTitle="负责人姓名" @closeAlert="closeAlert" @search="search" @okRadioValue="okInfo()" :moreType="onStoreType"  :isPage="isPage" :isMore="employeeMore"   @moreTypeInfo="moreTypeInfo"  ></radioItemsSearch>
+			<radioItemsSearch  v-if="onStoreType  === 2" :list="storeTypeList" :keyWord="keyWord"  title="选择门店" placeholderTitle="门店/编码/门店名称"  @closeAlert="closeAlert" @search="search"  @okRadioValue="okInfo()" :moreType="onStoreType"  :isPage="isPage" :isMore="departmentMore"   @moreTypeInfo="moreTypeInfo"  ></radioItemsSearch>
+			<radioItemsSearch  v-if="onStoreType  === 3" :list="suTypeList" :keyWord="keyWord"  title="选择厂商类别" placeholderTitle="门店/编码/门店名称"  @closeAlert="closeAlert" @search="search"  @okRadioValue="okInfo()"></radioItemsSearch>
 		</view>
 	</view>
-</template>
+</template> 
 <script>
 	import search from '../../../components/search.vue';
-	import city from '../../../common/city-data.json';
+	import city from '../../../common/city-data.json'; 
+	import radioItemsSearch from '../../../components/radioItemsSearch';
 	import { nullPass } from '../../../components/filter/index.js';
 	export default {
 		data() {
@@ -134,35 +97,64 @@
 				selPrivince: [],
 				selCityInfo: [],
 				selCounty: [],
-				selCityNameS: {privinceName: '',cityName: '',countyArea: ''},
+				selCityNameS: {privinceName: '',cityName: '',countyArea: '', address: ''},
 				selPrivinceIndex: 0,
 				selCityIndex: 0,
 				selCountyIndex: 0,
 				moduleType: 1 ,// 0: 销售订单 1: 销售发货单
 				isShowStore: false,
-				conctList: [], // 负责人
-				supplierList: [], // 所属部门
-				supplierTypeList: [], // 厂商类型
-				selconctInfo: {},
+				supplierList: [], 
+				supplierTypeList: [], 
+				suTypeList: [], 
 				selsupplierInfo: {},
 				selStoreTypeInfo: {},
+				selSupplierTypeInfo: {}, // 厂商类别
 				onStoreType: 1,
 				isStore: true,
 				isStock: true,
 				isUser: false,
-				alertTitle: '选择负责人',
 				id: '' ,
-				para: {keyWord: ''},
+				keyWord: '',
 				storeList: [],
-				storeTypeList: []
+				storeTypeList: [],
+				type: 1, // 1: 新增 2: 编辑
+				// 弹框分页
+				isPage: true,
+				size: 10,
+				employeePage: 1,  // 负责人
+				employeeMore: true,
+				departmentPage: 1,  // 所属门店
+				departmentMore: true,
 			}
 		},
-		onLoad() {
-			this.$API.generateNo().then(res => {
-				this.supplierInfo.code = res;
-			});
+		onLoad(option) {
+			this.id = option.id;
+			if (this.id !== '' && this.id !== undefined && this.id !== null) {
+				uni.setNavigationBarTitle({title: '编辑厂商'});
+				this.type = 2;
+				this.getInfo();
+			} else {
+				uni.setNavigationBarTitle({title: '新增厂商'});
+				this.$API.generateNo().then(res => {
+					this.supplierInfo.code = res;
+				});
+				this.$API.getStorage('fuxiUserInfo').then(res => {
+					this.selStoreTypeInfo = {id: res.data.departmentId, name: res.data.departmentName};
+				});
+			}
 		},
 		methods: {
+			getInfo () {
+				this.$API.get('/fuxi/supplier/query-supplier', {supplierId: this.id}).then(res => {
+					if (res.code === 'success') {
+						this.supplierInfo = res.data;
+						this.isUser = this.supplierInfo.stopflag;
+						this.selsupplierInfo =  {id: this.supplierInfo.contact, name: this.contactName};
+						this.selStoreTypeInfo =  {id: this.supplierInfo.departmentid, name: this.supplierInfo.department};
+						this.selSupplierTypeInfo =  {id: this.supplierInfo.suppliertypeid , name: this.supplierInfo.suppliertype};
+					}
+				});
+			},
 			storeWitchChange (e) { // 是否店仓
 				this.isStore = e.target.value;
 			},
@@ -172,50 +164,108 @@
 			useWitchChange (e) { // 是否停用
 				this.isUser = e.target.value;
 			},
-			search () {// 搜索
-				
+			search (str) { // 弹框搜索
+				this.keyWord = str;
+				this.onselInfo(this.onStoreType);
 			},
 			onselInfo (type) { // 选择店仓类类别/类型
-				this.isShowStore = true;
 				this.onStoreType = type;
 				uni.showLoading({
 					title: '加载中...',
 					duration: 2000
 				});
 				if (type === 1) {
-					this.alertTitle = '选择负责人';
-					if (this.storeList.length !== 0) {
-						uni.hideLoading();
-						return;
-					}
-					this.$API.get('/fuxi/select/query-employee').then(res => {
+					this.employeePage = 1;
+					this.employeeMore = true;
+					this.$API.get('/fuxi/select/query-employee',  {keyword: this.keyWord, pageNum: this.employeePage, pageSize: this.size}).then(res => {
 						uni.hideLoading();
 						if (res.code === 'success') {
-							this.storeList = res.data;
+							this.storeList = this.$API.fmtSelData(res.data.list, 10);
+							this.isShowStore = true;
+							if (this.employeePage === res.data.pages) {
+								this.employeeMore = false;
+							} else {
+								this.employeeMore = true;
+							}
 						}
 					});
 				} else if (type === 2) {
-					this.alertTitle = '选择部门';
-					if (this.storeTypeList.length !== 0) {
-						uni.hideLoading();
-						return;
-					}
-					this.$API.get('/fuxi/select/query-department').then(res => {
+					this.departmentPage = 1;
+					this.departmentMore = true;
+					this.$API.get('/fuxi/select/query-department', {keyword: this.keyWord, pageNum: this.departmentPage, pageSize: this.size}).then(res => {
 						uni.hideLoading();
 						if (res.code === 'success') {
-							this.storeTypeList = res.data;
+							this.storeTypeList = this.$API.fmtSelData(res.data.list, 6);
+							this.isShowStore = true;
+							if (this.departmentPage === res.data.pages) {
+								this.departmentMore = false;
+							} else {
+								this.departmentMore = true;
+							}
+						}
+					});
+				} else if (type === 3) {
+					if (this.keyword === '' && this.suTypeList.length !== 0) {
+						uni.hideLoading();
+						this.isShowStore = true;
+						return;
+					}
+					this.$API.get('/fuxi/select/query-supplier-type',  {keyword: this.keyWord}).then(res => {
+						uni.hideLoading();
+						if (res.code === 'success') {
+							this.suTypeList = this.$API.fmtSelData(res.data, 16);
+							this.isShowStore = true;
 						}
 					});
 				}
 				
 			},
+			moreTypeInfo (index) { // 更新弹框信息
+				uni.showLoading({
+					title: '加载中...',
+				});
+				 if (index === 1) { // 员工
+					this.employeePage++;
+					this.$API.get('/fuxi/select/query-employee',  {keyword: this.keyWord, pageNum: this.employeePage, pageSize: this.size}).then(res => {
+						uni.hideLoading();
+						if (res.code === 'success') {
+							let list = this.$API.fmtSelData(res.data.list, 10);
+							this.storeList = this.storeList.concat(list);
+							if (this.employeePage === res.data.pages) {
+								this.employeeMore = false;
+							} else {
+								this.employeeMore = true;
+							}
+						}
+					});
+				} else if (index === 2) { // 所属门店
+					this.departmentPage++;
+					this.$API.get('/fuxi/select/query-department', {keyword: this.keyWord, pageNum: this.departmentPage, pageSize: this.size}).then(res => {
+						uni.hideLoading();
+						if (res.code === 'success') {
+							let list = this.$API.fmtSelData(res.data.list, 6);
+							this.storeTypeList = this.storeTypeList.concat(list);
+							if (this.departmentPage === res.data.pages) {
+								this.departmentMore = false;
+							} else {
+								this.departmentMore = true;
+							}
+						}
+					});
+				}
+			},	
 			okInfo (val) {// 确认选择店仓分类
 				this.isShowStore = false;
 				if (this.onStoreType === 1) {
 					this.selsupplierInfo = val;
 				} else if (this.onStoreType === 2){
 					this.selStoreTypeInfo = val;
+				} else if (this.onStoreType ===3){
+					this.selSupplierTypeInfo = val;
 				}
+			},
+			closeAlert () {
+				this.isShowStore = false;
 			},
 			selCity (type) {
 				this.cityType = type;
@@ -267,66 +317,29 @@
 				uni.navigateBack();
 			},
 			save () { // 保存
-				if (!nullPass(this.selsupplierInfo.departmentTypeId)) {
-					uni.showToast({
-						title: '请选择店仓类别!',
-						icon: 'none'
-					});
-					return;
+				let url = '/fuxi/supplier/add-supplier';
+				let method = 'POST';
+				if (this.type === 2) {
+					url = '/fuxi/supplier/update-supplier';
+					method = 'PUT';
 				}
-				if (!nullPass(this.supplierInfo.department)) {
-					uni.showToast({
-						title: '店仓名称不能为空!',
-						icon: 'none'
-					});
-					return;
-				}
-				let provice = nullPass(this.selCityNameS.privinceName);
-				let city = nullPass(this.selCityNameS.cityName);
-				let count = nullPass(this.selCityNameS.countyArea);
-				if (provice && city && count) {
-					this.supplierInfo.city = this.selCityNameS.privinceName + '-' + this.selCityNameS.cityName + '-' + this.selCityNameS.countyArea;
-				} else if (provice && city) { 
-					this.supplierInfo.city = this.selCityNameS.privinceName + '-' + this.selCityNameS.cityName;
-				} else if (provice) {
-					this.supplierInfo.city = this.selCityNameS.privinceName;
-				} else {
-					this.supplierInfo.city = '';
-				}
-				this.supplierInfo.departmenttypeid  = this.selsupplierInfo.departmentTypeId;
-				this.supplierInfo.depttype   = this.selStoreTypeInfo.deptType;
-				this.$API.post('/fuxi/dept/add-dept', this.supplierInfo).then(res => {
+				this.supplierInfo.contact = this.selsupplierInfo.id;
+				this.supplierInfo.departmentid = this.selStoreTypeInfo.id;
+				this.supplierInfo.suppliertypeid  = this.selSupplierTypeInfo.id;
+				this.supplierInfo.stopflag  = this.isUser;
+				this.$API.post(url, this.supplierInfo, method).then(res => {
 					if (res.code === 'success') {
 						uni.showToast({
 							title: '保存成功!'
 						});
-						this.cleaData();
+						this.$API.to('../../supplier/supplierList/supplierList?type=14');
 					}
 				});
-			},
-			cleaData () { // 清除数据
-				this.supplierInfo =  {warehouseflag : true, stopflag: false, posnonzerostockflag: true};
-				this.cityS = [];
-				this.isShowCity = false;
-				this.cityType = 0;
-				this.selPrivince = [];
-				this.selCityInfo = [];
-				this.selCounty = [];
-				this.selCityNameS = {privinceName: '',cityName: '',countyArea: ''};
-				this.selPrivinceIndex = 0;
-				this.selCityIndex = 0;
-				this.selCountyIndex = 0;
-				this.moduleType = 1;
-				this.isShowStore = false;
-				this.storeList =[];
-				this.selsupplierInfo = {};
-				this.isStore = true;
-				this.isStock = true;
-				this.isUser = false;
 			}
 		},
 		components: {
-			search
+			search,
+			radioItemsSearch
 		},
 	}
 </script>
@@ -367,8 +380,15 @@
 					}
 				}
 				.add-right {
-					width: 10%;
+					width: 5%;
 					image {
+						@include cgh-right-img();
+					}
+				}
+				.content-right {
+					width: 5%;
+					image {
+						margin-right: 20upx;
 						@include cgh-right-img();
 					}
 				}
@@ -407,16 +427,16 @@
 		}
 		//
 		.close {
-			width: 100%;
-			color: #333;
-			background: $themeColor;
-			color: #fff;
-			padding: 10upx 0upx;
+			width: 100upx;
+			height: 100upx;
+			position: fixed;
+			overflow:auto;
+			top: 270upx;
+			right: 0;
+			z-index: 11;
 			image {
-				width: 45upx;
-				height: 50upx;
-				margin-left: 20upx;
-				vertical-align: middle;
+				width: 90upx;
+				height: 80upx;
 			}
 		}
 		.radio-con {
@@ -428,18 +448,7 @@
 			left: 0;
 			z-index: 11;
 			background: #fff;
-			.search {
-				background: red;
-				margin-top: 100upx;
-			}
 			.radio-info-con {
-				width: 100%;
-				height: 70%;
-				overflow: scroll;
-				position: fixed;
-				left: 0;
-				bottom:  0u;
-				z-index: 2009;
 				.item {
 					font-size: 36upx;
 					color: #333;
@@ -447,43 +456,6 @@
 					border-bottom: 1upx solid $boder-se;
 					padding: 25upx 0upx 25upx 30upx;
 				}
-			}
-		}
-		.search-con {
-			width: 92%;
-			height: 80upx;
-			margin-left: 4%;
-			margin-top: 20upx;
-			font-size: 32upx;
-			line-height: 80upx;
-			display: flex;
-			align-items: center;
-			justify-content: space-between;
-			white-space: nowrap;
-			.left {
-				width: 75%;
-				height: 100%;
-				display: flex;
-				align-items: center;
-				justify-content: space-between;
-				border: 1upx solid $boder-se;
-				border-radius: 20upx;
-				padding-left: 20upx;
-				image {
-					width: 45upx;
-					height: 45upx;
-				}
-				input {
-					width: 88%;
-					height: 100%;
-				}
-			}
-			.right {
-				width: 18%;
-				height: 100%;
-				border: 1upx solid $boder-se;
-				border-radius: 20upx;
-				text-align: center;
 			}
 		}
 	}

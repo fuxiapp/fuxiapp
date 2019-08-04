@@ -1,16 +1,16 @@
 <template>
 	<view class="cgh-search-item-childe">
 		<view class="info-con">
-			<view class="list" v-for="(v, index) in list" :key="index" @click="toPath(v.goodsid)">
+			<view class="list"  v-for="(v, index) in list" :key="index" @click="toPath(v.goodsid)">
 				<view class="img"><image :src="v.image" @error="imgError(index)" lazy-load="true" mode="aspectFit"></image></view>
 				<view class="info">
 					<view class="name">{{v.name}}</view>
 					<view class="no">{{v.code}}</view>
 					<view class="prices">
 						<view class="price">¥
-							<text>{{v.retailsales}}</text>
+							<text>{{v.price}}</text>
 						</view>
-						<view class="order-number" v-if="type === '3'">下单数 30</view>
+						<view class="order-number" v-if="type === '3'">下单数 {{v.quantity}}</view>
 					</view>
 				</view>
 			</view>
@@ -82,6 +82,7 @@
 						width: 180upx;
 						height: 180upx;
 						border-radius: 10upx;
+						background: $themeColor;
 					}
 				}
 				.info {

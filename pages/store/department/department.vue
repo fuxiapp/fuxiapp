@@ -44,8 +44,14 @@
 				para: {pageSize: 10, pageNum: 1, keyword: ''},
 			}
 		},
+		onBackPress(options) {  
+		    if (options.from === 'navigateBack') {  
+		        return false;  
+		    } 
+			this.$API.tab('../../tab/main/main');
+		    return true;  
+		}, 	
 		onLoad (option) {
-			this.moduleType = option.type;
 			this.getStoreInfo();
 			this.getList();
 		},
@@ -65,11 +71,7 @@
 				this.getList();
 			},
 			toInvoice (id) { // 选择店仓
-				/* if (this.moduleType === 2) { // 销售退货单
-					this.$API.to(`../../sale/salesSelCustomer/salesSelCustomer?id=${id}`);
-				} else {
-					this.$API.to(`../../sale/invoice/invoice?id=${id}&type=${this.moduleType}`);
-				}	 */
+				this.$API.to('../../store/addStore/addStore?id=' + id);
 			},
 			getStoreInfo () { // 获取店仓信息
 				this.$API.get('/fuxi/select/query-department-type').then(res => {

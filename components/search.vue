@@ -3,7 +3,7 @@
 		<view class="search-con">
 			<view class="left">
 				<image src="../../../static/base/search.png"></image>
-				<input v-model="keyWord" :placeholder="placeholderStr" />
+				<input type="text" confirm-type="search" @confirm="search"  v-model="keyWord" :placeholder="placeholderStr" />
 			</view>
 			<view class="right" @click="search">搜索</view>
 		</view>

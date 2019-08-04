@@ -1,7 +1,7 @@
 // 手机号码验证
 function meetsTel(str){
 	let reg = /^[0-9]{8,11}$/;
-	if(str.trim().length === 0 ){
+	if (str === '' || str === undefined || str === null){
 		return true;
 	}
 	return  reg.test(str);
@@ -9,7 +9,7 @@ function meetsTel(str){
 //登錄id驗證
 function meetsId(str){
 	let reg = /^[a-zA-Z0-9_]{1,15}$/;
-	if( str.trim().length === 0 ){
+	if( str.length === 0 ){
 		return true;
 	}
 	return reg.test(str);
@@ -17,7 +17,7 @@ function meetsId(str){
 //登錄密碼驗證
 function meetsPass(str){
 	let reg = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,16}$/;
-	if( str.trim().length === 0 ){
+	if( str.length === 0 ){
 		return true;
 	}
 	return reg.test(str);
@@ -25,7 +25,7 @@ function meetsPass(str){
 //邮箱的校验
 function meetsEmail(str){
 	let reg = /^[A-Za-z\d]+([-_.]+[A-Za-z\d]+)*@([A-Za-z\d]+[-.])+[A-Za-z\d]{2,4}$/;
-	if( str.trim().length === 0 ){
+	if( str.length === 0 ){
 		return true;
 	}
 	return reg.test(str);

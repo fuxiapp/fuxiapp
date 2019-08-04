@@ -12,8 +12,8 @@
 						<text class="mark">*</text>货号
 					</view>
 					<view class="head-val">
-						<input type="text" v-if="goodsId === '' || goodsId === undefined || goodsId === null " placeholder="请输入货号" v-model="goodsInfo.code" maxlength="100" />
-						<input type="text " v-else placeholder="请输入货号" disabled v-model="goodsInfo.code" maxlength="100" />
+						<input type="text" v-if="typeRq === 1" placeholder="请输入货号" v-model="goodsInfo.code" maxlength="100" />
+						<input type="text" v-if="typeRq === 2 " placeholder="请输入货号" disabled v-model="goodsInfo.code" />
 					</view>
 				</view>
 				<view class="head-item">
@@ -31,7 +31,7 @@
 					<view class="head-val"  @click="opentType(1)">
 						<input type="text" placeholder="请选择类别" disabled v-model="selRadioList.classType" maxlength="100" />
 					</view>
-					<view class="top-right">
+					<view class="content-right">
 						<image src="../../../static/base/right.png"></image>
 					</view>
 				</view>
@@ -87,7 +87,7 @@
 					<text>进货价</text>
 				</view>
 				<view class="v-input">
-					<input type="text" placeholder="请输入进货价"  v-model="goodsInfo.purchasePrice" />
+					<input type="number" placeholder="请输入进货价"  v-model="goodsInfo.purchaseprice" />
 				</view>
 			</view>
 			<view class="v-goods-brand">
@@ -95,7 +95,7 @@
 					<text>零售价</text>
 				</view>
 				<view class="v-input">
-					<input type="text" placeholder="请输入零售价"   v-model="goodsInfo.retailsales" />
+					<input type="number" placeholder="请输入零售价"   v-model="goodsInfo.retailsales" />
 				</view>
 			</view>
 			<view class="v-goods-brand">
@@ -103,12 +103,12 @@
 					<text>批发价</text>
 				</view>
 				<view class="v-input">
-					<input type="text" placeholder="请输入批发价"  v-model="goodsInfo.tradePrice" />
+					<input type="number" placeholder="请输入批发价"  v-model="goodsInfo.tradeprice" />
 				</view>
 			</view>
 			<view class="v-goods-brand" @click="opentType(6)">
 				<view class="v-input-title">
-					<text>颜色</text>
+					<text class="mark">*</text><text>颜色</text>
 				</view>
 				<view class="v-input">
 					<input type="text" placeholder="请选择颜色"  v-model="selRadioList.colorType" disabled="true" />
@@ -120,14 +120,14 @@
 			<text>保存</text>
 		</view>
 		<!-- 单选 -->
-		<view v-if="isShowType">
-			<radioItem v-if="typeNumber === 1" :list="classTypeInfo" @closeAlert="closeAlert"  @okRadioValue="okRadioValue"></radioItem>
-			<radioItem v-if="typeNumber === 2" :list="brandTypeInfo" @closeAlert="closeAlert"  @okRadioValue="okRadioValue"></radioItem>
+		<view  v-if="isShowType" >
+			<radioItemsSearch  v-if="typeNumber === 1"  :list="classTypeInfo"  title="货品类别" placeholderTitle="关键字搜索"  @closeAlert="closeAlert" @search="search"  @okRadioValue="okRadioValue()"></radioItemsSearch>
+			<radioItemsSearch  v-if="typeNumber === 2" :list="brandTypeInfo"  title="所属品牌" placeholderTitle="关键字搜索"  @closeAlert="closeAlert" @search="search"  @okRadioValue="okRadioValue()"></radioItemsSearch>
 			<radioItem v-if="typeNumber === 3" :list="ageTypeInfo" @closeAlert="closeAlert"  @okRadioValue="okRadioValue"></radioItem>
 			<radioItem v-if="typeNumber === 4" :list="seasonTypeInfo" @closeAlert="closeAlert"  @okRadioValue="okRadioValue"></radioItem>
-			<radioItem v-if="typeNumber === 5" :list="supplierTypeInfo" @closeAlert="closeAlert"  @okRadioValue="okRadioValue"></radioItem>
+			<radioItemsSearch  v-if="typeNumber === 5" :moreType="typeNumber" :list="supplierTypeInfo" :isPage="isPage" :isMore="supplierisMore"  title="所属厂商" placeholderTitle="关键字搜索"  @closeAlert="closeAlert" @search="search"  @okRadioValue="okRadioValue()" @moreTypeInfo="moreTypeInfo"></radioItemsSearch>
 			<selType v-if="typeNumber === 6" :selTypeChidenItem="selTypeChidenItem" :classTypeInfo="colorTypeInfo" @onType="onType" @resetType="resetType"  @closeMoreType="closeMoreType" @okType="okType" :moduleType="moduleType"></selType>
-		</view>
+		</view> 
 	</view>
 </template>
 
@@ -135,6 +135,7 @@
 	import radioItem from '../../../components/radioItem.vue';
 	import selType from '../../../components/selType.vue';
 	import { pricePass } from '../../../components/filter/index.js';
+	import radioItemsSearch from '../../../components/radioItemsSearch';
 	export default {
 		data() {
 			return {
@@ -152,7 +153,7 @@
 					  season: "",
 					  suppliercode:"",
 					  supplierid: "",
-					  tradePrice: ''
+					  tradePrice: '',
 				},
 				isShowRadio: false,
 				selRadioList: {classType: '', brandType: '', ageType: '', seasonType: '', supplierType: '', colorType:''},
@@ -171,11 +172,26 @@
 				url: '/fuxi/goods/add-goods',
 				typeRq: 1, // 1: 新增 2: 修改
 				isonSave: false,
+				keyword: '',
+				// 弹框分页
+				isPage: true,
+				size: 10,
+				supplierPage: 1,  // 厂商
+				supplierisMore: true,
+				
 			}
 		},
+		onBackPress(options) {  
+		    if (options.from === 'navigateBack') {  
+		        return false;  
+		    } 
+			this.$API.tab('../../tab/main/main');
+		    return true;  
+		}, 	
 		onLoad(option) {
 			 this.goodsId = option.id;
 			if (this.goodsId !== '' && this.goodsId !== undefined && this.goodsId !== null) {
+				uni.setNavigationBarTitle({title: '编辑货品'});
 				this.isonSave = true;
 				this.url = '/fuxi/goods/update-goods';
 				this.typeRq = 2;
@@ -188,7 +204,7 @@
 			}
 		},
 		methods: {
-			handleError (index) { // 图片加载错误
+			handleError () { // 图片加载错误
 			    this.goodImg = '../../../static/err_img.png';  
 			},
 			getDetailsInfo () { // 获取商品详情
@@ -202,6 +218,11 @@
 			},
 			closeAlert () {
 				this.isShowType = false;
+				this.keyWord = '';
+			},
+			search (str) { // 弹框搜索
+				this.keyword = str;
+				this.opentType(this.typeNumber);
 			},
 			okRadioValue (val) { // 确定选择类别
 				this.isShowType = false;
@@ -222,21 +243,13 @@
 					this.selRadioList.supplierType = val.name;
 				}
 			},
-			uploadImg () { // 上传图片
-				if (!this.isonSave) {
-					uni.showToast({
-						title: '请先保存商品信息!',
-						icon:'none'
-					});
-					return;
-				}
-				this.$API.upload().then(res => {
-					this.goodImg = res.imageSrc;
+			uploadImg () { // 选择图片
+				this.$API.uploadChooseImage(this.goodsInfo.code).then(res => {
+					this.goodImg = res;
 				});
 			},
 			onType (index) { // 选择颜色
-				this.selTypeChidenItem.push(index);
-				this.colorTypeInfo[index].flg = !this.colorTypeInfo[index].flg ;
+				this.colorTypeInfo[index].flg = !this.colorTypeInfo[index].flg;
 			},
 			okType () { // 确定选择颜色
 				this.isShowType = false;
@@ -259,95 +272,98 @@
 			opentType (index) { // 打开筛选类型
 				this.typeNumber = index;
 				this.isShowType = true;
+				uni.showLoading({
+					title: '加载中...'
+				});
 				if (index === 1) {
-					if (this.classTypeInfo.length > 0) {
-						return;
-					}
-					this.$API.get('/fuxi/select/query-goods-type').then(res => {
+					this.$API.get('/fuxi/select/query-goods-type', {keyword: this.keyword}).then(res => {
+						uni.hideLoading();
 						if (res.code === 'success') {
-							let arr = res.data;
-							for (let i = 0; i < arr.length; i++) {
-								let info = {id: arr[i].goodsTypeId, name: arr[i].goodsType, goodsTypeId: arr[i].goodsTypeId, flg: false};
-								this.classTypeInfo.push(info);
-							}
-							
+							this.classTypeInfo = this.$API.fmtSelData(res.data, 11);
 						}
 					});
 				} else if (index === 2) {
-					if (this.brandTypeInfo.length > 0) {
-						return;
-					}
-					this.$API.get('/fuxi/select/query-brand').then(res => {
+					this.$API.get('/fuxi/select/query-brand', {keyword: this.keyword}).then(res => {
+						uni.hideLoading();
 						if (res.code === 'success') {
-							let arr = res.data;
-							for (let i = 0; i < arr.length; i++) {
-								let info = {id: arr[i].brandId, name: arr[i].brand, flg: false};
-								this.brandTypeInfo.push(info);
-							}
-							
+							this.brandTypeInfo = this.$API.fmtSelData(res.data, 2);
 						}
 					});
 				} else if (index === 3) {
 					if (this.ageTypeInfo.length > 0) {
+						uni.hideLoading();
 						return;
 					}
 					this.$API.get('/fuxi/select/query-age').then(res => {
+						uni.hideLoading();
 						if (res.code === 'success') {
-							let arr = res.data;
-							for (let i = 0; i < arr.length; i++) {
-								let info = {id: arr[i].age, name: arr[i].age, flg: false};
-								this.ageTypeInfo.push(info);
-							}
+							this.ageTypeInfo = this.$API.fmtSelData(res.data, 1);
 						}
 					});
 				} else if (index === 4) {
 					if (this.seasonTypeInfo.length > 0) {
+						uni.hideLoading();
 						return;
 					}
 					this.$API.get('/fuxi/select/query-season').then(res => {
+						uni.hideLoading();
 						if (res.code === 'success') {
-							let arr = res.data;
-							for (let i = 0; i < arr.length; i++) {
-								let info = {id: arr[i].goodsTypeId, name: arr[i].season, flg: false};
-								this.seasonTypeInfo.push(info);
-							}
-							
+							this.seasonTypeInfo = this.$API.fmtSelData(res.data, 12);
 						}
 					});
 				} else if (index === 5) {
-					if (this.supplierTypeInfo.length > 0) {
-						return;
-					}
-					this.$API.get('/fuxi/select/query-supplier').then(res => {
+					this.supplierPage = 1;
+					this.supplierisMore = true;
+					this.$API.get('/fuxi/select/query-supplier',  {keyword: this.keyword, pageNum: this.supplierPage, pageSize: this.size}).then(res => {
+						uni.hideLoading();
 						if (res.code === 'success') {
-							let arr = res.data;
-							for (let i = 0; i < arr.length; i++) {
-								let info = {id: arr[i].supplierId, name: arr[i].supplier, flg: false};
-								this.supplierTypeInfo.push(info);
+							this.supplierTypeInfo = this.$API.fmtSelData(res.data.list, 13)
+							if (this.supplierPage === res.data.pages) {
+								this.supplierisMore = false;
+							} else {
+								this.supplierisMore = true;
 							}
-							
 						}
 					});
 				} else if (index === 6) {
-					if (this.colorTypeInfo.length > 0) {
-						return;
-					}
-					this.$API.get('/fuxi/select/query-color').then(res => {
+					this.colorTypeInfo = [];
+					this.$API.get('/fuxi/select/query-color',  {keyword: this.keyword}).then(res => {
+						uni.hideLoading();
 						if (res.code === 'success') {
-							let arr = res.data;
-							for (let i = 0; i < arr.length; i++) {
-								let info = {id: arr[i].colorId, name: arr[i].color, flg: false};
-								this.colorTypeInfo.push(info);
-								/* for (let i = 0; i < this.colorTypeInfo.length; i++) {
-									if (this.colorTypeInfo[i].colorId === this.goodsInfo.colorId) {
-										
+							let arr =  this.$API.fmtSelData(res.data, 3);
+							if (this.goodsInfo.goodscolor !== '' ) {
+								let selColor = (this.goodsInfo.goodscolor).split(',');
+								for (let i = 0; i < arr.length; i++) {
+									let info = {id: arr[i].id, name: arr[i].name, flg: false};
+									for (let j = 0; j < selColor.length; j++) {
+										if (arr[i].id === selColor[j]) {
+											info.flg = true;
+										}
 									}
-								} */
+									this.colorTypeInfo.push(info);
+								}
+							} else {
+								this.colorTypeInfo =  this.$API.fmtSelData(res.data, 3);
 							}
-							
 						}
 					});
 				}
+			},
+			moreTypeInfo (index) { // 更新弹框信息
+				 if (index === 5) {
+					this.supplierPage++;
+					this.$API.get('/fuxi/select/query-supplier',  {keyword: this.keyword, pageNum: this.supplierPage, pageSize: this.size}).then(res => {
+						if (res.code === 'success') {
+							let list = this.$API.fmtSelData(res.data.list, 13);
+							this.supplierTypeInfo = this.supplierTypeInfo.concat(list);
+							if (this.supplierPage === res.data.pages) {
+								this.supplierisMore = false;
+							} else {
+								this.supplierisMore = true;
+							}
+						}
+					});
+				} 
 			},
 			closeMoreType () { // 关闭多选
 				let list = this.selTypeChidenItem;
@@ -384,7 +400,7 @@
 					});
 					return;
 				}
-				let purchasePrice = this.goodsInfo.purchasePrice;
+				let purchasePrice = this.goodsInfo.purchaseprice;
 				if (purchasePrice !== '' && purchasePrice !== undefined && purchasePrice !== null ) {
 					if (!pricePass(purchasePrice)) {
 						uni.showToast({
@@ -404,7 +420,7 @@
 						return;
 					}
 				}
-				let tradePrice = this.goodsInfo.tradePrice;
+				let tradePrice = this.goodsInfo.tradeprice;
 				if (tradePrice !== '' && tradePrice !== undefined && tradePrice !== null ) {
 					if (!pricePass(tradePrice)) {
 						uni.showToast({
@@ -414,17 +430,25 @@
 						return;
 					}
 				}
+				if (this.goodsInfo.goodscolor === '') {
+					uni.showToast({
+						title: '请选择颜色!',
+						icon: 'none'
+					});
+					return;
+				}
 				let method = 'POST';
 				if (this.typeRq === 2) {
 					method = 'PUT'
 				}
 				this.$API.post(this.url, this.goodsInfo, method).then(res => {
-					console.log(res);
 					if (res.code === 'success') {
+						this.$API.upload(this.goodsInfo.code, this.goodImg);
 						if (this.typeRq === 2) {
 							uni.showToast({
 								title: '编辑成功!'
 							});	
+							
 							setTimeout(() => {
 								this.$API.to('../../goods/goodsList/goodsList');
 							}, 2000)
@@ -435,6 +459,7 @@
 							this.isonSave = true;
 							this.resetData();
 						}
+						
 					}
 				});
 			},
@@ -470,11 +495,15 @@
 				this.goodsId = '';
 				this.url = '/fuxi/goods/add-goods';
 				this.typeRq = 1;
+				this.$API.generateNo().then(res => {
+					this.goodsInfo.code = res;
+				});
 			}
 		},
 		components: {
 			radioItem,
-			selType
+			selType,
+			radioItemsSearch
 		}
 	}
 </script>
@@ -484,17 +513,18 @@
 	.v-add-goods-view {
 		width: 100%;
 		overflow: hidden;
-		background: #fff;
 		font-size: 30upx;
+		padding-bottom: 110upx;
 		// 头部
 		.cgh-head-con {
 			width: 94%;
 			overflow: hidden;
-			margin-left: 3%;
+			padding: 0upx 3%;
 			display: flex;
 			justify-items: center;
 			align-content: center;
 			padding-top: 20upx;
+			background: #fff;
 			.left {
 				width: 33%;
 				margin-right: 2%;
@@ -524,26 +554,22 @@
 						}
 					}
 				}
-				.top-right {
-					width: 5%;
-					margin-left: 2%;
-					image {
-						@include cgh-right-img();
-						vertical-align: middle;
-						margin-top: 30upx;
-					}
-				}
 			}
 		}
-		.base-right {
-			margin-left: 20upx;
-			@include cgh-right-img();
+		.content-right {
+			width: 5%;
+			margin-left: 2%;
+			image {
+				@include cgh-right-img();
+				vertical-align: middle;
+				margin-top: 30upx;
+			}
 		}
 		// 中间内容
 		.v-goods-content {
 			width: 100%;
 			overflow: hidden;
-			padding-bottom: 110upx;
+			background: #fff;
 			.v-goods-brand view:last-child {
 				border-bottom: 0upx;
 			}
@@ -556,20 +582,14 @@
 				.v-input-title {
 					width: 20%;
 					margin-left: 15upx;
-					line-height: 100upx;
+					line-height: 80upx;
 				}
 				.v-input {
 					width: 69%;
-					height: 100upx;
+					height: 80upx;
 					margin-top: 20upx;
 					input {
 						width: 100%;
-					}
-				}
-				.content-right {
-					width: 5%;
-					image {
-						margin-right: 20upx;
 					}
 				}
 			}

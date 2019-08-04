@@ -7,7 +7,7 @@
 			</view>
 			<view class="main">
 				<image src="../../../static/base/search.png"></image>
-				<input v-model="keyWord" placeholder="请输入内容" />
+				<input type="text" confirm-type="search" @confirm="search" v-model="keyWord" placeholder="请输入内容" />
 			</view>
 			<view class="right" @click="search">搜索</view>
 		</view>
@@ -25,9 +25,10 @@
 				type: String,
 				default: ''
 			},
+			
 			type: { // 1: 销售发货单  11: 店仓管理
-				type: String,
-				default: '1'
+				type: Number,
+				default: 1
 			},
 			store: {
 				type: String,

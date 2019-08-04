@@ -41,7 +41,7 @@
 			this.showAdd();
 		},
 		onLoad(option) {
-			this.moduleType = option.type === undefined? 1 : parseInt(option.type);
+			this.moduleType = option.type === undefined? 0 : parseInt(option.type);
 			this.getList();
 		},
 		onReachBottom() { // 页面下拉 
@@ -100,7 +100,9 @@
 				});
 			},
 			toPath (id) { // 跳转
-				this.$API.to(`../../sale/selStore/selStore?id=${id}`);
+				if (this.moduleType === 1) {
+					this.$API.to(`../../sale/selStore/selStore?id=${id}`);
+				}
 			},
 			
 		},

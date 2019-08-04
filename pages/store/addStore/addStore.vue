@@ -4,13 +4,17 @@
 			<view class="add-base-info">
 				<view class="item" @click="onselInfo(1)">
 					<view class="add-title red-title">店仓类别</view>
-					<view class="add-input"><input placeholder="店仓类别" disabled v-model="selStoreInfo.departmentType" /></view>
+					<view class="add-input"><input placeholder="店仓类别" disabled v-model="selStoreInfo.name" /></view>
+					<view class="add-right"><image class="base-right" src="../../../static/base/right.png"></image></view>
 				</view>
 			</view>
 			<view class="add-base-info">
 				<view class="item">
 					<view class="add-title">店仓编码</view>
-					<view class="add-input"><input  class="no" placeholder="编码"  disabled v-model="storeInfo.code" /></view>
+					<view class="add-input">
+						<input type="text"  v-if="type === 1"  placeholder="编码"  v-model="storeInfo.code" />
+						<input type="text"  v-if="type === 2" class="no" placeholder="编码" disabled v-model="storeInfo.code" />
+					</view>
 				</view>
 				<view class="item">
 					<view class="add-title red-title">店仓名称</view>
@@ -18,19 +22,20 @@
 				</view>
 				<view class="item" @click="onselInfo(2)">
 					<view class="add-title red-title">店仓类型</view>
-					<view class="add-input"><input placeholder="店仓类型" disabled v-model="selStoreTypeInfo.deptType" /></view>
+					<view class="add-input"><input placeholder="店仓类型" disabled v-model="selStoreTypeInfo.name" /></view>
+					<view class="add-right"><image class="base-right" src="../../../static/base/right.png"></image></view>
 				</view>
 
 				<view class="item">
 					<view class="add-title red-title">是否是店仓</view>
 					<view class="add-sWitch">
-						 <switch @change="storeWitchChange" checked  color="#427CAC" style="transform:scale(0.6)" />
+						 <switch @change="storeWitchChange" :checked="isStore" color="#427CAC" style="transform:scale(0.6)" />
 					</view>
 				</view>
 				<view class="item">
 					<view class="add-title red-title">不允许负库存</view>
 					<view class="add-sWitch">
-						 <switch @change="stockWitchChange"  checked color="#427CAC" style="transform:scale(0.6)" />
+						 <switch @change="stockWitchChange"  :checked="isStock" color="#427CAC" style="transform:scale(0.6)" />
 					</view>
 				</view>
 			
@@ -39,14 +44,17 @@
 				<view class="item" @click="selCity(1)">
 					<view class="add-title">省份</view>
 					<view class="add-input"><input placeholder="省份" disabled  v-model="selCityNameS.privinceName"  /></view>
+					<view class="add-right"><image class="base-right" src="../../../static/base/right.png"></image></view>
 				</view>
 				<view class="item" @click="selCity(2)">
 					<view class="add-title" >城市</view>
 					<view class="add-input"><input placeholder="城市" disabled  v-model="selCityNameS.cityName" /></view>
+					<view class="add-right"><image class="base-right" src="../../../static/base/right.png"></image></view>
 				</view>
 				<view class="item" @click="selCity(3)">
 					<view class="add-title">区县</view>
 					<view class="add-input"><input placeholder="区县" disabled  v-model="selCityNameS.countyArea"  /></view>
+					<view class="add-right"><image class="base-right" src="../../../static/base/right.png"></image></view>
 				</view>
 				<view class="item">
 					<view class="add-title">详细地址</view>
@@ -59,7 +67,7 @@
 				<view class="item">
 					<view class="add-title">停用</view>
 					<view class="add-sWitch">
-						 <switch @change="useWitchChange" color="#427CAC" style="transform:scale(0.6)" />
+						 <switch @change="useWitchChange" :checked="isUser"  color="#427CAC" style="transform:scale(0.6)" />
 					</view>
 				</view>
 				<view class="item">
@@ -88,24 +96,16 @@
 			</view>
 		</view>
 		<view  v-if="isShowStore">
-			<view class="cgh-alert-black" @click="isShowStore = false"></view>
-			<view class="close" @click="isShowStore = false"><image src="../../../static/icon/login/icon_del.png"></image></view>
-			<view class="radio-con">
-				<view class="radio-info-con" >
-					<view class="item" v-if="onStoreType  === 1"  v-for="(item, index) in storeList" :key="index" @click="okInfo(item)">
-						{{item.departmentType}}
-					</view>
-					<view class="item" v-if="onStoreType  === 2"  v-for="(item, index) in storeTypeList" :key="index" @click="okInfo(item)">
-						{{item.deptType}}
-					</view>
-				</view>
-			</view>
+			<radioItemsSearch v-if="onStoreType === 1"  :list="storeList"  title="店仓类别" placeholderTitle="关键字搜索"  @closeAlert="closeAlert" @search="search"  @okRadioValue="okInfo"></radioItemsSearch>
+			<radioItem v-if="onStoreType === 2"  :list="storeTypeList" @closeAlert="closeAlert"  @okRadioValue="okInfo"></radioItem>
 		</view>
 	</view>
 </template>
 <script>
 	import city from '../../../common/city-data.json';
-	import { nullPass } from '../../../components/filter/index.js';
+	import radioItemsSearch from '../../../components/radioItemsSearch';
+	import radioItem from '../../../components/radioItem';
+	import { nullPass, meetsTel } from '../../../components/filter/index.js';
 	export default {
 		data() {
 			return {
@@ -130,17 +130,50 @@
 				isStore: true,
 				isStock: true,
 				isUser: false,
-				id: ''
+				id: '',
+				keyword: '',
+				type: 1, // 1: 新增 2: 编辑
 			}
 		},
-		onLoad() {
-			if (this.id === '' || this.id === undefined || this.id === null) {
+		onLoad(option) {
+			this.id = option.id;
+			if (this.id !== '' && this.id !== undefined && this.id !== null) {
+				uni.setNavigationBarTitle({title: '编辑店仓'});
+				this.type = 2;
+				this.getDetailsInfo();
+			} else {
 				this.$API.generateNo().then(res => {
 					this.storeInfo.code = res;
 				});
 			}
 		},
 		methods: {
+			getDetailsInfo () { // 获取详情
+				uni.showLoading({
+					title: '加载中...'
+				});
+				this.$API.get('/fuxi/dept/query-dept', {departmentId: this.id}).then(res => {
+					uni.hideLoading();
+					if (res.code === 'success') {
+						this.storeInfo = res.data;
+						this.selStoreInfo = {id: this.storeInfo.departmenttypeid, name: this.storeInfo.departmenttype};
+						this.selStoreTypeInfo = {id: this.storeInfo.departmentid, name: this.storeInfo.departmenttype};
+						this.isStore = this.storeInfo.warehouseflag;
+						this.isStock = this.storeInfo.posnonzerostockflag;
+						this.isUser = this.storeInfo.stopflag;
+						let addrees = (this.storeInfo.city).split('-');
+						for (let i = 0; i < addrees.length; i++) {
+							if (i === 0) {
+								this.selCityNameS.privinceName = addrees[i];
+							} else if (i === 1) {
+								this.selCityNameS.cityName = addrees[i];
+							} else if (i === 2) {
+								this.selCityNameS.countyArea = addrees[i];
+							}
+						}
+					}
+				});
+			},
 			storeWitchChange (e) { // 是否店仓
 				this.isStore = e.target.value;
 			},
@@ -150,32 +183,32 @@
 			useWitchChange (e) { // 是否停用
 				this.isUser = e.target.value;
 			},
-			onselInfo (type) { // 选择店仓类类别/类型/部门类型
+			closeAlert () { // 关闭弹框
+				this.isShowStore = false;
+				this.keyword = '';
+			},
+			search (str) { // 弹框搜索
+				this.keyword = str;
+				this.onselInfo(this.onStoreType);
+			},
+			onselInfo (type) { // 选择类别/类型
 				this.isShowStore = true;
 				this.onStoreType = type;
 				uni.showLoading({
 					title: '加载中...'
 				});
 				if (type === 1) {
-					if (this.storeList.length !== 0) {
-						uni.hideLoading();
-						return;
-					}
-					this.$API.get('/fuxi/select/query-department-type').then(res => {
+					this.$API.get('/fuxi/select/query-department-type', {keyword: this.keyword}).then(res => {
 						uni.hideLoading();
 						if (res.code === 'success') {
-							this.storeList = res.data;
+							this.storeList = this.$API.fmtSelData(res.data, 7);
 						}
 					});
 				} else if (type === 2) {
-					if (this.storeTypeList.length !== 0) {
-						uni.hideLoading();
-						return;
-					}
-					this.$API.get('/fuxi/select/query-dept-type').then(res => {
+					this.$API.get('/fuxi/select/query-dept-type', {keyword: this.keyword}).then(res => {
 						uni.hideLoading();
 						if (res.code === 'success') {
-							this.storeTypeList = res.data;
+							this.storeTypeList = this.$API.fmtSelData(res.data, 8);
 						}
 					});
 				} 
@@ -243,19 +276,34 @@
 				
 			},
 			save () { // 保存
-				if (!nullPass(this.selStoreInfo.departmentTypeId)) {
+				if (!nullPass(this.selStoreInfo.id)) {
 					uni.showToast({
 						title: '请选择店仓类别!',
 						icon: 'none'
 					});
 					return;
 				}
-				if (!nullPass(this.storeInfo.department)) {
+				if (!nullPass(this.selStoreTypeInfo.id)) {
 					uni.showToast({
-						title: '店仓名称不能为空!',
+						title: '店仓类型不能为空!',
 						icon: 'none'
 					});
 					return;
+				}
+				if (!nullPass(this.storeInfo.tel)) {
+					if (!meetsTel(this.storeInfo.tel)) {
+						uni.showToast({
+							title: '请输入正确的手机号码格式!',
+							icon: 'none'
+						});
+						return;
+					}
+				}
+				let url = '/fuxi/dept/add-dept';
+				let method = 'POST';
+				if (this.type === 2) {
+					url = '/fuxi/dept/update-dept';
+					method = 'PUT'
 				}
 				let provice = nullPass(this.selCityNameS.privinceName);
 				let city = nullPass(this.selCityNameS.cityName);
@@ -269,39 +317,25 @@
 				} else {
 					this.storeInfo.city = '';
 				}
-				this.storeInfo.departmenttypeid  = this.selStoreInfo.departmentTypeId;
-				this.storeInfo.depttype   = this.selStoreTypeInfo.deptType;
-				this.$API.post('/fuxi/dept/add-dept', this.storeInfo).then(res => {
+				this.storeInfo.departmenttypeid = this.selStoreInfo.id;
+				this.storeInfo.depttype = this.selStoreTypeInfo.id;
+				this.storeInfo.posnonzerostockflag = this.isStock; 
+				this.storeInfo.stopflag  = this.isUser;
+				this.storeInfo.warehouseflag  = this.isStore;
+				this.$API.post(url, this.storeInfo, method).then(res => {
 					if (res.code === 'success') {
 						uni.showToast({
 							title: '保存成功!'
 						});
-						this.cleaData();
+						this.$API.to('../../store/department/department?type=11');
 					}
 				});
-			},
-			cleaData () { // 清除数据
-				this.storeInfo =  {warehouseflag : true, stopflag: false, posnonzerostockflag: true};
-				this.cityS = [];
-				this.isShowCity = false;
-				this.cityType = 0;
-				this.selPrivince = [];
-				this.selCityInfo = [];
-				this.selCounty = [];
-				this.selCityNameS = {privinceName: '',cityName: '',countyArea: ''};
-				this.selPrivinceIndex = 0;
-				this.selCityIndex = 0;
-				this.selCountyIndex = 0;
-				this.moduleType = 1;
-				this.isShowStore = false;
-				this.storeList =[];
-				this.selStoreInfo = {};
-				this.isStore = true;
-				this.isStock = true;
-				this.isUser = false;
 			}
+		},
+		components: {
+			radioItemsSearch,
+			radioItem
 		}
-		
 	}
 </script>
 
@@ -332,13 +366,19 @@
 					font-size: 30upx;
 				}
 				.add-input {
-					width: 76%;
+					width: 78%;
 					input {
 						width: 98%;
 						height: 100%;
 						color: #333;
 						padding-left: 5upx;
 					}
+				}
+			}
+			.add-right {
+				width: 5%;
+				image {
+					@include cgh-right-img();
 				}
 			}
 		}

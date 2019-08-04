@@ -83,6 +83,16 @@
 	font-weight: bold;
 	padding: 30upx 0upx;
 }
+@mixin base-btn ($width, $height) {
+	width: $width;
+	height: $height;
+	line-height:  $height;
+	color: #fff;
+	text-align: center;
+	font-size: 30upx;
+	background: $themeColor;
+	margin-bottom: 100upx;
+} 
 // 公共颜色
 $themeColor: #427CAC;
 $hui-se: #999;

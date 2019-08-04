@@ -1,7 +1,7 @@
 <template>
 	<view class="cgh-search-item-childe">
 		<view class="info-con">
-			<view class="list"  v-if="type !== '15'" v-for="(v, index) in list" :key="index" @click="toPath(v.id)">
+			<view class="list"  v-if="type !== '15'" v-for="(v, index) in list" :key="index" @click="toPath(v)">
 				<view class="name" v-if="type === '1'">{{v.supplier}}</view>
 				<view class="name" v-if="type === '2'">{{v.department}}</view>
 				<view class="class-type">
@@ -13,7 +13,7 @@
 					<view v-if="type === 2"><image src="../../../static/base/right.png"></image></view>
 				</view>
 			</view>
-			<view class="list" v-if="type === '15'" v-for="(v, index) in list" :key="index" @click="toPath(v.colorid)">
+			<view class="list" v-if="type === '15'" v-for="(v, index) in list" :key="index" @click="toPathColor(v.colorid)">
 				<view class="name">{{v.color}}</view>
 			</view>
 		</view>
@@ -48,7 +48,14 @@
 			}
 		},
 		methods: {
-			toPath(id) {
+			toPathColor (id) {
+				this.$emit('toPath', id);
+			},
+			toPath(item) {
+				let id = item.id;
+				if (this.type === '2') {
+					id = item.departmentid;
+				}
 				this.$emit('toPath', id);
 			}
 		}

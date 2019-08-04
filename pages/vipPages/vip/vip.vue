@@ -9,15 +9,18 @@
 			<!-- #endif -->
 			<!--  -->
 			<view class="info-con">
-				<view class="list" v-for="(v, index) in 20" :key="index" @click="toPath(index)">
+				<view class="list" v-for="(v, index) in listData" :key="index" @click="toPath(v.vipid)">
 					<view class="base-info">
-						<view class="name">张家界</view>
-						<view class="desc">所在门店:
-							<text>天河店</text>
+						<view class="name">{{v.vip}}</view>
+						<view class="store-name">所在门店:
+							<text>{{v.department}}</text>
 						 </view>
-						<view class="desc">积分/增值: <text class="price">121211</text></view>
+						<view class="store-name">积分/增值:
+							<text class="price" v-if="v.usablepoint !== '' || v.usablepoint !== null">{{v.usablepoint}}</text>
+							<text class="price" v-else>0</text>
+					   </view>
 						<view class="desc">创建时间:
-							<text>2109-07-12</text>
+							<text>{{v.madedate}}</text>
 						 </view>
 					</view>
 					<view class="right"><image src="../../../static/base/right.png"></image></view>
@@ -50,16 +53,23 @@
 				para: {pageSize: 10, pageNum: 1, keyword: ''}
 			}
 		},
+		onBackPress(options) {  
+		    if (options.from === 'navigateBack') {  
+		        return false;  
+		    } 
+			this.$API.tab('../../tab/main/main');
+		    return true;  
+		}, 	
 		onNavigationBarButtonTap(e) {
 			this.showAdd();
 		},
 		onLoad(option) {
 			this.moduleType = option.type === undefined? 1 : parseInt(option.type);
-			// this.getList();
+			this.getList();
 		},
 		onReachBottom() { // 页面下拉 
 			this.status = 'more';
-			// this.getMoreInfo();
+			this.getMoreInfo();
 		},
 		methods: {
 			showAdd () {
@@ -69,13 +79,13 @@
 				this.para.keyword = keyword;
 				this.getList();
 			},
-			getList() { // 获取公司列表
+			getList() { // 获取vip列表
 				this.countPage = 0;
 				this.listData = [];
 				this.last_id = '';
 				this.status = 'more';
 				this.para.pageNum = 1;
-				this.$API.get('/fuxi/supplier/query-supplier-list', this.para).then(res => {
+				this.$API.get('/fuxi/vip/query-vip-list', this.para).then(res => {
 					if (res.code === 'success') {
 						if (res.data.pages === 0 ) {
 							this.status = 'finish';
@@ -100,7 +110,7 @@
 					this.status = 'loading';
 				}
 				this.para.pageNum++;
-				this.$API.get('/fuxi/supplier/query-supplier-list', this.para).then(res => {
+				this.$API.get('/fuxi/vip/query-vip-list', this.para).then(res => {
 					if (res.code === 'success') {
 						let list = res.data.list;
 						for (let i = 0; i < list.length; i++) {
@@ -154,8 +164,14 @@
 							color: #333;
 							font-size: 36upx;
 							font-weight: bold;
-							
 						}
+						.store-name {
+							color: #333;
+							font-size: 30upx;
+							text {
+								padding-left: 10upx;
+							}
+						}	
 						.desc {
 							color: #ccc;
 							font-size: 30upx;

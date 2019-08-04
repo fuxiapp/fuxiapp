@@ -1,13 +1,13 @@
 <template>
 	<view class="cgh-deparment-view">
 		<view class="search">
-			<search placeholderStr="颜色编码/颜色名称" :type="moduleType"  @search="search"  ></search>
+			<search placeholderStr="颜色编码/颜色名称" type="15"  @search="search"  ></search>
 		</view>
 		<view class="list-con">
 			 <!-- #ifdef MP-WEIXIN -->
 			<button @click="addcolor">添加</button>
 			<!-- #endif -->
-			<searItem :moduleType="moduleType" :companyOrStrore="companyOrStrore" :list="listData" :type="moduleType" @toPath="uptecolor"></searItem>
+			<searItem :moduleType="moduleType" :companyOrStrore="companyOrStrore" :list="listData" type="15" @toPath="uptecolor"></searItem>
 		</view>
 		<uni-load-more :status="status" :content-text="contentText" />
 	</view>
@@ -20,7 +20,7 @@
 	export default {
 		data() {
 			return {
-				moduleType: '15',
+				moduleType: 15,
 				companyOrStrore: 0,
 				// 分页
 				listData: [],
@@ -36,8 +36,14 @@
 				para: {pageSize: 20, pageNum: 1, keyword: ''},
 			}
 		},
+		onBackPress(options) {  
+		    if (options.from === 'navigateBack') {  
+		        return false;  
+		    } 
+			this.$API.tab('../../tab/main/main');
+		    return true;  
+		}, 
 		onLoad (option) {
-			// this.moduleType = option.type;
 			this.getList();
 		},
 		onReachBottom() { // 页面下拉 

@@ -9,7 +9,7 @@
 			<!-- #endif -->
 			<!--  -->
 			<view class="info-con">
-				<view class="list" v-for="(v, index) in listData" :key="index" @click="toPath(index)">
+				<view class="list" v-for="(v, index) in listData" :key="index" @click="toPath(v.supplierid)">
 					<view class="base-info">
 						<view class="name">{{v.supplier}}</view>
 						<view class="desc">负责人:
@@ -51,6 +51,13 @@
 				para: {pageSize: 10, pageNum: 1, keyword: ''}
 			}
 		},
+		onBackPress(options) {  
+		    if (options.from === 'navigateBack') {  
+		        return false;  
+		    } 
+			this.$API.tab('../../tab/main/main');
+		    return true;  
+		}, 	
 		onNavigationBarButtonTap(e) {
 			this.showAdd();
 		},
@@ -162,7 +169,7 @@
 							
 						}
 						.desc {
-							color: #ccc;
+							color: #333;
 							font-size: 30upx;
 							text {
 								padding-left: 10upx;

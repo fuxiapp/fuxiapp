@@ -1,16 +1,19 @@
 <template>
 	<view class="cgh-add-customer-view">
-			<view class="add-base-info">
-				<view class="item">
-					<view class="add-title">编码</view>
-					<view class="add-input"><input  class="no" placeholder="编码"  disabled v-model="colorInfo.no" /></view>
-				</view>
-				<view class="item">
-					<view class="add-title">名称</view>
-					<view class="add-input"><input placeholder="填写颜色编码" v-model="colorInfo.color"  /></view>
+		<view class="add-base-info">
+			<view class="item">
+				<view class="add-title">编码</view>
+				<view class="add-input">
+					<input type="text" v-if="type === 1"  placeholder="编码"   v-model="colorInfo.no" />
+					<input type="text"  class="no"  v-if="type === 2"  placeholder="编码"  disabled v-model="colorInfo.no" />
 				</view>
 			</view>
-			<view class="btn" @click="save">保存</view>
+			<view class="item">
+				<view class="add-title">名称</view>
+				<view class="add-input"><input placeholder="填写颜色编码" v-model="colorInfo.color"  /></view>
+			</view>
+		</view>
+		<view class="btn" @click="save">保存</view>
 	</view>
 </template>
 <script>
@@ -20,11 +23,14 @@
 			return {
 				colorInfo: {no: '', color: ''},
 				id: '',
+				type: 1 // 1:添加 2: 编辑
 			}
 		},
 		onLoad(option) {
 			this.id = option.id;
-			if (nullPass(this.id)) {
+			if (this.id !== '' && this.id !== undefined && this.id !== null) {
+				uni.setNavigationBarTitle({title: '编辑颜色'});
+				this.type = 2;
 				this.getInfo();
 			} else {
 				this.$API.generateNo().then(res => {
@@ -41,7 +47,7 @@
 				});
 			},
 			save () { // 保存
-				let url = '';
+				
 				if (!nullPass(this.colorInfo.color)) {
 					uni.showToast({
 						title: '颜色名称不能为空!',
@@ -49,26 +55,19 @@
 					});
 					return;
 				}
-				if (nullPass(this.id)) {
+				let url = '/fuxi/color/add-color';
+				let method = 'POST';
+				if (this.type === 2) {
 					url = '/fuxi/color/update-color';
-				} else {
-					url = '/fuxi/color/add-color';
-				}
-				this.$API.post(url, this.colorInfo).then(res => {
+					method = 'PUT';
+				} 
+				this.$API.post(url, this.colorInfo, method).then(res => {
 					if (res.code === 'success') {
 						uni.showToast({
 							title: '保存成功!'
 						});
-						if (nullPass(this.id)) {
-							this.$API.bank();
-						} else {
-							this.$API.generateNo().then(res => {
-									this.colorInfo.no = res;
-								});
-								this.colorInfo.color = '';
-							}
-						}
-						
+						this.$API.to('../../colors/color/color?type=15');
+					}
 				});
 			}
 		}
@@ -96,6 +95,7 @@
 				border-bottom: 1upx solid $boder-se;
 				line-height: 80upx;
 				justify-content: space-between;
+				padding: 5upx 0upx;
 				.add-title {
 					width: 20%;
 					color: #333;
