@@ -1,7 +1,7 @@
 <template>
 	<view class="v-edit-goods-view">
 		<view class="con goods-base-info">
-			<view class="img"><image @error="handleError" @click="previewImage" :src="goodsInfo.image"></image></view>
+			<view class="img"><image @error="handleError" :src="goodsInfo.image" @click="previewImage"></image></view>
 			<view class="info">
 				<view class="name">{{goodsInfo.goodsName}}</view>
 				<view class="no">{{goodsInfo.goodsCode}}</view>
@@ -38,17 +38,12 @@
 			<view class="title">
 				<view class="cgh-size">尺寸</view>
 				<view class="cgh-stock">库存</view>
-				<view class="cgh-stock" v-if="moduleType === 1">采购数</view>
 				<view class="cgh-number">数量</view>
 			</view>
 			<view class="info-details">
 				<view class="list" v-for="(v, index) in sizeList" :key="index">
 					<view  class="cgh-size">{{v.sizeName}}</view>
 					<view class="cgh-stock">{{v.stock}}</view>
-					<view class="cgh-stock" v-if="moduleType === 1">
-						<block v-if="v.purchase === ''">0</block>
-						<block v-if="v.purchase !== ''">{{v.purchase}}</block>
-					</view>
 					<view class="cgh-number">
 						<view class="less" @click="less(index)">-</view>
 						<view class="one-number"><input type="number" v-model="v.quantity" @input="inputBlur(2, index)" @blur="inputBlur(2, index)"  placeholder="数量"/></view>
@@ -71,7 +66,7 @@
 			<view class="upate-price">
 				<view class="title">{{upTitle}}</view>
 				<view class="input-con">
-					<input v-model="price" type="number" :placeholder="priceType=== 1 ? '请输入价格' : '请输入折扣'" />
+					<input v-model="price" type="number" placeholder="请输入价格" />
 				</view>
 				<view class="btn">
 					<view class="cel" @click="isShowPrice = false">取消</view>
@@ -80,14 +75,13 @@
 			</view>
 			<view class="cgh-alert-black" @click="isShowPrice = false"></view>
 		</view>
-		<view class="one-btn" v-if= "moduleType === 7"  @click="toPath">
+		<view class="footer" v-if="moduleType !== 18" @click="toPath(1)" >
 			确定
 		</view>
-		<view class="footer" v-else>
-			<view class="left">{{totalNumber}}件<text>¥ {{totalPrice}}</text></view>
-			<view class="right" @click="toPath">确定</view>
+		<view class="v-save" v-if="moduleType === 18">
+			<view class="btn-item left"  @click="toPath(2)" >保存并新增</view>
+			<view class="btn-item right"@click="toPath(1)" >保存并收货</view>
 		</view>
-		
 	</view>
 </template>
 <script>
@@ -137,27 +131,19 @@
 			this.goodsInfo.price = this.decimalNumber(this.goodsInfo.price);
 			this.$API.getStorage('fuxiSalesSend').then(res => {
 				this.salesSend = res.data;
-				if (!nullPass(this.salesSend.type)) {
+				if (!nullPass(this.salesSend.supplierId)) {
 					uni.showToast({
-						title: '请先客户,部门,类型!',
-						icon: 'none'
+						title: '请先厂商!'
 					});
-					this.$API.rto('../../sale/salesSelCustomer/salesSelCustomer?type=' + this.moduleType);
+					this.$API.rto(`../../PurchasePages/selSupplier/selSupplier?type=${this.moduleType}`);
 				}
 				this.getByIdInfo();
 			}).catch (() => {
 				uni.showToast({
-					title: '请先客户,部门,类型!',
-					icon: 'none'
+					title: '请先厂商!'
 				});
-				this.$API.rto('../../sale/salesSelCustomer/salesSelCustomer?type=' + this.moduleType);
+				this.$API.rto(`../../PurchasePages/selSupplier/selSupplier?type=${this.moduleType}`);
 			});
-			if (type !== '' && type !== undefined) {
-				this.moduleType = parseInt(type);
-				if (this.moduleType === 7) {
-					uni.setNavigationBarTitle({	title: '录入货品'})
-				}
-			}
 			this.$API.getStorage('fuxiSelasOrderInfo').then(res => {
 				this.fuxiSelasOrderInfo = res.data;
 			});
@@ -169,11 +155,11 @@
 				uni.showLoading({
 					title: '加载中...'
 				});
-				let para = {stockFlag: this.stockFlag, goodsId: this.id, departmentId: this.salesSend.departmentid, customerId: this.salesSend.customerid, type: this.salesSend.typeCode};
-				if (this.getType === 2) { 
-				   para = {stockFlag: this.stockFlag, barcode: this.id, departmentId: this.salesSend.departmentid, customerId: this.salesSend.customerid, type: this.salesSend.typeCode};
+				let para = {supplierId: this.salesSend.supplierId, goodsId: this.id, barcode: ''};
+				if (this.getType === 2) { // 条形码识别
+					para = {supplierId: this.salesSend.supplierId, goodsId: '', barcode: this.id};
 				} 
-				this.$API.get('/fuxi/barcode/barcode-parsing-sales', para, 'POST').then(res => {
+				this.$API.get('/fuxi/barcode/barcode-parsing-purchase', para, 'POST').then(res => {
 					uni.hideLoading();
 					if (res.code === 'success') {
 						this.goodsInfo = res.data;
@@ -196,23 +182,21 @@
 			handleError () { // 图片错误
 				this.goodsInfo.image = '../../../static/err_img.png'; 
 			},
-			toPath () {
-				if (this.moduleType === 7) {
-					this.$API.rto(`../../sale/addGoodsConfig/addGoodsConfig?id=${this.id}&type=${this.moduleType}`);
-				} else { // 销售单
+			toPath (type) {
+				if (this.moduleType === 4 || this.moduleType == 18) { // 采购发货单
 					let selInfoList = [];
 					for (let j = 0; j < this.colorList.length; j++) {
 						let flg = false;
 						let colorS = {};
-						// 计算某个size
-						colorS.amount = this.totalPrice; 
+						// 计算某个颜色
+						colorS.amount = this.totalNumber *  this.goodsInfo.unitprice; 
 						colorS.colorid = this.colorList[j].colorId;
 						colorS.discountrate  = this.goodsInfo.discountRate;
 						colorS.goodsid = this.goodsInfo.goodsId;
 						colorS.quantity = this.colorList[j].quantity;
-						colorS.unitprice  = this.goodsInfo.unitPrice; 
-						colorS.discount = 0;
-						colorS.retailsales =  this.goodsInfo.retailSales;
+						colorS.unitprice  = this.goodsInfo.unitprice; 
+						colorS.discount  = 0;
+						colorS.retailsales = this.goodsInfo.retailSales;
 						for (let i = 0; i < this.colorList[j].sizes.length; i++) {
 							let s = this.colorList[j].sizes[i].quantity;
 							if (s !== '' && s !== null && parseInt(s) > 0) {
@@ -262,10 +246,14 @@
 						return;
 					}
 					let retailamount = (parseFloat(this.goodsInfo.retailSales) * parseInt(this.totalNumber)).toFixed(2);
-					let info = {discountRate: this.goodsInfo.discountRate, retailamount: retailamount,  goodsid: this.id, retailSales: this.goodsInfo.retailSales, code: this.goodsInfo.goodsCode, totalPrice: this.totalPrice , retailSales: this.goodsInfo.retailSales,  image: this.goodsInfo.image ,name: this.goodsInfo.goodsName, price: this.goodsInfo.unitPrice, quantity: this.totalNumber, discountrate: this.goodsInfo.discountrate,  colorList: selInfoList};
+					let info = {discountRate: this.goodsInfo.discountRate, retailamount: retailamount, retailSales: this.goodsInfo.retailSales, goodsid: this.id, code: this.goodsInfo.goodsCode, totalPrice: this.totalPrice , retailSales: this.goodsInfo.retailSales,  image: this.goodsInfo.image ,name: this.goodsInfo.goodsName, price: this.goodsInfo.unitPrice, quantity: this.totalNumber, discountrate: this.goodsInfo.discountrate,  colorList: selInfoList};
 					this.fuxiSelasOrderInfo.push(info);
 					this.$API.setStorage('fuxiSelasOrderInfo', this.fuxiSelasOrderInfo);
-					this.$API.rto( `../../sale/saleComfig/saleComfig?id=${this.id}&type=${this.moduleType}`);
+					if (this.moduleType === 18 && type === 2) {
+						this.$API.rto( `../../PurchasePages/quickGoodsAdd/quickGoodsAdd?type=${this.moduleType}&isEditGoods=1`);
+					} else {
+						this.$API.rto( `../../PurchasePages/saleComfig/saleComfig?id=${this.id}&type=${this.moduleType}`);
+					}
 				}
 			},
 			allAdd () { // 批量添加数量
@@ -360,7 +348,7 @@
 					 this.price = this.goodsInfo.discountRate;
 					this.upTitle = '修改折扣';
 				}
-			},
+ 			},
 			okPirce () { // 修改价格
 				if (this.priceType === 1) {
 					if (this.price !== '' && this.price !== null && parseFloat(this.price) > 0) {
@@ -544,6 +532,7 @@
 			overflow: hidden;
 			padding: 20upx 2%;
 			font-size: 28upx;
+			margin-bottom: 100upx;
 			.list {
 				margin-bottom: 15upx;
 			}
@@ -678,33 +667,17 @@
 			@include cgh-alert-black();
 		} 
 		.footer {
-			width: 98%;
+			width: 100%;
 			height: 100upx;
-			padding-left: 2%;
-			background: #fff;
-			border-top: 1upx solid $boder-se;
 			position: fixed;
 			bottom: 0;
 			left: 0;
-			display: flex;
 			z-index: 2;
-			justify-content: space-between;
 			line-height: 100upx;
-			.left {
-				font-size: 28upx;
-				color: #333;
-				text {
-					padding-left: 20upx;
-					@include default-price(30upx, bold);
-				}
-			}
-			.right {
-				width: 30%;
-				background: orange;
-				font-size: 30upx;
-				text-align: center;
-				color: #fff;
-			}
+			background: orange;
+			font-size: 30upx;
+			text-align: center;
+			color: #fff;
 		}
 		.one-btn {
 			width: 100%;
@@ -718,6 +691,28 @@
 			line-height: 100upx;
 			text-align: center;
 			color: #fff;
+		}
+		.v-save {
+			background-color: #FFFFFF;
+			position: fixed;
+			bottom: 0;
+			width: 100%;
+			box-shadow: 5upx 0 0 0 #ECECEC;
+			width: 100%;
+			height: 90upx;
+			font-size: 36upx;
+			color: #FFFFFF;
+			background-color: #427CAC;
+			text-align: center;
+			line-height: 90upx;
+			z-index: 2;
+			display:  flex;
+			.btn-item {
+				width: 50%;
+			}
+			.left {
+				background: orange;
+			}
 		}
 	}
 </style>

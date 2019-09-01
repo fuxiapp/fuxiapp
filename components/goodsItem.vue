@@ -1,16 +1,19 @@
 <template>
 	<view class="cgh-search-item-childe">
 		<view class="info-con">
-			<view class="list"  v-for="(v, index) in list" :key="index" @click="toPath(v.goodsid)">
-				<view class="img"><image :src="v.image" @error="imgError(index)" lazy-load="true" mode="aspectFit"></image></view>
-				<view class="info">
+			<view class="list"  v-for="(v, index) in list" :key="index">
+				<view class="img"><image :src="v.image" @click="previewImage(v.image)" @error="imgError(index)" lazy-load="true" mode="aspectFill"></image></view>
+				<view class="info"  @click="toPath(v)">
 					<view class="name">{{v.name}}</view>
 					<view class="no">{{v.code}}</view>
 					<view class="prices">
 						<view class="price">¥
-							<text>{{v.price}}</text>
+							<text v-if="moduleType !== 1 &&  moduleType !== 2">{{v.price}}</text>
+							<text v-if="moduleType === 1">{{v.totalPrice}}</text>
+							<text v-if="moduleType === 2">{{v.retailsales}}</text>
 						</view>
-						<view class="order-number" v-if="type === '3'">下单数 {{v.quantity}}</view>
+						<view class="order-number goods-add" v-if="(isFlgAdd === 0 || isFlgAdd === 1 || isFlgAdd === 2 || isFlgAdd === 5) && v.flg === true">该货品已追加</view>
+						<view class="order-number" v-if="type === '3'">下单数 <text v-if="moduleType === 2">-</text>{{v.quantity}}</view>
 					</view>
 				</view>
 			</view>
@@ -33,6 +36,10 @@
 			moduleType: {
 				type: Number,
 				default: 0
+			},
+			isFlgAdd: {
+				type: Number,
+				default: 1
 			}
 		},
 		data() {
@@ -43,11 +50,17 @@
 		onLoad() {
 		},
 		methods: {
-			toPath(id) {
-				this.$emit('toPath', id);
+			toPath(v) {
+				this.$emit('toPath', v);
 			},
 			imgError (index) {
 				this.$emit('handleError', index);
+			},
+			previewImage (img) {  // 预览图片
+				let imgs = [img];
+				uni.previewImage({
+				    urls: imgs
+				});
 			},
 		}
 		
@@ -103,8 +116,10 @@
 						}
 					}	
 					
-				}
-			
+			 }
+			 .goods-add {
+				color: red;
+			 }
 			}
 		}
 	}

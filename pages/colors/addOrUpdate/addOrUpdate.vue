@@ -4,13 +4,13 @@
 			<view class="item">
 				<view class="add-title">编码</view>
 				<view class="add-input">
-					<input type="text" v-if="type === 1"  placeholder="编码"   v-model="colorInfo.no" />
-					<input type="text"  class="no"  v-if="type === 2"  placeholder="编码"  disabled v-model="colorInfo.no" />
+					<input type="text" v-if="type === 1"  v-model="colorInfo.no" />
+					<input type="text"  class="no"  v-if="type === 2"  disabled v-model="colorInfo.no" />
 				</view>
 			</view>
 			<view class="item">
 				<view class="add-title">名称</view>
-				<view class="add-input"><input placeholder="填写颜色编码" v-model="colorInfo.color"  /></view>
+				<view class="add-input"><input v-model="colorInfo.color"  /></view>
 			</view>
 		</view>
 		<view class="btn" @click="save">保存</view>

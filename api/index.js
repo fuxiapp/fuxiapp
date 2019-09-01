@@ -1,7 +1,6 @@
 const API = {
 	get(url, data = {}, method = 'GET'){ // get请求
 		return new Promise((resolve,reject) => {
-			console.log(JSON.stringify(data));
 			// 获取网络类型
 			url = `http://116.55.248.84:9090${url}`;
 			let tokenId = '';
@@ -22,7 +21,6 @@ const API = {
 					},
 					success: (res) => {
 						let data = res.data;
-						console.log(JSON.stringify(res));
 						if(data.code === 'success') {
 							resolve(data);
 						} else if (data.code === 'no-login') {
@@ -44,7 +42,6 @@ const API = {
 						}	
 					},
 					fail: (err) => {
-						console.log(err);
 						uni.showToast({
 							title:'请求异常',
 							icon: 'none'
@@ -58,7 +55,6 @@ const API = {
 	},
 	post(url, data = {}, method ='POST'){ 	// post请求
 		return new Promise((resolve,reject) => {
-			console.log(data);
 			// 获取网络类型
 			url = `http://116.55.248.84:9090${url}`;
 			let tokenId = '';
@@ -79,7 +75,6 @@ const API = {
 					},
 					success: (res) => {
 						let data = res.data;
-						console.log(JSON.stringify(res));
 						if( data.code === 'success' ){
 							resolve(data);
 						} else if (data.code === 'no-login') {
@@ -132,7 +127,6 @@ const API = {
 	//图片上传
 	upload(goodsCode=1, imageSrc){
 		return new Promise((resolve,reject) => {
-			console.log('上传图片code = ' + goodsCode);
 			let url = `http://116.55.248.84:9090/fuxi/common/upload-image?goodsCode=${goodsCode}`;
 			uni.uploadFile({
 				url: url,
@@ -256,7 +250,7 @@ const API = {
 			titleNView: titleObj
 		});
 	},
-	generateNo () { // 生成流水号(部门编码+年月日+两位流水号 departmentNo)
+	generateNo (type) { // 生成流水号
 		return new Promise( (resolve,reject) =>{
 			// 获取部门编号
 			let departmentNo = '';
@@ -272,11 +266,19 @@ const API = {
 				let y = dd.getFullYear();
 				let m = dd.getMonth() + 1 < 10 ? '0' + (dd.getMonth() + 1) : dd.getMonth() + 1; // 获取当前月份的日期，不足10补0
 				let d = dd.getDate() < 10 ? '0' + dd.getDate() : dd.getDate(); // 获取当前几号，不足10补0
-				let day =  y +  m + d;
-				// 流水号
-				let no = Math.floor(Math.random()*10);
-				let no2 = Math.floor(Math.random()*10);
-				let val = departmentNo + '' +day + '' + no + '' +no2;
+				let hours = dd.getHours(); // 时，
+				let minutes = dd.getMinutes(); //分
+				let seconds = dd.getSeconds(); //秒
+				let yearStr = (y.toString()).substring(2);
+				let day =  yearStr +  m + d + hours + minutes + seconds;
+				let val = '';
+				if (type === 1) { // 添加货品
+					val = day;
+				} else if (type === 2) { // 添加客户
+					val =  departmentNo + day;
+				}  else {
+					val = day;
+				}
 				resolve(val);
 			}, 20);
 		});
@@ -393,23 +395,35 @@ const API = {
 				}
 				break;
 			case 16: // 查询厂商类别  /fuxi/select/query-supplier-type
-					for (let i = 0; i < arr.length; i++) {
-						let info = {id: arr[i].supplierTypeId, name: arr[i].supplierType, flg: false};
-						list.push(info);
-					}
-					break;
+				for (let i = 0; i < arr.length; i++) {
+					let info = {id: arr[i].supplierTypeId, name: arr[i].supplierType, flg: false};
+					list.push(info);
+				}
+				break;
 			case 17:  // 查询销售类别  fuxi/select/query-sales-Type 
-					for (let i = 0; i < arr.length; i++) {
-						let info = {id: arr[i].Name, name: arr[i].Name, flg: false};
-						list.push(info);
-					}
-					break;		
+				for (let i = 0; i < arr.length; i++) {
+					let info = {id: arr[i].Name, name: arr[i].Name, flg: false};
+					list.push(info);
+				}
+				break;		
 			case 18:  // 查询支付方式  /fuxi/select/query-payment-Type 
-					for (let i = 0; i < arr.length; i++) {
-						let info = {id: arr[i].PaymentTypeID, name: arr[i].Name, flg: false};
-						list.push(info);
-					}
-					break;				
+				for (let i = 0; i < arr.length; i++) {
+					let info = {id: arr[i].PaymentTypeID, name: arr[i].Name, flg: false};
+					list.push(info);
+				}
+				break;
+			case 19:  // 查询采购类别  /fuxi/select/query-purchase-Type
+				for (let i = 0; i < arr.length; i++) {
+					let info = {id: arr[i].Type, name: arr[i].Name, flg: false};
+					list.push(info);
+				}
+				break;
+			case 20:  // 查询货品子类别   /fuxi/select/query-goods-sub-type
+				for (let i = 0; i < arr.length; i++) {
+					let info = {id: arr[i].goodsSubTypeId, name: arr[i].name, otherName: arr[i].otherName, flg: false};
+					list.push(info);
+				}
+				break;
 		}	
 		return list;
 	},

@@ -1,7 +1,7 @@
 <template>
 	<view class="v-edit-goods-view">
 		<view class="con goods-base-info">
-			<view class="img"><image @error="handleError" @click="previewImage" :src="goodsInfo.image"></image></view>
+			<view class="img"><image @error="handleError" :src="goodsInfo.image"></image></view>
 			<view class="info">
 				<view class="name">{{goodsInfo.goodsName}}</view>
 				<view class="no">{{goodsInfo.goodsCode}}</view>
@@ -31,27 +31,23 @@
 		<view class="color-con">
 			<view  v-for="(v, index) in colorList"  :class="index === selColorIndex ? 'color-item check-color':'color-item'" :key="index" @click="onColor(index)" >
 				<view class="name">{{v.colorName}}</view>
-				<view class="number" v-if="v.quantity > 0">{{v.quantity}}</view>
+				<view class="number" v-if="v.quantity > 0">-{{v.quantity}}</view>
 			</view>
 		</view>
 		<view class="info-con">
 			<view class="title">
 				<view class="cgh-size">尺寸</view>
-				<view class="cgh-stock">库存</view>
-				<view class="cgh-stock" v-if="moduleType === 1">采购数</view>
 				<view class="cgh-number">数量</view>
 			</view>
 			<view class="info-details">
 				<view class="list" v-for="(v, index) in sizeList" :key="index">
 					<view  class="cgh-size">{{v.sizeName}}</view>
-					<view class="cgh-stock">{{v.stock}}</view>
-					<view class="cgh-stock" v-if="moduleType === 1">
-						<block v-if="v.purchase === ''">0</block>
-						<block v-if="v.purchase !== ''">{{v.purchase}}</block>
-					</view>
 					<view class="cgh-number">
 						<view class="less" @click="less(index)">-</view>
-						<view class="one-number"><input type="number" v-model="v.quantity" @input="inputBlur(2, index)" @blur="inputBlur(2, index)"  placeholder="数量"/></view>
+						<view class="one-number-con">
+							<view class="one-less">-</view>
+							<view class="one-number"><input type="number" v-model="v.quantity" @input="inputBlur(2, index)" @blur="inputBlur(2, index)"  placeholder="数量"/></view>
+						</view>
 						<view class="add" @click="add(index)">+</view>
 					</view>
 				</view>
@@ -71,7 +67,7 @@
 			<view class="upate-price">
 				<view class="title">{{upTitle}}</view>
 				<view class="input-con">
-					<input v-model="price" type="number" :placeholder="priceType=== 1 ? '请输入价格' : '请输入折扣'" />
+					<input v-model="price" type="number" placeholder="请输入价格" />
 				</view>
 				<view class="btn">
 					<view class="cel" @click="isShowPrice = false">取消</view>
@@ -84,7 +80,7 @@
 			确定
 		</view>
 		<view class="footer" v-else>
-			<view class="left">{{totalNumber}}件<text>¥ {{totalPrice}}</text></view>
+			<view class="left">-{{totalNumber}}件<text>¥ -{{totalPrice}}</text></view>
 			<view class="right" @click="toPath">确定</view>
 		</view>
 		
@@ -119,7 +115,6 @@
 				getType: 1, // 1: 货品点击 2: 扫描
 				fuxiSelasOrderInfo: [], // 已添加的货品
 				stockFlag: 1, // 是否查询库存
-				notRangeTotalPrice: 0, // 未打折总价
 			}
 		},
 		onBackPress(options) {  
@@ -137,27 +132,19 @@
 			this.goodsInfo.price = this.decimalNumber(this.goodsInfo.price);
 			this.$API.getStorage('fuxiSalesSend').then(res => {
 				this.salesSend = res.data;
-				if (!nullPass(this.salesSend.type)) {
+				if (!nullPass(this.salesSend.supplierId)) {
 					uni.showToast({
-						title: '请先客户,部门,类型!',
-						icon: 'none'
+						title: '请先厂商!'
 					});
-					this.$API.rto('../../sale/salesSelCustomer/salesSelCustomer?type=' + this.moduleType);
+					this.$API.rto(`../../PurchasePages/selSupplier/selSupplier?type=${this.moduleType}`);
 				}
 				this.getByIdInfo();
 			}).catch (() => {
 				uni.showToast({
-					title: '请先客户,部门,类型!',
-					icon: 'none'
+					title: '请先厂商!'
 				});
-				this.$API.rto('../../sale/salesSelCustomer/salesSelCustomer?type=' + this.moduleType);
+				this.$API.rto(`../../PurchasePages/selSupplier/selSupplier?type=${this.moduleType}`);
 			});
-			if (type !== '' && type !== undefined) {
-				this.moduleType = parseInt(type);
-				if (this.moduleType === 7) {
-					uni.setNavigationBarTitle({	title: '录入货品'})
-				}
-			}
 			this.$API.getStorage('fuxiSelasOrderInfo').then(res => {
 				this.fuxiSelasOrderInfo = res.data;
 			});
@@ -169,11 +156,11 @@
 				uni.showLoading({
 					title: '加载中...'
 				});
-				let para = {stockFlag: this.stockFlag, goodsId: this.id, departmentId: this.salesSend.departmentid, customerId: this.salesSend.customerid, type: this.salesSend.typeCode};
-				if (this.getType === 2) { 
-				   para = {stockFlag: this.stockFlag, barcode: this.id, departmentId: this.salesSend.departmentid, customerId: this.salesSend.customerid, type: this.salesSend.typeCode};
+				let para = {supplierId: this.salesSend.supplierId, goodsId: this.id, barcode: ''};
+				if (this.getType === 2) { // 条形码识别
+					para = {supplierId: this.salesSend.supplierId, goodsId: '', barcode: this.id};
 				} 
-				this.$API.get('/fuxi/barcode/barcode-parsing-sales', para, 'POST').then(res => {
+				this.$API.get('/fuxi/barcode/barcode-parsing-purchase', para, 'POST').then(res => {
 					uni.hideLoading();
 					if (res.code === 'success') {
 						this.goodsInfo = res.data;
@@ -187,19 +174,13 @@
 					}
 				});
 			},
-			previewImage () {  // 预览图片
-				let imgs = [this.goodsInfo.image];
-				uni.previewImage({
-				    urls: imgs
-				});
-			},
 			handleError () { // 图片错误
 				this.goodsInfo.image = '../../../static/err_img.png'; 
 			},
 			toPath () {
 				if (this.moduleType === 7) {
 					this.$API.rto(`../../sale/addGoodsConfig/addGoodsConfig?id=${this.id}&type=${this.moduleType}`);
-				} else { // 销售单
+				} else { // 销售发货单
 					let selInfoList = [];
 					for (let j = 0; j < this.colorList.length; j++) {
 						let flg = false;
@@ -262,10 +243,11 @@
 						return;
 					}
 					let retailamount = (parseFloat(this.goodsInfo.retailSales) * parseInt(this.totalNumber)).toFixed(2);
-					let info = {discountRate: this.goodsInfo.discountRate, retailamount: retailamount,  goodsid: this.id, retailSales: this.goodsInfo.retailSales, code: this.goodsInfo.goodsCode, totalPrice: this.totalPrice , retailSales: this.goodsInfo.retailSales,  image: this.goodsInfo.image ,name: this.goodsInfo.goodsName, price: this.goodsInfo.unitPrice, quantity: this.totalNumber, discountrate: this.goodsInfo.discountrate,  colorList: selInfoList};
+					let info = {discountRate: this.goodsInfo.discountRate, retailamount: retailamount, retailSales: this.goodsInfo.retailSales ,goodsid: this.id, code: this.goodsInfo.goodsCode, totalPrice: this.totalPrice , retailSales: this.goodsInfo.retailSales,  image: this.goodsInfo.image ,name: this.goodsInfo.goodsName, price: this.goodsInfo.unitPrice, quantity: this.totalNumber, discountrate: this.goodsInfo.discountrate,  colorList: selInfoList};
 					this.fuxiSelasOrderInfo.push(info);
 					this.$API.setStorage('fuxiSelasOrderInfo', this.fuxiSelasOrderInfo);
-					this.$API.rto( `../../sale/saleComfig/saleComfig?id=${this.id}&type=${this.moduleType}`);
+					this.$API.rto( `../../PurchasePages/saleComfig/saleComfig?id=${this.id}&type=${this.moduleType}`);
+					// this.$API.to(`../../sale/saleComfig/saleComfig?id=${this.id}&type=${this.moduleType}`);
 				}
 			},
 			allAdd () { // 批量添加数量
@@ -284,7 +266,7 @@
 			less (index) { // 单个数量减
 				if (parseInt(this.sizeList[index].quantity) < 1) { 
 					uni.showToast({
-						title: '数量不能小于0!',
+						title: '数量不能小于-0!',
 						icon: 'none'
 					});
 					return;
@@ -408,7 +390,7 @@
 				this.sizeList = this.colorList[index].sizes;
 				
 			},
-			decimalNumber (val) { //价格保留两位小数
+			decimalNumber (val) { // 价格保留两位小数
 				if (val === '' || val === null || val === undefined) {
 					return '0.00'
 				}
@@ -551,10 +533,11 @@
 				width: 100%;
 				overflow: hidden;
 				display: flex;
+				justify-content: space-between;
 				text-align: center;
 				line-height: 80upx;
 				.cgh-size, .cgh-stock{
-					width: 30%;
+					width: 20%;
 					height: 80upx;
 				}
 				.cgh-number {
@@ -578,14 +561,20 @@
 						font-size: 55upx;
 						line-height: 40upx;
 					}
-					.one-number {
-						width: 90upx;
-						height: 45upx;
-						font-size: 30upx;
-						color: #333;
-						line-height: 30upx;
+					.one-number-con {
+						display: flex;
 						border-bottom: 2upx solid $boder-se;
-						margin: 14upx 15upx 0upx 15upx;
+						width: 100upx;
+						height: 50upx;
+						text-align: center;
+						margin: 0upx 15upx 0upx 15upx;
+						line-height: 50upx;
+						.one-less {
+							font-size: 40upx;
+						}
+					}
+					.one-number {
+						font-size: 30upx;
 						@include lineEllipsis(1);
 					}
 				}
@@ -595,7 +584,7 @@
 		.more-con {
 			width: 52%;
 			overflow: auto;
-			height: 25%;
+			height: 40%;
 			background: white;
 			display: black; 
 			position: absolute;  

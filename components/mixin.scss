@@ -49,17 +49,17 @@
 		-webkit-overflow-scrolling: touch;
 }
 @mixin cgh-alert-black {
-			display: black; 
-			position: fixed; 
-			top: 0%; 
-			left: 0%; 
-			width: 100%; 
-			height: 100%; 
-			background-color: black; 
-			z-index: 2; 
-			-moz-opacity: 0.5; 
-			opacity:.80; 
-			filter: alpha(opacity=88); 
+		display: black; 
+		position: fixed; 
+		top: 0%; 
+		left: 0%; 
+		width: 100%; 
+		height: 100%; 
+		background-color: black; 
+		z-index: 2; 
+		-moz-opacity: 0.5; 
+		opacity:.80; 
+		filter: alpha(opacity=88); 
 }
 @mixin cgh-right-img {
 		width: 18upx;

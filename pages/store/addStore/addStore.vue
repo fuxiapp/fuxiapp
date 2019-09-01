@@ -4,7 +4,7 @@
 			<view class="add-base-info">
 				<view class="item" @click="onselInfo(1)">
 					<view class="add-title red-title">店仓类别</view>
-					<view class="add-input"><input placeholder="店仓类别" disabled v-model="selStoreInfo.name" /></view>
+					<view class="add-input"><input disabled v-model="selStoreInfo.name" /></view>
 					<view class="add-right"><image class="base-right" src="../../../static/base/right.png"></image></view>
 				</view>
 			</view>
@@ -12,17 +12,17 @@
 				<view class="item">
 					<view class="add-title">店仓编码</view>
 					<view class="add-input">
-						<input type="text"  v-if="type === 1"  placeholder="编码"  v-model="storeInfo.code" />
-						<input type="text"  v-if="type === 2" class="no" placeholder="编码" disabled v-model="storeInfo.code" />
+						<input type="text"  v-if="type === 1"   v-model="storeInfo.code" />
+						<input type="text"  v-if="type === 2" class="no" disabled v-model="storeInfo.code" />
 					</view>
 				</view>
 				<view class="item">
 					<view class="add-title red-title">店仓名称</view>
-					<view class="add-input"><input placeholder="店仓名称" v-model="storeInfo.department "  /></view>
+					<view class="add-input"><input  v-model="storeInfo.department "  /></view>
 				</view>
 				<view class="item" @click="onselInfo(2)">
 					<view class="add-title red-title">店仓类型</view>
-					<view class="add-input"><input placeholder="店仓类型" disabled v-model="selStoreTypeInfo.name" /></view>
+					<view class="add-input"><input  disabled v-model="selStoreTypeInfo.name" /></view>
 					<view class="add-right"><image class="base-right" src="../../../static/base/right.png"></image></view>
 				</view>
 
@@ -43,26 +43,26 @@
 			<view class="add-base-info">
 				<view class="item" @click="selCity(1)">
 					<view class="add-title">省份</view>
-					<view class="add-input"><input placeholder="省份" disabled  v-model="selCityNameS.privinceName"  /></view>
+					<view class="add-input"><input disabled  v-model="selCityNameS.privinceName"  /></view>
 					<view class="add-right"><image class="base-right" src="../../../static/base/right.png"></image></view>
 				</view>
 				<view class="item" @click="selCity(2)">
 					<view class="add-title" >城市</view>
-					<view class="add-input"><input placeholder="城市" disabled  v-model="selCityNameS.cityName" /></view>
+					<view class="add-input"><input  disabled  v-model="selCityNameS.cityName" /></view>
 					<view class="add-right"><image class="base-right" src="../../../static/base/right.png"></image></view>
 				</view>
 				<view class="item" @click="selCity(3)">
 					<view class="add-title">区县</view>
-					<view class="add-input"><input placeholder="区县" disabled  v-model="selCityNameS.countyArea"  /></view>
+					<view class="add-input"><input disabled  v-model="selCityNameS.countyArea"  /></view>
 					<view class="add-right"><image class="base-right" src="../../../static/base/right.png"></image></view>
 				</view>
 				<view class="item">
 					<view class="add-title">详细地址</view>
-					<view class="add-input"><input placeholder="详细地址"  v-model="storeInfo.addr" /></view>
+					<view class="add-input"><input v-model="storeInfo.addr" /></view>
 				</view>
 				<view class="item">
 					<view class="add-title">电话</view>
-					<view class="add-input"><input placeholder="电话" v-model="storeInfo.tel" /></view>
+					<view class="add-input"><input  v-model="storeInfo.tel" /></view>
 				</view>
 				<view class="item">
 					<view class="add-title">停用</view>
@@ -72,7 +72,7 @@
 				</view>
 				<view class="item">
 					<view class="add-title">备注</view>
-					<view class="add-input"><input placeholder="备注" v-model="storeInfo.memo"  /></view>
+					<view class="add-input"><input  v-model="storeInfo.memo"  /></view>
 				</view>
 			</view>
 			<view class="btn" @click="save">保存</view>

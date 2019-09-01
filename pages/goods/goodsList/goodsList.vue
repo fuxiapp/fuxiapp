@@ -54,7 +54,7 @@
 			<view class="v-goods" v-for="(goods,index) in listData" :key="index">
 				<view class="v-goods-top">
 					<view class="v-image">
-						<image class="goods-image" :src="goods.image"  @error="handleError(index)"></image>
+						<image class="goods-image" :src="goods.image" @click="previewImage(goods.image)" @error="handleError(index)"></image>
 					</view>
 					<view class="v-detail">
 						<view class="goods-name">{{goods.name}}</view>
@@ -115,7 +115,7 @@
 				selTypeChidenItem: [],
 				// 弹框分页
 				isPage: true,
-				size: 10,
+				size: 20,
 				supplierPage: 1,  // 厂商
 				supplierisMore: true,
 			}
@@ -124,14 +124,14 @@
             if (options.from === 'navigateBack') {  
                 return false;  
             } 
-			this.$API.to('../../goods/goodsList/goodsList');
+			this.$API.tab('../../tab/main/main');
             return true;  
         }, 		
 		onReachBottom() { // 页面下拉 
 			this.status = 'more';
 			this.getMoreInfo();
 		},
-		onLoad() {
+		onShow() {
 			this.getList();
 		},
 		onNavigationBarButtonTap (e) {
@@ -143,6 +143,12 @@
 			}
 		},
 		methods: {
+			previewImage (img) {  // 预览图片
+				let imgs = [img];
+				uni.previewImage({
+				    urls: imgs
+				});
+			},
 			search (keyword) { // 关键字搜索
 				this.para.keyword = keyword;
 				this.getList();
@@ -156,27 +162,16 @@
 			},
 			share (index) {
 				let info = this.listData[index];
-				uni.share({
-					provider: "weixin",
-					scene: "WXSceneSession",
-					type: 0,
-					href: `${this.$SHARE}/mallgoods/${info.goodsid}/goodsdetail.html`,
-					title: '西奈应用',
-					summary: info.name,
-					imageUrl: info.image,
-					success: (res) =>  {
-						uni.showToast({
-							title: '分享成功!',
-							icon: 'none'
-						});
-					},
-					fail: (err) =>  {
-						uni.showToast({
-							title: '' + JSON.stringify(err),
-							icon: 'none'
-						});
-					}
+				let content = info.name;
+				//#ifdef APP-PLUS
+				plus.share.sendWithSystem({content: content, href: `${this.$SHARE}/mallgoods/${info.goodsid}/goodsdetail.html`}, function(){
+				}, function(e){
+					uni.showToast({
+						title: '' + JSON.stringify(err),
+						icon: 'none'
+					});
 				});
+				//#endif
 			},
 			getList() { // 获取货品列表
 				this.countPage = 0;
@@ -192,11 +187,12 @@
 							list[i].image = this.$URL + list[i].code + '.jpg';
 						}
 						this.listData = this.reload ? list : this.listData.concat(list);
-						this.last_id = list[list.length - 1].id;
 						this.reload = false;
 						if (this.para.pageNum === res.data.pages ) {
 							this.status = 'finish';
+							return;
 						}
+						this.last_id = list.length > 1 ? list[list.length - 1].id : '';
 					}
 				});
 			},
@@ -301,7 +297,7 @@
 					}
 					this.$API.get('/fuxi/select/query-goods-type').then(res => {
 						if (res.code === 'success') {
-							this.$API.fmtDateInfo(res.data, 11);
+							this.classTypeInfo = this.$API.fmtSelData(res.data, 11);
 						}
 					});
 				} else if (index === 2) {
@@ -379,9 +375,9 @@
 					for (let i = 0; i < this.classTypeInfo.length; i++) {
 						if (this.classTypeInfo[i].flg === true) {
 							if (selArr === '') {
-								selArr = this.classTypeInfo[i].goodsTypeId;
+								selArr = this.classTypeInfo[i].id;
 							} else {
-								selArr = selArr + ',' + this.classTypeInfo[i].goodsTypeId;
+								selArr = selArr + ',' + this.classTypeInfo[i].id;
 							}
 						}
 					}

@@ -5,38 +5,38 @@
 				<view class="item">
 					<view class="add-title">厂商编码</view>
 					<view class="add-input">
-						<input type="text" v-if="id !== ''" class="no" placeholder="编码" disabled v-model="supplierInfo.code" />
-						<input type="text" v-if="id === ''"  placeholder="编码"  v-model="supplierInfo.code" />
+						<input type="text" v-if="id !== ''" class="no" disabled v-model="supplierInfo.code" />
+						<input type="text" v-if="id === ''"   v-model="supplierInfo.code" />
 					</view>
 				</view>
 				<view class="item">
 					<view class="add-title red-title">厂商名称</view>
-					<view class="add-input"><input placeholder="厂商名称" v-model="supplierInfo.supplier"  /></view>
+					<view class="add-input"><input  v-model="supplierInfo.supplier"  /></view>
 				</view>
 				<view class="item">
 					<view class="add-title">手机</view>
-					<view class="add-input"><input placeholder="手机" v-model="supplierInfo.mobilephone" /></view>
+					<view class="add-input"><input v-model="supplierInfo.mobilephone" /></view>
 				</view>
 				<view class="item" @click="onselInfo(1)">
 					<view class="add-title red-title">负责人</view>
-					<view class="add-input"><input placeholder="负责人" disabled v-model="selsupplierInfo.name" /></view>
+					<view class="add-input"><input disabled v-model="selsupplierInfo.name" /></view>
 					<view class="content-right"><image class="base-right" src="../../../static/base/right.png"></image></view>
 				</view>
 			</view>
 			<view class="add-base-info">
 				<view class="item" @click="onselInfo(2)">
 					<view class="add-title red-title">所属门店</view>
-					<view class="add-input"><input placeholder="所属门店" disabled v-model="selStoreTypeInfo.name" /></view>
+					<view class="add-input"><input disabled v-model="selStoreTypeInfo.name" /></view>
 					<view class="content-right"><image class="base-right" src="../../../static/base/right.png"></image></view>
 				</view>
 				<view class="item" @click="onselInfo(3)">
 					<view class="add-title red-title">厂商类别</view>
-					<view class="add-input"><input placeholder="厂商类别" disabled v-model="selSupplierTypeInfo.name" /></view>
+					<view class="add-input"><input  disabled v-model="selSupplierTypeInfo.name" /></view>
 					<view class="content-right"><image class="base-right" src="../../../static/base/right.png"></image></view>
 				</view>
 				<view class="item">
 					<view class="add-title">厂商欠款</view>
-					<view class="add-input"><input placeholder="厂商欠款" v-model="supplierInfo.apAmount" disabled= /></view>
+					<view class="add-input"><input v-model="supplierInfo.apAmount" disabled= /></view>
 				</view>
 				<view class="item">
 					<view class="add-title">历史交易</view>
@@ -52,25 +52,25 @@
 			<view class="add-base-info">
 				<view class="item">
 					<view class="add-title">详情地址</view>
-					<view class="add-input"><input placeholder="详情地址"  v-model="supplierInfo.address"  /></view>
+					<view class="add-input"><input  v-model="supplierInfo.address"  /></view>
 				</view>
 				<view class="item">
 					<view class="add-title">银行账号</view>
-					<view class="add-input"><input placeholder="银行账号" v-model="supplierInfo.accountno"  /></view>
+					<view class="add-input"><input v-model="supplierInfo.accountno"  /></view>
 				</view>
 				<view class="item">
 					<view class="add-title">开户银行</view>
-					<view class="add-input"><input placeholder="开户银行"  v-model="supplierInfo.bankname" /></view>
+					<view class="add-input"><input v-model="supplierInfo.bankname" /></view>
 				</view>
 				<view class="item">
 					<view class="add-title">银行账户</view>
-					<view class="add-input"><input placeholder="银行账户" v-model="supplierInfo.corpname"  /></view>
+					<view class="add-input"><input  v-model="supplierInfo.corpname"  /></view>
 				</view>
 			</view>
 			<view class="add-base-info">
 				<view class="item">
 					<view class="add-title">备注</view>
-					<view class="add-input"><input placeholder="备注" v-model="supplierInfo.memo"  /></view>
+					<view class="add-input"><input  v-model="supplierInfo.memo"  /></view>
 				</view>
 			</view>
 			<view class="btn" @click="save">保存</view>
@@ -149,7 +149,7 @@
 					if (res.code === 'success') {
 						this.supplierInfo = res.data;
 						this.isUser = this.supplierInfo.stopflag;
-						this.selsupplierInfo =  {id: this.supplierInfo.contact, name: this.contactName};
+						this.selsupplierInfo =  {id: this.supplierInfo.contact, name: this.supplierInfo.contactName};
 						this.selStoreTypeInfo =  {id: this.supplierInfo.departmentid, name: this.supplierInfo.department};
 						this.selSupplierTypeInfo =  {id: this.supplierInfo.suppliertypeid , name: this.supplierInfo.suppliertype};
 					}
@@ -332,7 +332,7 @@
 						uni.showToast({
 							title: '保存成功!'
 						});
-						this.$API.to('../../supplier/supplierList/supplierList?type=14');
+						this.$API.rto('../../supplier/supplierList/supplierList?type=14');
 					}
 				});
 			}

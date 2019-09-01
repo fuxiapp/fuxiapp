@@ -8,7 +8,9 @@
 			<button @click="showAdd">添加</button>
 			<!-- #endif -->
 			<!--  -->
-			<searItem :list="listData" @toPath="toPath"  type="1"></searItem>
+			<view class="list" v-for="(v, index) in listData" :key="v.code" @click="toPath(v)">
+				<view class="name">{{v.customer}}</view>
+			</view>
 		</view>
 		<uni-load-more :status="status" :content-text="contentText" />
 	</view>
@@ -16,7 +18,6 @@
 
 <script>
 	import search from '../../../components/search.vue';
-	import searItem from '../../../components/searItem.vue';
 	import city from '../../../common/city-data.json';
 	import uniLoadMore from '../../../components/uni/uni-load-more/uni-load-more.vue';
 	export default {
@@ -34,13 +35,15 @@
 					contentnomore: '没有更多数据了'
 				},
 				countPage: '',
-				para: {pageSize: 10, pageNum: 1, keyword: ''}
+				para: {pageSize: 20, pageNum: 1, keyword: ''}
 			}
 		},
 		onNavigationBarButtonTap(e) {
 			this.showAdd();
 		},
 		onLoad(option) {
+			this.$API.removeStorage('fuxiSelasOrderInfo');
+			this.$API.removeStorage('fuxiSalesSend');
 			this.moduleType = option.type === undefined? 0 : parseInt(option.type);
 			this.getList();
 		},
@@ -62,7 +65,12 @@
 				this.last_id = '';
 				this.status = 'more';
 				this.para.pageNum = 1;
-				this.$API.get('/fuxi/supplier/query-supplier-list', this.para).then(res => {
+				uni.showLoading({
+					title: '加载中...',
+					duration: 2000
+				});
+				this.$API.get('/fuxi/select/query-customer', this.para).then(res => {
+					uni.hideLoading();
 					if (res.code === 'success') {
 						if (res.data.pages === 0 ) {
 							this.status = 'finish';
@@ -73,7 +81,7 @@
 						this.last_id = list[list.length - 1].id;
 						this.listData = this.reload ? list : this.listData.concat(list);
 						this.reload = false;
-						
+						console.log(this.listData);
 					}
 				});
 			},
@@ -87,37 +95,56 @@
 					this.status = 'loading';
 				}
 				this.para.pageNum++;
-				this.$API.get('/fuxi/supplier/query-supplier-list', this.para).then(res => {
+				uni.showLoading({
+					title: '加载中...',
+					duration: 2000
+				});
+				this.$API.get('/fuxi/select/query-customer', this.para).then(res => {
+					uni.hideLoading();
 					if (res.code === 'success') {
 						let list = res.data.list;
-						for (let i = 0; i < list.length; i++) {
-							list[i].image = this.$URL + list[i].code + '.jpg';
-						}
 						this.listData = this.reload ? list : this.listData.concat(list);
 						this.last_id = list[list.length - 1].id;
 						this.reload = false;
 					}
 				});
 			},
-			toPath (id) { // 跳转
-				if (this.moduleType === 1) {
-					this.$API.to(`../../sale/selStore/selStore?id=${id}`);
+			toPath (v) { // 跳转
+				if (this.moduleType === 0 || this.moduleType === 1 || this.moduleType === 2) {   // 销售发货单/退货单
+					let info = {customerid: v.customerId, customerName: v.customer, departmentid: v.departmentId, warehouseid: '', warehousedName: '',  employeeid:'', employeeName: '', type: '', typeCode: ''};
+					if (this.moduleType === 0) {
+						info.warehouseid = v.departmentId;
+					} 
+					this.$API.setStorage('fuxiSalesSend', info);
+					this.$API.rto(`../../sale/selStore/selStore?id=${v.customerId}&type=${this.moduleType}`);
 				}
 			},
-			
 		},
 		components: {
 			search,
-			searItem,
 			uniLoadMore
 		}
 	}
 </script>
 
 <style lang="scss">
+	@import "../../../components/mixin.scss";
 	.v-sel-customer {
+		width: 100%;
+		overflow: hidden;
 		.list-con {
 			margin-top: 140upx;
+			background: #fff;
+			.list {
+				width: 92%;
+				overflow: hidden;
+				border-bottom: 1upx solid $boder-se;
+				padding: 28upx 4%;
+				.name {
+					color: #333;
+					font-size: 36upx;
+				}
+			}
 		}
 	}
 </style>

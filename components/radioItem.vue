@@ -75,9 +75,8 @@
 			background: #fff;
 			.radio-info-con {
 				.item {
-					font-size: 36upx;
+					font-size: 32upx;
 					color: #333;
-					font-weight: bold;
 					border-bottom: 1upx solid $boder-se;
 					padding: 25upx 0upx 25upx 30upx;
 				}

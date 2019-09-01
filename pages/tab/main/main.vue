@@ -78,6 +78,7 @@
 				cHeight3: '', //圆弧进度图
 				pixelRatio: 1,
 				serverData: '',
+				endDate: '',
 				noInfo: [{
 						icon: 'iconsales-order',
 						url: '../../sale/salesSelCustomer/salesSelCustomer',
@@ -97,23 +98,23 @@
 					},
 					{
 						icon: 'icontuihuodan',
-						url: '../../sale/selStore/selStore',
+						url: '../../sale/salesSelCustomer/salesSelCustomer',
 						title: '销售退货单',
 						bac: '#FD943E',
 						routeType: 2,
 						type: 2
 					},
-					{
+					/* {
 						icon: 'iconicon-caigoudd',
 						url: '../../purchaseOrder/purchaseOrder',
 						title: '采购订单',
 						bac: '#427CAC',
 						routeType: 2,
 						type: 3
-					},
+					}, */
 					{
 						icon: 'iconshouhuodan',
-						url: '../../sale/salesPurchase/salesPurchase',
+						url: '../../PurchasePages/selSupplier/selSupplier',
 						title: '采购收货单',
 						bac: '#12BC7F',
 						routeType: 2,
@@ -121,7 +122,7 @@
 					},
 					{
 						icon: 'icontuihuodan',
-						url: '../../sale/salesPurchase/salesPurchase',
+						url: '../../PurchasePages/selSupplier/selSupplier',
 						title: '采购退货单',
 						bac: '#BC7AF1',
 						routeType: 2,
@@ -143,7 +144,7 @@
 						routeType: 2,
 						type: 7
 					},
-					{
+					/* {
 						icon: 'iconjianchaliucheng',
 						url:'../../sale/selStore/selStore',
 						title: '进仓单',
@@ -158,7 +159,7 @@
 						bac: '#427CAC',
 						routeType: 2,
 						type: 9
-					}
+					} */
 
 				],
 				docInfo: [{
@@ -223,16 +224,23 @@
 						bac: '#12BC7F',
 						routeType: 2,
 						type: 17
+					},
+					{
+						icon: 'iconicon-caigoudd',
+						url:'../../PurchasePages/quickGoodsAdd/quickGoodsAdd',
+						title: '一键收货',
+						bac: '#427CAC',
+						routeType: 2,
+						type: 18
 					}
-
 				],
 				receivalInfo: [{
 						icon: 'iconshoukuandan',
 						url:'../../receival/receival',
 						title: '客户收款单',
-						bac: '#12BC7F',
+						bac: '#427CAC',
 						routeType: 2,
-						type: 18
+						type: 19
 					},
 					{
 						icon: 'iconjigouduan-shouyeqietu',
@@ -240,7 +248,7 @@
 						title: '客户费用单',
 						bac: '#427CAC',
 						routeType: 2,
-						type: 19
+						type: 20
 					},
 					{
 						icon: 'iconkehuwanglai',
@@ -248,7 +256,7 @@
 						title: '客户往来',
 						bac: '#427CAC',
 						routeType: 2,
-						type: 20
+						type: 21
 					},
 					{
 						icon: 'iconfukuandan',
@@ -279,6 +287,10 @@
 			};
 		},
 		onLoad() {
+			var num = 190 / 1323 * 10;
+			num = num.toFixed(2);
+			this.$API.removeStorage('fuxiSalesSend');
+			this.$API.removeStorage('fuxiSelasOrderInfo');
 			_self = this;
 			this.cWidth = uni.upx2px(750);
 			this.cHeight = uni.upx2px(500);

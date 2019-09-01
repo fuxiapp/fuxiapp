@@ -4,11 +4,10 @@
 			<search placeholderStr="编码/名称/手机号" type="1" @search="search"></search>
 		</view>
 		<view class="list-con">
-			<!-- #ifdef MP-WEIXIN -->
-			<button @click="showAdd">添加</button>
-			<!-- #endif -->
-			<!--  -->
-			<searItem :list="listData" @toPath="toPath"  type="1"></searItem>
+			<view class="list" v-for="(v, index) in listData" :key="v.employeeId" @click="toPath(v)">
+				<view class="name">姓名:<text>{{v.name}}</text></view>
+				<view class="name">部门:<text>{{v.departmentName}}</text></view>
+			</view>
 		</view>
 		<uni-load-more :status="status" :content-text="contentText" />
 	</view>
@@ -17,7 +16,6 @@
 <script>
 	import search from '../../../components/search.vue';
 	import searItem from '../../../components/searItem.vue';
-	import city from '../../../common/city-data.json';
 	import uniLoadMore from '../../../components/uni/uni-load-more/uni-load-more.vue';
 	export default {
 		data() {
@@ -34,14 +32,15 @@
 					contentnomore: '没有更多数据了'
 				},
 				countPage: '',
-				para: {pageSize: 10, pageNum: 1, keyword: ''}
+				para: {pageSize: 10, pageNum: 1, keyword: ''},
+				salesSend: {},
 			}
 		},
-		onNavigationBarButtonTap(e) {
-			this.showAdd();
-		},
 		onLoad(option) {
-			this.moduleType = option.type === undefined? 1 : parseInt(option.type);
+			this.$API.getStorage('fuxiSalesSend').then(res => {
+				this.salesSend = res.data;
+			});
+			this.moduleType = option.type === undefined? 0 : parseInt(option.type);
 			this.getList();
 		},
 		onReachBottom() { // 页面下拉 
@@ -49,9 +48,6 @@
 			this.getMoreInfo();
 		},
 		methods: {
-			showAdd () {
-				this.$API.to('../../sale/addCustomer/addCustomer');
-			},
 			search (keyword) { // 关键字搜索
 				this.para.keyword = keyword;
 				this.getList();
@@ -62,7 +58,7 @@
 				this.last_id = '';
 				this.status = 'more';
 				this.para.pageNum = 1;
-				this.$API.get('/fuxi/supplier/query-supplier-list', this.para).then(res => {
+				this.$API.get('/fuxi/select/query-employee', this.para).then(res => {
 					if (res.code === 'success') {
 						if (res.data.pages === 0 ) {
 							this.status = 'finish';
@@ -73,7 +69,10 @@
 						this.last_id = list[list.length - 1].id;
 						this.listData = this.reload ? list : this.listData.concat(list);
 						this.reload = false;
-						
+						if (this.countPage === this.para.pageNum) {
+							this.status = 'finish';
+							return;
+						}
 					}
 				});
 			},
@@ -87,7 +86,7 @@
 					this.status = 'loading';
 				}
 				this.para.pageNum++;
-				this.$API.get('/fuxi/supplier/query-supplier-list', this.para).then(res => {
+				this.$API.get('/fuxi/select/query-employee', this.para).then(res => {
 					if (res.code === 'success') {
 						let list = res.data.list;
 						for (let i = 0; i < list.length; i++) {
@@ -99,8 +98,18 @@
 					}
 				});
 			},
-			toPath (id) { // 跳转
-				this.$API.to(`../../sale/selStore/selStore?id=${id}&type=1`);
+			toPath (v) { // 跳转
+				if (this.moduleType === 0 || this.moduleType === 1  || this.moduleType === 2) { // 销售发货单/退货单
+					this.salesSend.employeeid =  v.employeeId;
+					this.salesSend.employeeName = v.name;
+					this.$API.setStorage('fuxiSalesSend', this.salesSend);
+					this.$API.rto(`../../sale/saleType/saleType?id=${v.employeeId}&type=${this.moduleType}`);
+				} else if (this.moduleType === 4 || this.moduleType === 5)  { // 采购发货单
+					this.salesSend.employeeid =  v.employeeId;
+					this.salesSend.employeeName = v.name;
+					this.$API.setStorage('fuxiSalesSend', this.salesSend);
+					this.$API.rto(`../../PurchasePages/purchaseType/purchaseType?id=${v.employeeId}&type=${this.moduleType}`);
+				}
 			},
 			
 		},
@@ -113,9 +122,28 @@
 </script>
 
 <style lang="scss">
+	@import "../../../components/mixin.scss";
 	.v-sel-customer {
+		width: 100%;
+		overflow: hidden;
 		.list-con {
 			margin-top: 140upx;
+			background: #fff;
+			.list {
+				width: 92%;
+				overflow: hidden;
+				border-bottom: 1upx solid $boder-se;
+				padding: 25upx 4%;
+				.name {
+					color: #333;
+					font-size: 36upx;
+					@include lineEllipsis(1);
+					text {
+						font-weight: bold;
+						padding-left: 20upx;
+					}
+				}
+			}
 		}
 	}
 </style>

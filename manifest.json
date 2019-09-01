@@ -2,7 +2,7 @@
     "name" : "西奈科技",
     "appid" : "__UNI__55778F8",
     "description" : "西奈新零售移动应用",
-    "versionName" : "1.1.0",
+    "versionName" : "1.0.4",
     "versionCode" : "100",
     "transformPx" : false,
     "app-plus" : {
@@ -55,14 +55,14 @@
                 "push" : {},
                 "share" : {
                     "weixin" : {
-                        "appid" : "wx2821e0eacb227d1b",
-                        "appsecret" : "80b2a586f8e9b7ce92190a6d95febcaf"
+                        "appid" : "wx640f190d3aff49f5",
+                        "appsecret" : "5d34493ed7bd211a8a3581b75d19154e"
                     }
                 },
                 "oauth" : {
                     "weixin" : {
-                        "appid" : "wx2821e0eacb227d1b",
-                        "appsecret" : "80b2a586f8e9b7ce92190a6d95febcaf"
+                        "appid" : "wx640f190d3aff49f5",
+                        "appsecret" : "5d34493ed7bd211a8a3581b75d19154e"
                     }
                 }
             },

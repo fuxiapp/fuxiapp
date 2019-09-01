@@ -4,7 +4,9 @@
 			<search placeholderStr="店仓编码/店仓名称" type="2" @search="search" ></search>
 		</view>
 		<view class="list-con">
-			<searItem :moduleType="moduleType" :companyOrStrore="companyOrStrore" :list="listData" type="2" @toPath="toInvoice"></searItem>
+			<view class="list" v-for="(v, index) in listData" :key="v.departmentId" @click="toPath(v)">
+				<view class="name">{{v.department}}</view>
+			</view>
 		</view>
 		<uni-load-more :status="status" :content-text="contentText" />
 	</view>
@@ -28,15 +30,19 @@
 					contentnomore: '没有更多数据了'
 				},
 				countPage: '',
-				para: {pageSize: 10, pageNum: 1, keyword: ''},
+				para: {pageSize: 20, pageNum: 1, keyword: ''},
 				moduleType: 1 ,// main 模块
 				companyOrStrore: 0,
-				supperId: ''
+				supperId: '',
+				salesSend: {}
 			}
 		},
 		onLoad (option) {
+			this.$API.getStorage('fuxiSalesSend').then(res => {
+				this.salesSend = res.data;
+			});
 			this.supperId = option.id;
-			this.moduleType = parseInt(option.type);
+			this.moduleType = +option.type;
 			this.getList();
 		},
 		onReachBottom() { // 页面下拉 
@@ -48,12 +54,17 @@
 				this.para.keyword = keyword;
 				this.getList();
 			},
-			toInvoice (id) { // 选择店仓
-				if (this.moduleType === 2) { // 销售退货单
-					this.$API.to(`../../sale/salesSelCustomer/salesSelCustomer?id=${id}`);
-				} else {
-					this.$API.to(`../../sale/invoice/invoice?id=${id}&type=${this.moduleType}`);
-				}	
+			toPath (v) { // 选择店仓
+				if (this.moduleType === 0 || this.moduleType === 1 || this.moduleType === 2) { // 销售发货单/退货单
+					if (this.moduleType === 0) {
+						this.salesSend.departmentId = v.departmentId;
+					} else {
+						this.salesSend.warehouseid = v.departmentId;
+					}
+					this.salesSend.warehousedName= v.department;
+					this.$API.setStorage('fuxiSalesSend', this.salesSend);
+					this.$API.to(`../../sale/salesEmployee/salesEmployee?id=${v.departmentId}&type=${this.moduleType}`);
+				}
 			},
 			getList() { // 获取店仓列表
 				this.countPage = 0;
@@ -61,7 +72,12 @@
 				this.last_id = '';
 				this.status = 'more';
 				this.para.pageNum = 1;
-				this.$API.get('/fuxi/dept/query-dept-list', this.para).then(res => {
+				uni.showLoading({
+					title: '加载中...',
+					duration: 2000
+				});
+				this.$API.get('/fuxi/select/query-warehouse', this.para).then(res => {
+					uni.hideLoading();
 					if (res.code === 'success') {
 						if (res.data.pages === 0 ) {
 							this.status = 'finish';
@@ -85,12 +101,14 @@
 					this.status = 'loading';
 				}
 				this.para.pageNum++;
-				this.$API.get('/fuxi/dept/query-dept-list', this.para).then(res => {
+				uni.showLoading({
+					title: '加载中...',
+					duration: 2000
+				});
+				this.$API.get('/fuxi/select/query-warehouse', this.para).then(res => {
+					uni.hideLoading();
 					if (res.code === 'success') {
 						let list = res.data.list;
-						for (let i = 0; i < list.length; i++) {
-							list[i].image = this.$URL + list[i].code + '.jpg';
-						}
 						this.listData = this.reload ? list : this.listData.concat(list);
 						this.last_id = list[list.length - 1].id;
 						this.reload = false;
@@ -106,10 +124,24 @@
 	}
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
+	@import "../../../components/mixin.scss";
 	.v-sel-strore {
+		width: 100%;
+		overflow: hidden;
 		.list-con {
 			margin-top: 140upx;
+			background: #fff;
+			.list {
+				width: 92%;
+				overflow: hidden;
+				border-bottom: 1upx solid $boder-se;
+				padding: 28upx 4%;
+				.name {
+					color: #333;
+					font-size: 36upx;
+				}
+			}
 		}
 	}
 </style>

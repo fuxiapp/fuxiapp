@@ -3,20 +3,20 @@
 		<view v-if="!iShowSelGoods">
 			<view class="search">
 				<search v-if="moduleType === 4 || moduleType === 5"   @search="search" placeholderStr="店仓编码/店仓名称" type="2"></search>
-				<searchLeft v-else placeholderStr="货品编码/品名/条形码" type="1" @scanCode="scanCode"  @search="search" ></searchLeft>
+				<searchLeft v-else placeholderStr="货品编码/品名/条形码" :type="selType" @scanCode="scanCode"  @search="search" ></searchLeft>
 			</view>
 			<view class="list-con">
-				<goodsItem :list="listData" type="1" @toPath="goEditGoods"  @handleError="handleError"></goodsItem>
+				<goodsItem :list="listData" :moduleType="goodsItemType" :isFlgAdd="moduleType"  type="1" @toPath="goEditGoods"  @handleError="handleError"></goodsItem>
 			</view>
 			<view class="btn" v-if="moduleType === 7" @click="selGoods" >已盘货品</view>
 			<view class="btn" v-else @click="selGoods" >已选货品</view>
 		</view>
 		<view  v-if="iShowSelGoods">
 			<view  class="ok-goods-con">
-				<goodsItem :list="infoList" type="1" @toPath="goEditGoods" @handleError="handleError"></goodsItem>
+				<goodsItem :list="fuxiSelasOrderInfo" :moduleType="goodsItemType" type="1" @handleError="handleError"></goodsItem>
 			</view>
 			<view class="btn"  @click="iShowSelGoods = false">返回</view>
-			<view class="cgh-alert-black"></view>
+			<view class="cgh-alert-black" @click="iShowSelGoods = false"></view>
 		</view>
 		<uni-load-more :status="status" :content-text="contentText" />
 	</view>
@@ -29,6 +29,8 @@
 	export default {
 		data() {
 			return {
+				goodsItemType: 2,
+				selType: 1,
 				// 分页
 				listData: [],
 				last_id: '',
@@ -43,15 +45,34 @@
 				para: {pageSize: 10, pageNum: 1},
 				iShowSelGoods: false,
 				moduleType: 1 ,// main 模块
+				fuxiSelasOrderInfo: [], // 已追加的货品
 			}
 		},
+		onBackPress(options) {  
+		    if (options.from === 'navigateBack') {  
+		        return false;  
+		    } 
+			this.$API.tab('../../tab/main/main');
+		    return true;  
+		}, 	
 		onShow() {
 			this.iShowSelGoods = false;
 		},
 		onLoad(option) {
-			let type = option.type;
-			if (type !== '' && type !== undefined) {
-				this.moduleType = parseInt(type);
+			this.$API.getStorage('fuxiSelasOrderInfo').then(res => {
+				let fuxiSelasOrderInfo = [];
+				let selSelesIds = [];
+				let list = res.data;
+				for (let i = 0; i < list.length; i++) {
+					let para = {goodsid: list[i].goodsid, image: this.$URL + list[i].code + '.jpg', name: list[i].name, code: list[i].code, retailSales: list[i].retailSales};
+					this.fuxiSelasOrderInfo.push(para);
+				}
+			});
+			this.moduleType = option.type ? +option.type : 1;
+			if (this.moduleType === 4 || this.moduleType === 5) {
+				this.$API.setTitle('采购单');
+			} else {
+				this.$API.setTitle('销售单');
 			}
 			this.getList();
 		},
@@ -64,14 +85,32 @@
 				this.para.keyword = keyword;
 				this.getList();
 			},
-			goEditGoods (id) {
-				this.$API.to(`../../sale/editGoods/editGoods?id=${id}&type=${this.moduleType}`);
+			goEditGoods (v) {
+				if (v.flg) {
+					uni.showToast({
+						title: '该货品已追加!',
+						icon: 'none'
+					});
+				} else {
+					if (this.moduleType === 0 || this.moduleType === 1) { // 销售订单/销售发货单
+						this.$API.rto(`../../sale/editGoods/editGoods?id=${v.goodsid}&type=${this.moduleType}&getType=1`);
+					} else if (this.moduleType === 2) { // 销售退货单
+						this.$API.rto(`../../sale/returnGoods/returnGoods?id=${v.goodsid}&type=${this.moduleType}&getType=1`);
+					} else if (this.moduleType === 4) { // 采购发货单
+						this.$API.rto(`../../PurchasePages/editGoods/editGoods?id=${v.goodsid}&type=${this.moduleType}&getType=1`);
+					}  else if (this.moduleType === 5) { // 采购退货单
+						this.$API.rto(`../../PurchasePages/returnGoods/returnGoods?id=${v.goodsid}&type=${this.moduleType}&getType=1`);
+					}
+				}
 			},
 			scanCode () { // 识别二维码
 				uni.scanCode({
 					success: (res) => {
-						this.para.keyword = res.result;
-						this.getList();
+						if (this.moduleType === 1) {
+							this.$API.rto(`../../sale/editGoods/editGoods?id=${res.result}&type=${this.moduleType}&getType=2`);
+						} else if (this.moduleType === 2) {
+							this.$API.rto(`../../sale/returnGoods/returnGoods?id=${res.result}&type=${this.moduleType}&getType=2`);
+						}
 					},fail: (err) => {
 						console.log(err);
 					}
@@ -99,7 +138,16 @@
 						let list = res.data.list;
 						for (let i = 0; i < list.length; i++) {
 							list[i].image = this.$URL + list[i].code + '.jpg';
+							for (let j = 0; j < this.fuxiSelasOrderInfo.length; j++) {
+								if (this.fuxiSelasOrderInfo[j].goodsid === list[i].goodsid) {
+									list[i].flg = true;
+								} else {
+									list[i].flg = false;
+								}
+							}
 						}
+						console.log(this.fuxiSelasOrderInfo);
+						console.log(list);
 						this.listData = this.reload ? list : this.listData.concat(list);
 						this.last_id = list[list.length - 1].id;
 						this.reload = false;

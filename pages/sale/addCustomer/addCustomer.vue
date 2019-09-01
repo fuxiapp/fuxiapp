@@ -5,48 +5,48 @@
 				<view class="item">
 					<view class="add-title">客户编码</view>
 					<view class="add-input">
-						<input type="text" v-if="type === 1" placeholder="客户编码"  v-model="customerInfo.code" />
-						<input type="text" v-if="type === 2" class="no" placeholder="客户编码" disabled v-model="customerInfo.code" />
+						<input type="text" v-if="type === 1" v-model="customerInfo.code" />
+						<input type="text" v-if="type === 2" class="no" disabled v-model="customerInfo.code" />
 					</view>
 				</view>
 				
 				<view class="item" @click="onselInfo(1)">
 					<view class="add-title red-title">所在门店</view>
-					<view class="add-input"><input placeholder="所在门店" disabled v-model="selCustomerInfo.name" /></view>
+					<view class="add-input"><input disabled v-model="selCustomerInfo.name" /></view>
 					<view class="add-right"><image class="base-right" src="../../../static/base/right.png"></image></view>
 				</view>
 				<view class="item">
 					<view class="add-title red-title">客户名称</view>
-					<view class="add-input"><input placeholder="客户名称" v-model="customerInfo.customer"  /></view>
+					<view class="add-input"><input v-model="customerInfo.customer"  /></view>
 				</view>
 				<view class="item">
 					<view class="add-title">订货账号</view>
-					<view class="add-input"><input placeholder="订货账号" v-model="customerInfo.loginname"  /></view>
+					<view class="add-input"><input v-model="customerInfo.loginname"  /></view>
 				</view>
 				<view class="item">
 					<view class="add-title">订货密码</view>
-					<view class="add-input"><input type="password" placeholder="订货密码" v-model="customerInfo.loginpass"  /></view>
+					<view class="add-input"><input type="password" v-model="customerInfo.loginpass"  /></view>
 				</view>
 				
 				<view class="item">
 					<view class="add-title">手机</view>
-					<view class="add-input"><input type="number" placeholder="手机" v-model="customerInfo.mobilephone" /></view>
+					<view class="add-input"><input type="number" v-model="customerInfo.mobilephone" /></view>
 				</view>
 				<view class="item"  @click="onselInfo(2)">
 					<view class="add-title red-title">所属业务员</view>
-					<view class="add-input"><input placeholder="所属业务员" v-model="selStoreInfo.name" disabled /></view>
+					<view class="add-input"><input v-model="selStoreInfo.name" disabled /></view>
 					<view class="add-right"><image class="base-right" src="../../../static/base/right.png"></image></view>
 				</view>
 				<view class="item" @click="onselInfo(3)">
 					<view class="add-title red-title">客户类型</view>
-					<view class="add-input"><input placeholder="客户类型" disabled v-model="selCustomerTypeInfo.name" /></view>
+					<view class="add-input"><input  disabled v-model="selCustomerTypeInfo.name" /></view>
 					<view class="add-right"><image class="base-right" src="../../../static/base/right.png"></image></view>
 				</view>
 			</view>
 			<view class="add-base-info">
 				<view class="item">
 					<view class="add-title">客户欠款</view>
-					<view class="add-input"><input type="number" placeholder="客户欠款"  v-model="customerInfo.arAmount" /></view>
+					<view class="add-input"><input type="number"   v-model="customerInfo.arAmount" /></view>
 				</view>
 				<view class="item">
 					<view class="add-title">历史交易</view>
@@ -64,40 +64,40 @@
 			<view class="add-base-info">
 				<view class="item" @click="selCity(1)">
 					<view class="add-title">省份</view>
-					<view class="add-input"><input placeholder="省份" disabled  v-model="selCityNameS.privinceName"  /></view>
+					<view class="add-input"><input disabled  v-model="selCityNameS.privinceName"  /></view>
 					<view class="add-right"><image class="base-right" src="../../../static/base/right.png"></image></view>
 				</view>
 				<view class="item" @click="selCity(2)">
 					<view class="add-title" >城市</view>
-					<view class="add-input"><input placeholder="城市" disabled  v-model="selCityNameS.cityName" /></view>
+					<view class="add-input"><input disabled  v-model="selCityNameS.cityName" /></view>
 					<view class="add-right"><image class="base-right" src="../../../static/base/right.png"></image></view>
 				</view>
 				<view class="item" @click="selCity(3)">
 					<view class="add-title">区县</view>
-					<view class="add-input"><input placeholder="区县" disabled  v-model="selCityNameS.countyArea"  /></view>
+					<view class="add-input"><input  disabled  v-model="selCityNameS.countyArea"  /></view>
 					<view class="add-right"><image class="base-right" src="../../../static/base/right.png"></image></view>
 				</view>
 				<view class="item">
 					<view class="add-title">详细地址</view>
-					<view class="add-input"><input placeholder="详细地址"  v-model="customerInfo.address" /></view>
+					<view class="add-input"><input v-model="customerInfo.address" /></view>
 				</view>
 			</view>
 			<view class="add-base-info">
 				<view class="item">
 					<view class="add-title">开户银行</view>
-					<view class="add-input"><input placeholder="开户银行" v-model="customerInfo.bankname" /></view>
+					<view class="add-input"><input v-model="customerInfo.bankname" /></view>
 				</view>
 				<view class="item">
 					<view class="add-title">银行账号</view>
-					<view class="add-input"><input placeholder="银行账号" v-model="customerInfo.accountno"  /></view>
+					<view class="add-input"><input  v-model="customerInfo.accountno"  /></view>
 				</view>
 				<view class="item">
 					<view class="add-title">银行账户</view>
-					<view class="add-input"><input placeholder="银行账户" v-model="customerInfo.corpname "  /></view>
+					<view class="add-input"><input  v-model="customerInfo.corpname "  /></view>
 				</view>
 				<view class="item">
 					<view class="add-title">备注</view>
-					<view class="add-input"><input placeholder="备注" v-model="customerInfo.memo"  /></view>
+					<view class="add-input"><input  v-model="customerInfo.memo"  /></view>
 				</view>
 			</view>
 			<view class="btn">
@@ -182,7 +182,7 @@
 				this.type = 2;
 				this.getInfo();
 			} else {
-				this.$API.generateNo().then(res => {
+				this.$API.generateNo(2).then(res => {
 					this.customerInfo.code = res;
 				});
 				this.$API.getStorage('fuxiUserInfo').then(res => {

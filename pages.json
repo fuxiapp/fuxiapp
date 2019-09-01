@@ -10,6 +10,12 @@
 			}
 		},
 		{
+			"path": "pages/PurchasePages/quickGoodsAdd/quickGoodsAdd",
+			"style": {
+				"navigationBarTitleText": "新增货品"
+			}
+		},
+		{
 			"path": "pages/tab/main/main",
 			"style": {
 				"navigationBarTitleText": "工作台",
@@ -19,6 +25,26 @@
 				}
 			},
 			"scrollIndicator": "none"
+		},
+		
+		{
+			"path": "pages/sale/saleComfig/saleComfig",
+			"style": {
+				"navigationBarTitleText": "销售单",
+				"app-plus" : {
+					"scrollIndicator":"none",
+					"titleNView" : {
+						"buttons" : [
+							//原生标题栏按钮配置,
+							{
+							   "text": "首页",
+							   "fontSize": "14"
+							}
+						]
+					},
+					"bounce" : "none"
+				}
+			}
 		},
 		{
 			"path": "pages/tab/sales/sales",
@@ -293,34 +319,16 @@
 		{
 			"path": "pages/sale/invoice/invoice",
 			"style": {
-				"navigationBarTitleText": "销售发货单"
+				"navigationBarTitleText": "销售单"
 			}
 		},
 		{
 			"path": "pages/sale/editGoods/editGoods",
 			"style": {
-				"navigationBarTitleText": "销售发货单"
+				"navigationBarTitleText": "销售单"
 			}
 		},
 		{
-			"path": "pages/sale/saleComfig/saleComfig",
-			"style": {
-				"navigationBarTitleText": "销售发货单",
-			    "app-plus" : {
-					"scrollIndicator":"none",
-				    "titleNView" : {
-				        "buttons" : [
-				            //原生标题栏按钮配置,
-				            {
-				               "text": "首页",
-				               "fontSize": "14"
-				            }
-				        ]
-				    },
-				    "bounce" : "none"
-				}
-			}
-		},{
 			"path": "pages/sale/salesPurchase/salesPurchase",
 			"style": {
 				"navigationBarTitleText": "选择厂商",
@@ -401,6 +409,93 @@
 			"style": {
 				"navigationBarTitleText": "新增会员"
 			}
+		},
+		{
+			"path": "pages/sale/saleType/saleType",
+			"style": {
+				"navigationBarTitleText": "销售类别"
+			}
+		},
+		{
+			"path": "pages/sale/salesEmployee/salesEmployee",
+			"style": {
+				"navigationBarTitleText": "经手人"
+			}
+		},
+		{
+			"path": "pages/sale/returnGoods/returnGoods",
+			"style": {
+				"navigationBarTitleText": "销售退货单"
+			}
+		},
+		{
+			"path": "pages/setting/setPassword/setPassword",
+			"style": {
+				"navigationBarTitleText": "修改密码"
+			}
+		},
+		{
+			"path": "pages/PurchasePages/selSupplier/selSupplier",
+			"style": {
+				"navigationBarTitleText": "选择厂商",
+				"app-plus": {
+					"bounce": "none",
+					"titleNView": {
+						"buttons": [ //原生标题栏按钮配置,
+							{
+								"fontSrc": "/static/iconfont.ttf",
+								"text": "\ue6ea",
+								"fontSize": "24px",
+								"color": "#FFFFFF"
+							}
+						]
+					}
+				},
+				"scrollIndicator": "none"
+			}
+		},
+		{
+			"path": "pages/PurchasePages/selStore/selStore",
+			"style": {
+				"navigationBarTitleText": "选择店仓"
+			}
+		},
+		{
+			"path": "pages/PurchasePages/editGoods/editGoods",
+			"style": {
+				"navigationBarTitleText": "录入货品"
+			}
+		},
+		{
+			"path": "pages/PurchasePages/saleComfig/saleComfig",
+			"style": {
+				"navigationBarTitleText": "采购单",
+				"app-plus" : {
+					"scrollIndicator":"none",
+				    "titleNView" : {
+				        "buttons" : [
+				            //原生标题栏按钮配置,
+				            {
+				               "text": "首页",
+				               "fontSize": "14"
+				            }
+				        ]
+				    },
+				    "bounce" : "none"
+				}
+			}
+		},
+		{
+			"path": "pages/PurchasePages/purchaseType/purchaseType",
+			"style": {
+				"navigationBarTitleText": "采购类型"
+			}
+		},
+		{
+			"path": "pages/PurchasePages/returnGoods/returnGoods",
+			"style": {
+				"navigationBarTitleText": "采购退货单"
+			}
 		}
 	],
 	"tabBar": {
@@ -440,7 +535,7 @@
 		]
 	},
 	"globalStyle": {
-		"navigationBarTextStyle": "#ffffff",
+		//"navigationBarTextStyle": "#ffffff",
 		"navigationBarTitleText": "西奈移动应用",
 		"navigationBarBackgroundColor": "#333333",
 		"backgroundColor": "#ffffff"
@@ -449,7 +544,7 @@
 		"current": 0, // 当前激活的模式(list 的索引项)
 		"list": [{
 			"name": "login", //模式名称
-			"path": "pages/login/login", //启动页面，必选
+			"path": "pages/login/logins", //启动页面，必选
 			"query": "" //启动参数，在页面的onLoad函数里面得到
 		}]
 	}

@@ -110,6 +110,7 @@
 					margin-top: 30upx;
 					margin-right: 30upx;
 					text-align: center;
+					font-size: 32upx;
 					@include lineEllipsis(1);
 				}
 				.check-item {

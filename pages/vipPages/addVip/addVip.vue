@@ -4,28 +4,28 @@
 			<view class="item">
 				<view class="add-title red-title">会员编号</view>
 				<view class="add-input">
-					<input type="text" v-if="type === 1" placeholder="请输入会员编号" v-model="vipInfo.code" />
-					<input type="text" v-if="type === 2 " placeholder="请输入会员编号" disabled v-model="vipInfo.code" />
+					<input type="text" v-if="type === 1" v-model="vipInfo.code" />
+					<input type="text" v-if="type === 2 "  disabled v-model="vipInfo.code" />
 				</view>
 			</view>
 			<view class="item">
 				<view class="add-title red-title">姓名</view>
 				<view class="add-input">
-					<input placeholder="姓名" v-model="vipInfo.vip"  />
+					<input v-model="vipInfo.vip"  />
 				</view>
 			</view>
 			<view class="item">
 				<view class="add-title">手机</view>
-				<view class="add-input"><input type="number" placeholder="手机" v-model="vipInfo.mobilephone" /></view>
+				<view class="add-input"><input type="number" v-model="vipInfo.mobilephone" /></view>
 			</view>
 			<view class="item">
 				<view class="add-title red-title">vip类别</view>
-				<view class="add-input"  @click="onselInfo(1)"><input placeholder="vip类别" disabled v-model="selStoreInfo.name" /></view>
+				<view class="add-input"  @click="onselInfo(1)"><input  disabled v-model="selStoreInfo.name" /></view>
 				<view class="add-type" @click="isShowTypeAdd = true">新增</view>
 			</view>
 			<view class="item" >
 				<view class="add-title">所属门店</view>
-				<view class="add-input " @click="onselInfo(2)"><input placeholder="所属门店" v-model="selCustomerInfo.name" disabled /></view>
+				<view class="add-input " @click="onselInfo(2)"><input v-model="selCustomerInfo.name" disabled /></view>
 				<view class="add-right"><image src="../../../static/base/right.png"></image></view>
 			</view>
 			<view class="item-radio">
@@ -40,7 +40,7 @@
 				<view class="add-title">生日</view>
 				<view class="add-input" >
 					<picker mode="date" :value="vipInfo.birthday" @change="confirmBirthday">
-						<input placeholder="生日" disabled  v-model="vipInfo.birthday"  />
+						<input disabled  v-model="vipInfo.birthday"  />
 					</picker>
 				</view>
 				<view class="add-right"><image src="../../../static/base/right.png"></image></view>
@@ -59,11 +59,11 @@
 				<view class="add-base-info">
 					<view class="item">
 						<view class="add-title">类别名称</view>
-						<view class="add-input"><input placeholder="类别名称"  v-model="addVipInfo.vipType"  /></view>
+						<view class="add-input"><input  v-model="addVipInfo.vipType"  /></view>
 					</view>
 					<view class="item">
 						<view class="add-title">类别折扣</view>
-						<view class="add-input"><input type="number"  placeholder="类别折扣"  v-model="addVipInfo.discountRate "  /></view>
+						<view class="add-input"><input type="number"  v-model="addVipInfo.discountRate "  /></view>
 					</view>
 				</view> 
 				<view class="cgh-add-type-button" @click="saveVipType">确认</view>
